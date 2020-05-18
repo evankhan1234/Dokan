@@ -1,4 +1,4 @@
-package com.evan.dokan.ui.auth
+package com.evan.dokan.ui.auth.interfaces
 
 import com.evan.dokan.data.db.entities.User
 import com.evan.dokan.data.db.entities.Users
