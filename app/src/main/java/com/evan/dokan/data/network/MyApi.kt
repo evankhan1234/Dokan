@@ -20,7 +20,7 @@ interface MyApi {
         @Field("password") password: String
     ) : Response<AuthResponse>
 
-    @POST("login-api.php")
+    @POST("login-customer-api.php")
     suspend fun userLoginFor(
         @Body authPost: AuthPost
     ) : Response<LoginResponse>
@@ -46,7 +46,7 @@ interface MyApi {
 
             return Retrofit.Builder()
                 .client(okkHttpclient)
-                .baseUrl("http://192.168.0.105/stationary/v1/")
+                .baseUrl("http://192.168.0.106/stationary/v1/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(MyApi::class.java)
