@@ -20,8 +20,9 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".ui.auth.CreateAccountActivity"/>
-        <activity android:name=".ui.auth.ImageUpdateActivity"/>
+        <activity android:name=".ui.shop.ShopActivity"></activity>
+        <activity android:name=".ui.auth.CreateAccountActivity" />
+        <activity android:name=".ui.auth.ImageUpdateActivity" />
         <activity android:name=".ui.auth.LoginActivity" />
         <activity android:name=".ui.TestActivity" />
         <activity android:name=".ui.home.HomeActivity" />
@@ -50,6 +51,7 @@
         <meta-data
                 android:name="com.google.firebase.messaging.default_notification_color"
                 android:resource="@color/colorPrimary" />
+
         <provider
                 android:name="androidx.core.content.FileProvider"
                 android:authorities="${applicationId}"
