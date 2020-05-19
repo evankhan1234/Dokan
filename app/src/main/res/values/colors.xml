@@ -5,4 +5,11 @@
     <color name="colorAccent">@android:color/black</color>
     <color name="black">@android:color/black</color>
     <color name="white">@android:color/white</color>
+    <color name="black_again">#333333</color>
+    <color name="black_opacity_80">#F2333333</color>
+    <color name="black_opacity_60">#80333333</color>
+    <color name="black_opacity_50">#80333333</color>
+    <color name="black_opacity_30">#4D333333</color>
+    <color name="black_opacity_40">#66333333</color>
+    <color name="black_opacity_15">#26333333</color>
 </resources>
