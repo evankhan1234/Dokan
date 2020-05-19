@@ -1,4 +1,4 @@
-package com.evan.dokan.data.network.post
+package com.evan.dokan.data.network.responses
 
 import com.evan.dokan.data.db.entities.User
 import com.evan.dokan.data.db.entities.Users

@@ -2,10 +2,11 @@ package com.evan.dokan.data.network
 
 
 import com.evan.dokan.data.network.post.AuthPost
-import com.evan.dokan.data.network.post.LoginResponse
-import com.evan.dokan.data.network.responses.AuthResponse
-import com.evan.dokan.data.network.responses.QuotesResponse
+import com.evan.dokan.data.network.post.SignUpPost
+import com.evan.dokan.data.network.responses.*
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -24,6 +25,11 @@ interface MyApi {
     suspend fun userLoginFor(
         @Body authPost: AuthPost
     ) : Response<LoginResponse>
+
+    @POST("create-customer-registration.php")
+    suspend fun userSignUp(
+        @Body post: SignUpPost
+    ) : Response<BasicResponses>
     @FormUrlEncoded
     @POST("signup")
     suspend fun userSignup(
@@ -31,7 +37,11 @@ interface MyApi {
         @Field("email") email: String,
         @Field("password") password: String
     ) : Response<AuthResponse>
-
+    @Multipart
+    @POST("create-sign-up-image.php")
+    suspend fun createProfileImage(
+        @Part file: MultipartBody.Part?, @Part("uploaded_file") requestBody: RequestBody?
+    ): Response<ImageResponse>
     @GET("quotes")
     suspend fun getQuotes() : Response<QuotesResponse>
 

@@ -2,21 +2,15 @@ package com.evan.dokan.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Html
-import android.view.View
-import android.widget.EditText
-import android.widget.RadioButton
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.evan.dokan.ui.home.HomeActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import com.evan.dokan.R
-import com.evan.dokan.data.db.entities.User
 import com.evan.dokan.data.db.entities.Users
 import com.evan.dokan.databinding.ActivityLoginBinding
+import com.evan.dokan.ui.auth.interfaces.AuthListener
 import com.evan.dokan.util.MyPasswordTransformationMethod
 import com.evan.dokan.util.hide
 import com.evan.dokan.util.show
@@ -26,7 +20,8 @@ import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 
 
-class LoginActivity : AppCompatActivity(), AuthListener, KodeinAware {
+class LoginActivity : AppCompatActivity(),
+    AuthListener, KodeinAware {
 
     override val kodein by kodein()
     private val factory : AuthViewModelFactory by instance()
