@@ -2,6 +2,8 @@ package com.evan.dokan.data.network
 
 
 import com.evan.dokan.data.network.post.AuthPost
+import com.evan.dokan.data.network.post.LimitPost
+import com.evan.dokan.data.network.post.SearchPost
 import com.evan.dokan.data.network.post.SignUpPost
 import com.evan.dokan.data.network.responses.*
 import okhttp3.MultipartBody
@@ -26,6 +28,16 @@ interface MyApi {
         @Body authPost: AuthPost
     ) : Response<LoginResponse>
 
+    @POST("shop-get.php")
+    suspend fun getShopPagination(
+        @Header("Authorization") Authorization:String,
+        @Body limit: LimitPost
+    ) : Response<ShopResponse>
+    @POST("searching-shop.php")
+    suspend fun getShopSearch(
+        @Header("Authorization") Authorization:String,
+        @Body searchPost: SearchPost
+    ): Response<ShopResponse>
     @POST("create-customer-registration.php")
     suspend fun userSignUp(
         @Body post: SignUpPost

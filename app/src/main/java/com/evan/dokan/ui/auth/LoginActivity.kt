@@ -11,6 +11,7 @@ import com.evan.dokan.R
 import com.evan.dokan.data.db.entities.Users
 import com.evan.dokan.databinding.ActivityLoginBinding
 import com.evan.dokan.ui.auth.interfaces.AuthListener
+import com.evan.dokan.ui.shop.ShopActivity
 import com.evan.dokan.util.MyPasswordTransformationMethod
 import com.evan.dokan.util.hide
 import com.evan.dokan.util.show
@@ -53,7 +54,7 @@ class LoginActivity : AppCompatActivity(),
 
     override fun onSuccess(user: Users) {
         progress_bar.hide()
-        Intent(this, HomeActivity::class.java).also {
+        Intent(this, ShopActivity::class.java).also {
             it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(it)
         }

@@ -10,6 +10,7 @@ import android.view.View
 import com.evan.dokan.R
 import com.evan.dokan.ui.auth.LoginActivity
 import com.evan.dokan.ui.home.HomeActivity
+import com.evan.dokan.ui.shop.ShopActivity
 import com.evan.dokan.util.SharedPreferenceUtil
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.FirebaseApp
@@ -53,7 +54,7 @@ class SpalashActivity : AppCompatActivity(), Animator.AnimatorListener {
         token = SharedPreferenceUtil.getShared(this, SharedPreferenceUtil.TYPE_AUTH_TOKEN)
         Log.e(TAG, token!! + "")
         if (token != null && !token?.trim().equals("") && !token.isNullOrEmpty()) {
-            Intent(this, LoginActivity::class.java).also {
+            Intent(this, ShopActivity::class.java).also {
                 it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(it)
             }
