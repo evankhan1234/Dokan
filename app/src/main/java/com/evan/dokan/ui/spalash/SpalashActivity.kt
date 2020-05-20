@@ -8,8 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.evan.dokan.R
-import com.evan.dokan.ui.auth.LoginActivity
-import com.evan.dokan.ui.home.HomeActivity
+import com.evan.dokan.ui.boarding.BoardingActivity
 import com.evan.dokan.ui.shop.ShopActivity
 import com.evan.dokan.util.SharedPreferenceUtil
 import com.google.android.gms.tasks.OnCompleteListener
@@ -59,7 +58,7 @@ class SpalashActivity : AppCompatActivity(), Animator.AnimatorListener {
                 startActivity(it)
             }
         } else {
-            Intent(this, LoginActivity::class.java).also {
+            Intent(this, BoardingActivity::class.java).also {
                 it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(it)
             }

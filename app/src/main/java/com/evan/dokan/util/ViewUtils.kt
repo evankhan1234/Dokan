@@ -16,6 +16,7 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.core.app.ActivityCompat
 import com.evan.bazar.ui.custom.CustomDialog
@@ -30,7 +31,16 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
+fun hideKeyboard(activity: Activity) {
+    try {
+        val view = activity.currentFocus
+        val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view!!.windowToken, 0)
+    }
+    catch (ee: java.lang.Exception) {
+    }
 
+}
 fun Context.toast(message: String){
     Toast.makeText(this, message, Toast.LENGTH_LONG ).show()
 }

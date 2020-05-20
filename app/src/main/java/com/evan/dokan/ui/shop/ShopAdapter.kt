@@ -57,9 +57,9 @@ class AlertViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         if (shop != null) {
 
-//            itemView.text_update.setOnClickListener {
-//                listener.onUpdate(product)
-//            }
+            itemView.text_update.setOnClickListener {
+                listener.onUpdate(shop)
+            }
             Glide.with(context)
                 .load("https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/slideshows/powerhouse_vegetables_slideshow/650x350_powerhouse_vegetables_slideshow.jpg")
                 .into(itemView.img_image!!)
@@ -85,12 +85,5 @@ class AlertViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
     }
 
-    fun getStartDate(startDate: String?): String? {
-        val inputFormat =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        val outputFormat =
-            DateTimeFormatter.ofPattern("dd,MMMM yyyy")
-        return LocalDate.parse(startDate, inputFormat).format(outputFormat)
-    }
 
 }

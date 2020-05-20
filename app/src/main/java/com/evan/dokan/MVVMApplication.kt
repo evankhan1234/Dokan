@@ -9,6 +9,12 @@ import com.evan.dokan.data.repositories.HomeRepository
 import com.evan.dokan.data.repositories.QuotesRepository
 import com.evan.dokan.data.repositories.UserRepository
 import com.evan.dokan.ui.auth.AuthViewModelFactory
+import com.evan.dokan.ui.home.HomeViewModel
+import com.evan.dokan.ui.home.HomeViewModelFactory
+import com.evan.dokan.ui.home.dashboard.product.ProductCategoryWiseDataSource
+import com.evan.dokan.ui.home.dashboard.product.ProductCategoryWiseModelFactory
+import com.evan.dokan.ui.home.dashboard.product.ProductCategoryWiseSourceFactory
+import com.evan.dokan.ui.home.dashboard.product.ProductCategoryWiseViewModel
 import com.evan.dokan.ui.home.profile.ProfileViewModelFactory
 import com.evan.dokan.ui.home.quotes.QuotesViewModelFactory
 import com.evan.dokan.ui.shop.ShopDataSource
@@ -38,10 +44,16 @@ class MVVMApplication : Application(), KodeinAware {
         bind() from singleton { QuotesRepository(instance(), instance(), instance()) }
         bind() from provider { AuthViewModelFactory(instance()) }
         bind() from provider { ShopModelFactory(instance(),instance()) }
+        bind() from provider { ProductCategoryWiseModelFactory(instance(),instance()) }
         bind() from provider { ShopSourceFactory(instance()) }
+        bind() from provider { ProductCategoryWiseSourceFactory(instance()) }
         bind() from provider { ShopViewModel(instance(),instance()) }
+        bind() from provider { ProductCategoryWiseViewModel(instance(),instance()) }
         bind() from provider { ShopDataSource(instance(),instance()) }
+        bind() from provider { ProductCategoryWiseDataSource(instance(),instance()) }
         bind() from provider { ProfileViewModelFactory(instance()) }
+        bind() from provider { HomeViewModelFactory(instance()) }
+        bind() from provider { HomeViewModel(instance()) }
         bind() from provider{ QuotesViewModelFactory(instance()) }
 
 

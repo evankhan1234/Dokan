@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
             android:name=".MVVMApplication"
@@ -20,7 +22,8 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".ui.shop.ShopActivity"></activity>
+        <activity android:name=".ui.boarding.BoardingActivity"/>
+        <activity android:name=".ui.shop.ShopActivity" />
         <activity android:name=".ui.auth.CreateAccountActivity" />
         <activity android:name=".ui.auth.ImageUpdateActivity" />
         <activity android:name=".ui.auth.LoginActivity" />

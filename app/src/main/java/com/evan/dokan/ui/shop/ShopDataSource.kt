@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.evan.dokan.data.db.entities.Shop
 import com.evan.dokan.data.network.post.LimitPost
+import com.evan.dokan.data.network.post.ShopPost
 import com.evan.dokan.data.repositories.HomeRepository
 import com.evan.dokan.util.*
 
@@ -13,7 +14,7 @@ class ShopDataSource (val context: Context, val alertRepository: HomeRepository)
     PageKeyedDataSource<Int, Shop>() {
 
     var networkState: MutableLiveData<NetworkState> = MutableLiveData()
-    var post: LimitPost? = null
+    var post: ShopPost? = null
     override fun loadInitial(
         params: LoadInitialParams<Int>,
         callback: LoadInitialCallback<Int, Shop>
@@ -23,7 +24,7 @@ class ShopDataSource (val context: Context, val alertRepository: HomeRepository)
 
             try {
                 networkState.postValue(NetworkState.LOADING)
-                post = LimitPost(10, 1)
+                post = ShopPost(SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_LATITUDE)!!,SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_LONGITUDE)!!,10, 1)
                 val response = alertRepository.getShopPagination(SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_AUTH_TOKEN)!!,post!!)
                 Log.e("response","response"+response)
                 response.success.let { isSuccessful ->
@@ -54,7 +55,7 @@ class ShopDataSource (val context: Context, val alertRepository: HomeRepository)
         Coroutines.main {
             try {
                 networkState.postValue(NetworkState.LOADING)
-                post = LimitPost(10, params.key)
+                post = ShopPost(SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_LATITUDE)!!,SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_LONGITUDE)!!,10, params.key)
                 val response =
                     alertRepository.getShopPagination(SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_AUTH_TOKEN)!!,post!!)
                 response.success.let { isSuccessful ->
