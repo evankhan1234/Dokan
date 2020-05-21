@@ -37,5 +37,7 @@ data class Product (
     @SerializedName("ProductCategoryId")
     var ProductCategoryId: Int?,
     @SerializedName("Status")
-    var Status: Int?
+    var Status: Int?,
+    @SerializedName("UnitName")
+    var UnitName: String?
 ): Parcelable

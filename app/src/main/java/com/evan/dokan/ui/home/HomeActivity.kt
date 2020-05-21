@@ -11,9 +11,11 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.evan.dokan.R
+import com.evan.dokan.data.db.entities.Product
 import com.evan.dokan.ui.home.cart.CartFragment
 import com.evan.dokan.ui.home.dashboard.DashboardFragment
 import com.evan.dokan.ui.home.dashboard.product.ProductCategoryWiseListFragment
+import com.evan.dokan.ui.home.dashboard.product.details.ProductDetailsFragment
 import com.evan.dokan.ui.home.order.OrderFragment
 import com.evan.dokan.ui.home.settings.SettingsFragment
 import com.evan.dokan.ui.shop.ShopActivity
@@ -92,12 +94,12 @@ class HomeActivity : AppCompatActivity() {
                 dashboard.removeChild()
                 setUpHeader(FRAG_TOP)
             }
-//            if (f is OrderDeliveryFragment) {
-//                val orderDeliveryFragment: OrderDeliveryFragment =
-//                    mFragManager?.findFragmentByTag(FRAG_ORDER.toString()) as OrderDeliveryFragment
-//                orderDeliveryFragment.removeChild()
-//                setUpHeader(FRAG_ORDER)
-//            }
+            else if (f is ProductCategoryWiseListFragment) {
+                val productCategoryWiseListFragment: ProductCategoryWiseListFragment =
+                    mFragManager?.findFragmentByTag(FRAG_CATEGORY.toString()) as ProductCategoryWiseListFragment
+                productCategoryWiseListFragment.removeChild()
+                setUpHeader(FRAG_CATEGORY)
+            }
 //            if (f is CategoryFragment) {
 //                val storeFragment: CategoryFragment =
 //                    mFragManager?.findFragmentByTag(FRAG_CATEGORY.toString()) as CategoryFragment
@@ -132,6 +134,51 @@ class HomeActivity : AppCompatActivity() {
     fun backPress() {
         hideKeyboard(this)
         onBackPressed()
+
+    }
+    fun goToProductDetailsFragment(product: Product) {
+        setUpHeader(FRAG_PRODUCT)
+        mFragManager = supportFragmentManager
+        // create transaction
+        var fragId:Int?=0
+        fragId=FRAG_PRODUCT
+        fragTransaction = mFragManager?.beginTransaction()
+        //check if there is any backstack if yes then remove it
+        val count = mFragManager?.getBackStackEntryCount()
+        if (count != 0) {
+            //this will clear the back stack and displays no animation on the screen
+            // mFragManager?.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        }
+        // check current fragment is wanted fragment
+        if (mCurrentFrag != null && mCurrentFrag!!.getTag() != null && mCurrentFrag!!.getTag() == fragId.toString()) {
+            return
+        }
+        var newFrag: Fragment? = null
+
+        // identify which fragment will be called
+
+        newFrag = ProductDetailsFragment()
+        val b= Bundle()
+        b.putParcelable(Product::class.java?.getSimpleName(), product)
+
+        newFrag.setArguments(b)
+
+        mCurrentFrag = newFrag
+
+        fragTransaction!!.setCustomAnimations(
+            R.anim.view_transition_in_left,
+            R.anim.view_transition_out_left,
+            R.anim.view_transition_in_right,
+            R.anim.view_transition_out_right
+        )
+
+        // param 1: container id, param 2: new fragment, param 3: fragment id
+
+        fragTransaction?.replace(R.id.main_container, newFrag!!, fragId.toString())
+        // prevent showed when user press back fabReview
+        fragTransaction?.addToBackStack(fragId.toString())
+        //  fragTransaction?.hide(active).show(guideFragment).commit();
+        fragTransaction!!.commit()
 
     }
     fun addFragment(fragId: Int, isHasAnimation: Boolean, obj: Any?) {
@@ -225,6 +272,13 @@ class HomeActivity : AppCompatActivity() {
                 ll_back_header?.visibility = View.VISIBLE
                 rlt_header?.visibility = View.GONE
                 tv_details.text = resources.getString(R.string.product)
+                btn_footer_home.setSelected(true)
+
+            }
+            FRAG_PRODUCT -> {
+                ll_back_header?.visibility = View.VISIBLE
+                rlt_header?.visibility = View.GONE
+                tv_details.text = resources.getString(R.string.details)
                 btn_footer_home.setSelected(true)
 
             }

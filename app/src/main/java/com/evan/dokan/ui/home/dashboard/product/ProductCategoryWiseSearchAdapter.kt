@@ -1,6 +1,7 @@
 package com.evan.dokan.ui.home.dashboard.product
 
 import android.content.Context
+import android.graphics.Paint
 import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,7 +15,7 @@ import com.evan.dokan.data.db.entities.Shop
 import com.evan.dokan.ui.shop.IShopUpdateListener
 import com.evan.dokan.ui.shop.ShopListAdapter
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.layout_shop_list.view.*
+import kotlinx.android.synthetic.main.layout_product_list.view.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -36,24 +37,44 @@ class ProductCategoryWiseSearchAdapter(val context: Context, val product: Mutabl
     override fun onBindViewHolder(holder:CustomViewHolder, position: Int) {
 
 
-//        holder.itemView.text_update.setOnClickListener {
-//            productCategoryWiseUpdateListener.onUpdate(product?.get(position)!!)
-//        }
-//        Glide.with(context)
-//            .load("https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/slideshows/powerhouse_vegetables_slideshow/650x350_powerhouse_vegetables_slideshow.jpg")
-//            .into(holder.itemView.img_image!!)
-//
-//        var shop_name: String = ""
-//        var shop_address: String = ""
-//
-//        shop_name = "<b> <font color=#15507E>Shop Name</font> : </b>" + shop?.get(position)?.Name
-//        shop_address = "<b> <font color=#15507E>Shop Address</font> : </b>" + shop?.get(position)?.Address
-//        holder.itemView.tv_shop_name.text = Html.fromHtml(shop_name)
-//        holder.itemView.tv_shop_address.text = Html.fromHtml(shop_address)
+        holder.itemView.setOnClickListener {
+            productCategoryWiseUpdateListener.onUpdate(product?.get(position)!!)
+        }
+        Glide.with(context)
+            .load(product?.get(position)?.ProductImage)
+            .into( holder.itemView.img_image!!)
+
+        var discount_prices: String = ""
+        var total_prices: String = ""
+
+        holder.itemView.tv_date.text = getStartDate(product?.get(position)?.Created)
+        holder.itemView.tv_product_name.text = product?.get(position)?.Name
+        holder.itemView.tv_stock.text = "Stock : " + product?.get(position)?.Stock+" "+product?.get(position)?.UnitName
+        if (product?.get(position)?.Discount == 0.0) {
+            holder.itemView.tv_product_discount_price.visibility = View.GONE
+            discount_prices =
+                "<b> <font color=#BF3E15>ট </font> : </b>" + product?.get(position)?.SellPrice.toString()
+            holder.itemView.tv_product_price.text = Html.fromHtml(discount_prices!!)
+        } else {
+            var discounts: Double = 0.0
+            discounts = product?.get(position)?.SellPrice!! - product?.get(position)?.Discount!!
+            discount_prices =
+                "<b> <font color=#BF3E15>ট </font> : </b>" + product?.get(position)?.SellPrice.toString()
+            total_prices = "<b> <font color=#BF3E15>ট </font> : </b>" + discounts
+            holder.itemView.tv_product_price.text = Html.fromHtml(discount_prices!!)
+            holder.itemView.tv_product_discount_price.text = Html.fromHtml(total_prices!!)
+            holder.itemView.tv_product_price.setPaintFlags( holder.itemView.tv_product_price.getPaintFlags() or Paint.STRIKE_THRU_TEXT_FLAG)
+        }
 
 
     }
-
+    fun getStartDate(startDate: String?): String? {
+        val inputFormat =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val outputFormat =
+            DateTimeFormatter.ofPattern("dd,MMMM yyyy")
+        return LocalDate.parse(startDate, inputFormat).format(outputFormat)
+    }
     inner class CustomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
     }
