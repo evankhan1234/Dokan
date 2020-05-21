@@ -1,6 +1,8 @@
 package com.evan.dokan.ui.home.dashboard.product
 
 import android.content.Context
+import android.graphics.Paint
+import android.opengl.Visibility
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
@@ -11,12 +13,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.evan.dokan.R
 import com.evan.dokan.data.db.entities.Product
-import com.evan.dokan.ui.shop.IShopUpdateListener
 import kotlinx.android.synthetic.main.layout_product_list.view.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class ProductCategoryWiseAdapter (val context: Context, val productCategoryWiseUpdateListener: IProductCategoryWiseUpdateListener) :
+class ProductCategoryWiseAdapter(
+    val context: Context,
+    val productCategoryWiseUpdateListener: IProductCategoryWiseUpdateListener
+) :
     PagedListAdapter<Product, RecyclerView.ViewHolder>(NewsDiffCallback) {
     private val DATA_VIEW_TYPE = 1
     private val FOOTER_VIEW_TYPE = 2
@@ -54,24 +58,43 @@ class ProductCategoryWiseAdapter (val context: Context, val productCategoryWiseU
 
 class AlertViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-    fun bind(context: Context, product: Product?, position: Int, listener: IProductCategoryWiseUpdateListener) {
+    fun bind(
+        context: Context,
+        product: Product?,
+        position: Int,
+        listener: IProductCategoryWiseUpdateListener
+    ) {
 
         if (product != null) {
 
-//            itemView.text_update.setOnClickListener {
-//                listener.onUpdate(product)
-//            }
+            itemView.setOnClickListener {
+                listener.onUpdate(product)
+            }
             Glide.with(context)
                 .load(product?.ProductImage)
                 .into(itemView.img_image!!)
-//
-//            var shop_name: String = ""
-//            var shop_address: String = ""
-//
-//            shop_name = "<b> <font color=#15507E>Shop Name</font> : </b>" + shop?.Name
-//            shop_address = "<b> <font color=#15507E>Shop Address</font> : </b>" + shop?.Address
-//            itemView.tv_shop_name.text = Html.fromHtml(shop_name)
-//            itemView.tv_shop_address.text = Html.fromHtml(shop_address)
+
+            var discount_prices: String = ""
+            var total_prices: String = ""
+
+            itemView.tv_date.text = getStartDate(product?.Created)
+            itemView.tv_product_name.text = product?.Name
+            itemView.tv_stock.text = "Stock : " + product?.Stock+" "+product?.UnitName
+            if (product?.Discount == 0.0) {
+                itemView.tv_product_discount_price.visibility = View.GONE
+                discount_prices =
+                    "<b> <font color=#BF3E15>ট </font> : </b>" + product?.SellPrice.toString()
+                itemView.tv_product_price.text = Html.fromHtml(discount_prices!!)
+            } else {
+                var discounts: Double = 0.0
+                discounts = product?.SellPrice!! - product?.Discount!!
+                discount_prices =
+                    "<b> <font color=#BF3E15>ট </font> : </b>" + product?.SellPrice.toString()
+                total_prices = "<b> <font color=#BF3E15>ট </font> : </b>" + discounts
+                itemView.tv_product_price.text = Html.fromHtml(discount_prices!!)
+                itemView.tv_product_discount_price.text = Html.fromHtml(total_prices!!)
+                itemView.tv_product_price.setPaintFlags(itemView.tv_product_price.getPaintFlags() or Paint.STRIKE_THRU_TEXT_FLAG)
+            }
 
 
         }

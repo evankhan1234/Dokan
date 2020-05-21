@@ -20,6 +20,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.evan.dokan.R
 import com.evan.dokan.data.db.entities.Product
+import com.evan.dokan.ui.home.HomeActivity
+import com.evan.dokan.ui.home.dashboard.product.details.ProductDetailsFragment
 import com.evan.dokan.util.NetworkState
 import com.evan.dokan.util.SharedPreferenceUtil
 import com.evan.dokan.util.hide
@@ -109,18 +111,18 @@ class ProductCategoryWiseListFragment : Fragment() , KodeinAware,IProductCategor
         })
     }
 
-//    fun removeChild() {
-//        val f =
-//            childFragmentManager.findFragmentByTag(CreateCategoryFragment::class.java.simpleName)
-//        val f1 = childFragmentManager.findFragmentByTag(CreateCategoryFragment::class.java.simpleName)
-//        if (f != null) {
-//            val transaction = childFragmentManager.beginTransaction()
-//            transaction.setCustomAnimations(R.anim.left_to_right, R.anim.left_to_right)
-//            transaction.remove(f)
-//            transaction.commit()
-//            childFragmentManager.popBackStack()
-//        }
-//    }
+    fun removeChild() {
+        val f =
+            childFragmentManager.findFragmentByTag(ProductDetailsFragment::class.java.simpleName)
+        val f1 = childFragmentManager.findFragmentByTag(ProductDetailsFragment::class.java.simpleName)
+        if (f != null) {
+            val transaction = childFragmentManager.beginTransaction()
+            transaction.setCustomAnimations(R.anim.left_to_right, R.anim.left_to_right)
+            transaction.remove(f)
+            transaction.commit()
+            childFragmentManager.popBackStack()
+        }
+    }
 
     override fun show(data: MutableList<Product>) {
         viewModel.replaceSubscription(this)
@@ -147,9 +149,9 @@ class ProductCategoryWiseListFragment : Fragment() , KodeinAware,IProductCategor
     }
 
     override fun onUpdate(product: Product) {
-//        if (activity is HomeActivity) {
-//            (activity as HomeActivity).goToUpdateCategoryFragment(category)
-//        }
+        if (activity is HomeActivity) {
+            (activity as HomeActivity).goToProductDetailsFragment(product)
+        }
     }
     var keyword: TextWatcher = object : TextWatcher {
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
