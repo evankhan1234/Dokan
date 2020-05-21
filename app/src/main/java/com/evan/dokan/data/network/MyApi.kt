@@ -1,10 +1,7 @@
 package com.evan.dokan.data.network
 
 
-import com.evan.dokan.data.network.post.AuthPost
-import com.evan.dokan.data.network.post.LimitPost
-import com.evan.dokan.data.network.post.SearchPost
-import com.evan.dokan.data.network.post.SignUpPost
+import com.evan.dokan.data.network.post.*
 import com.evan.dokan.data.network.responses.*
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -27,11 +24,25 @@ interface MyApi {
     suspend fun userLoginFor(
         @Body authPost: AuthPost
     ) : Response<LoginResponse>
-
-    @POST("shop-get.php")
+    @POST("searching-product-category.php")
+    suspend fun getProductSearchCategory(
+        @Header("Authorization") Authorization:String,
+        @Body productSearchPost: ProductSearchPost
+    ): Response<ProductResponses>
+    @POST("product-category-product-list.php")
+    suspend fun getProductCategory(
+        @Header("Authorization") Authorization:String,
+        @Body productPost: ProductPost
+    ): Response<ProductResponses>
+    @POST("customer-product-category.php")
+    suspend fun getCategory(
+        @Header("Authorization") Authorization:String,
+        @Body shopUserIdPost: ShopUserIdPost
+    ): Response<CategoryResponses>
+    @POST("nearby-shop.php")
     suspend fun getShopPagination(
         @Header("Authorization") Authorization:String,
-        @Body limit: LimitPost
+        @Body limit: ShopPost
     ) : Response<ShopResponse>
     @POST("searching-shop.php")
     suspend fun getShopSearch(

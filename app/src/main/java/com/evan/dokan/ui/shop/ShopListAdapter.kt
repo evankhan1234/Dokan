@@ -32,9 +32,9 @@ class ShopListAdapter(val context: Context, val shop: MutableList<Shop>?, val iS
     override fun onBindViewHolder(holder:CustomViewHolder, position: Int) {
 
 
-//        holder.itemView.text_update.setOnClickListener {
-//            iShopUpdateListener.onUpdate(product?.get(position)!!)
-//        }
+        holder.itemView.text_update.setOnClickListener {
+            iShopUpdateListener.onUpdate(shop?.get(position)!!)
+        }
         Glide.with(context)
             .load("https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/slideshows/powerhouse_vegetables_slideshow/650x350_powerhouse_vegetables_slideshow.jpg")
             .into(holder.itemView.img_image!!)
