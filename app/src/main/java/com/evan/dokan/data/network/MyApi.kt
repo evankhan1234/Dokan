@@ -39,6 +39,21 @@ interface MyApi {
         @Header("Authorization") Authorization:String,
         @Body productLikePost: ProductLikePost
     ): Response<BasicResponses>
+    @POST("create-wish-list.php")
+    suspend fun  createWishList(
+        @Header("Authorization") Authorization:String,
+        @Body wishListCreatePost: WishListCreatePost
+    ): Response<BasicResponses>
+    @POST("delete-wish-list-product.php")
+    suspend fun  deleteWishList(
+        @Header("Authorization") Authorization:String,
+        @Body wshListDeletedPost: WishListDeletedPost
+    ): Response<BasicResponses>
+    @POST("wish-list-get.php")
+    suspend fun  getWishList(
+        @Header("Authorization") Authorization:String,
+        @Body shopUserIdPost: ShopUserIdPost
+    ): Response<ProductResponses>
     @POST("customer-product-category.php")
     suspend fun getCategory(
         @Header("Authorization") Authorization:String,

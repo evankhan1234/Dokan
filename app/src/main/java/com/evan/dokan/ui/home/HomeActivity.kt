@@ -18,6 +18,7 @@ import com.evan.dokan.ui.home.dashboard.product.ProductCategoryWiseListFragment
 import com.evan.dokan.ui.home.dashboard.product.details.ProductDetailsFragment
 import com.evan.dokan.ui.home.order.OrderFragment
 import com.evan.dokan.ui.home.settings.SettingsFragment
+import com.evan.dokan.ui.home.wishlist.WishListFragment
 import com.evan.dokan.ui.shop.ShopActivity
 import com.evan.dokan.util.*
 import kotlinx.android.synthetic.main.activity_home.*
@@ -61,10 +62,10 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
-    fun btn_orders_clicked(view: View) {
-        setUpHeader(FRAG_ORDER)
-        afterClickTabItem(FRAG_ORDER, null)
-        setUpFooter(FRAG_ORDER)
+    fun btn_wish_list_clicked(view: View) {
+        setUpHeader(FRAG_WISHLIST)
+        afterClickTabItem(FRAG_WISHLIST, null)
+        setUpFooter(FRAG_WISHLIST)
 
     }
 
@@ -100,13 +101,12 @@ class HomeActivity : AppCompatActivity() {
                 productCategoryWiseListFragment.removeChild()
                 setUpHeader(FRAG_CATEGORY)
             }
-//            if (f is CategoryFragment) {
-//                val storeFragment: CategoryFragment =
-//                    mFragManager?.findFragmentByTag(FRAG_CATEGORY.toString()) as CategoryFragment
-//                storeFragment.replace()
-//                storeFragment.removeChild()
-//                setUpHeader(FRAG_CATEGORY)
-//            }
+           else if (f is WishListFragment) {
+                val storeFragment: WishListFragment =
+                    mFragManager?.findFragmentByTag(FRAG_WISHLIST.toString()) as WishListFragment
+                storeFragment.removeChild()
+                setUpHeader(FRAG_WISHLIST )
+            }
 //            if (f is SupplierFragment) {
 //                val supplierFragment: SupplierFragment =
 //                    mFragManager?.findFragmentByTag(FRAG_SUPPLIER.toString()) as SupplierFragment
@@ -160,6 +160,8 @@ class HomeActivity : AppCompatActivity() {
         newFrag = ProductDetailsFragment()
         val b= Bundle()
         b.putParcelable(Product::class.java?.getSimpleName(), product)
+//        var list: ArrayList<Product> = arrayListOf()
+//        b.putParcelableArrayList(Product::class.java?.getSimpleName(), list)
 
         newFrag.setArguments(b)
 
@@ -205,8 +207,8 @@ class HomeActivity : AppCompatActivity() {
             FRAG_STORE -> {
                 newFrag = CartFragment()
             }
-            FRAG_ORDER -> {
-                newFrag = OrderFragment()
+            FRAG_WISHLIST -> {
+                newFrag = WishListFragment()
             }
             FRAG_SETTINGS -> {
                 newFrag = SettingsFragment()
@@ -254,11 +256,11 @@ class HomeActivity : AppCompatActivity() {
                 tv_title.text = resources.getString(R.string.cart)
 
             }
-            FRAG_ORDER -> {
+            FRAG_WISHLIST -> {
                 ll_back_header?.visibility = View.GONE
                 rlt_header?.visibility = View.VISIBLE
 
-                tv_title.text = resources.getString(R.string.order)
+                tv_title.text = resources.getString(R.string.wish_list)
 
             }
             FRAG_SETTINGS -> {
@@ -317,12 +319,12 @@ class HomeActivity : AppCompatActivity() {
                 btn_footer_store.setSelected(true)
                 tv_store_menu.setSelected(true)
             }
-            FRAG_ORDER -> {
+            FRAG_WISHLIST -> {
                 shadow_line?.visibility = View.VISIBLE
                 bottom_navigation?.visibility = View.VISIBLE
 
-                btn_footer_orders.setSelected(true)
-                tv_orders_menu.setSelected(true)
+                btn_footer_wish_list.setSelected(true)
+                tv_wish_list_menu.setSelected(true)
             }
             FRAG_SETTINGS-> {
                 shadow_line?.visibility = View.VISIBLE
@@ -353,8 +355,8 @@ class HomeActivity : AppCompatActivity() {
         btn_footer_store.setSelected(false)
         tv_store_menu.setSelected(false)
 
-        btn_footer_orders.setSelected(false)
-        tv_orders_menu.setSelected(false)
+        btn_footer_wish_list.setSelected(false)
+        tv_wish_list_menu.setSelected(false)
 
         btn_footer_settings.setSelected(false)
         tv_settings_menu.setSelected(false)

@@ -8,25 +8,32 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 
 import com.evan.dokan.R
 import com.evan.dokan.data.db.entities.Product
-import com.evan.dokan.data.network.post.Push
-import com.evan.dokan.data.network.post.PushPost
 import com.evan.dokan.ui.home.HomeViewModel
 import com.evan.dokan.ui.home.HomeViewModelFactory
 import com.evan.dokan.ui.home.dashboard.category.CategoryAdapter
+import com.evan.dokan.ui.home.wishlist.IWishDeleteListener
+import com.evan.dokan.ui.home.wishlist.IWishListCreateListener
 import com.evan.dokan.util.SharedPreferenceUtil
+import com.evan.dokan.util.hide
+import com.evan.dokan.util.show
 import com.google.gson.Gson
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
+import java.text.SimpleDateFormat
+import java.util.*
 
 
-class ProductDetailsFragment : Fragment() ,KodeinAware,IProductLikeListener{
+class ProductDetailsFragment : Fragment() ,KodeinAware,IProductLikeListener,
+    IWishListCreateListener, IWishDeleteListener {
     override val kodein by kodein()
 
     var categoryAdapter: CategoryAdapter?=null
@@ -43,6 +50,7 @@ class ProductDetailsFragment : Fragment() ,KodeinAware,IProductLikeListener{
     var img_like:ImageView?=null
     var img_plus:ImageView?=null
     var img_minus:ImageView?=null
+    var progress_bar:ProgressBar?=null
     var is_like:Boolean?=null
     var token:String?=""
     var quantity:Int?=1
@@ -54,7 +62,10 @@ class ProductDetailsFragment : Fragment() ,KodeinAware,IProductLikeListener{
         val root= inflater.inflate(R.layout.fragment_product_details, container, false)
         viewModel = ViewModelProviders.of(this, factory).get(HomeViewModel::class.java)
         viewModel.productLikeListener=this
+        viewModel.wishListCreateListener=this
+        viewModel.wishDeleteListener=this
         img_product=root?.findViewById(R.id.img_product)
+        progress_bar=root?.findViewById(R.id.progress_bar)
         img_plus=root?.findViewById(R.id.img_plus)
         img_like=root?.findViewById(R.id.img_like)
         text_quantity=root?.findViewById(R.id.text_quantity)
@@ -94,15 +105,17 @@ class ProductDetailsFragment : Fragment() ,KodeinAware,IProductLikeListener{
             }
 
         }
+        val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+        val currentDate = sdf.format(Date())
         token = SharedPreferenceUtil.getShared(activity!!, SharedPreferenceUtil.TYPE_AUTH_TOKEN)
         viewModel.getProductLike(token!!,product?.Id!!,product?.ShopUserId!!)
         img_like?.setOnClickListener {
             if (!is_like!!) {
-
+                viewModel?.createWishList(token!!,product?.ShopUserId!!,product?.Id!!,1,currentDate)
                 img_like?.isSelected = true
                 is_like = true
             } else {
-
+                viewModel?.deleteWishList(token!!,product?.ShopUserId!!,product?.Id!!)
                 img_like?.isSelected = false
                 is_like = false
             }
@@ -128,6 +141,23 @@ class ProductDetailsFragment : Fragment() ,KodeinAware,IProductLikeListener{
     override fun onBoolean(response: Boolean) {
         is_like=response
         img_like?.isSelected = response!!
+    }
+
+    override fun onSuccess(message: String) {
+       Toast.makeText(context!!,message,Toast.LENGTH_SHORT).show()
+
+    }
+
+    override fun onStarted() {
+        progress_bar?.show()
+    }
+
+    override fun onEnd() {
+        progress_bar?.hide()
+    }
+
+    override fun onFailure(message: String) {
+        Toast.makeText(context!!,message,Toast.LENGTH_SHORT).show()
     }
 
 }

@@ -8,6 +8,7 @@
 
 
     <LinearLayout
+            android:layout_marginTop="2dp"
             android:id="@+id/footer"
             android:layout_width="match_parent"
             android:layout_height="60dp"
@@ -73,7 +74,15 @@
                     android:layout_centerHorizontal="true"
                     android:background="@color/transparent"
                     android:src="@drawable/img_footer_store_selector" />
-
+            <TextView
+                    android:background="@drawable/background_circle"
+                    android:layout_marginLeft="57dp"
+                    android:text="3"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"/>
             <TextView
                     android:id="@+id/tv_store_menu"
                     android:layout_width="wrap_content"
@@ -99,11 +108,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/transparent"
-                    android:onClick="btn_orders_clicked"
+                    android:onClick="btn_wish_list_clicked"
                     android:stateListAnimator="@null" />
 
             <ImageView
-                    android:id="@+id/btn_footer_orders"
+                    android:id="@+id/btn_footer_wish_list"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
                     android:layout_marginTop="8dp"
@@ -112,7 +121,16 @@
                     android:src="@drawable/img_footer_orders_selector" />
 
             <TextView
-                    android:id="@+id/tv_orders_menu"
+                    android:background="@drawable/background_circle"
+                    android:layout_marginLeft="57dp"
+                    android:text="7"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"/>
+            <TextView
+                    android:id="@+id/tv_wish_list_menu"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentBottom="true"
@@ -120,7 +138,7 @@
                     android:gravity="center_horizontal|bottom"
                     android:textSize="12sp"
                     android:layout_marginBottom="8dp"
-                    android:text="Orders"
+                    android:text="Wish List"
                     android:textColor="@color/color_menu_selector"
                     />
         </RelativeLayout>
