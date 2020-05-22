@@ -34,5 +34,13 @@ class HomeRepository (
     suspend fun getProductLike(header:String, post: ProductLikePost): BasicResponses {
         return apiRequest { api.getProductLike(header,post) }
     }
-
+    suspend fun createWishList(header:String, post: WishListCreatePost): BasicResponses {
+        return apiRequest { api.createWishList(header,post) }
+    }
+    suspend fun deleteWishList(header:String, post: WishListDeletedPost): BasicResponses {
+        return apiRequest { api.deleteWishList(header,post) }
+    }
+    suspend fun getWishList(header:String, post: ShopUserIdPost): ProductResponses {
+        return apiRequest { api.getWishList(header,post) }
+    }
 }

@@ -62,6 +62,8 @@ class ProductCategoryWiseListFragment : Fragment() , KodeinAware,IProductCategor
         viewModel.productCategoryWiseListener=this
         token = SharedPreferenceUtil.getShared(activity!!, SharedPreferenceUtil.TYPE_AUTH_TOKEN)
         edit_content?.addTextChangedListener(keyword)
+        initAdapter()
+        initState()
         return root
     }
     fun replace(){
@@ -72,8 +74,7 @@ class ProductCategoryWiseListFragment : Fragment() , KodeinAware,IProductCategor
         super.onResume()
         // viewModel.getCategoryType(token!!)
         Log.e("stop","stop")
-        initAdapter()
-        initState()
+
     }
 
     private fun initAdapter() {
