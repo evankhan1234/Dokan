@@ -31,5 +31,8 @@ class HomeRepository (
     suspend fun getProductSearchCategory(header:String, post: ProductSearchPost): ProductResponses {
         return apiRequest { api.getProductSearchCategory(header,post) }
     }
+    suspend fun getProductLike(header:String, post: ProductLikePost): BasicResponses {
+        return apiRequest { api.getProductLike(header,post) }
+    }
 
 }

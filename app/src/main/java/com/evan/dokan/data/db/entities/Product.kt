@@ -31,7 +31,7 @@ data class Product (
     @SerializedName("Discount")
     var Discount: Double?,
     @SerializedName("ShopUserId")
-    var ShopUserId: String?,
+    var ShopUserId: Int?,
     @SerializedName("Created")
     var Created: String?,
     @SerializedName("ProductCategoryId")
@@ -39,5 +39,7 @@ data class Product (
     @SerializedName("Status")
     var Status: Int?,
     @SerializedName("UnitName")
-    var UnitName: String?
+    var UnitName: String?,
+    @SerializedName("WishId")
+    var WishId: Int?
 ): Parcelable

@@ -55,6 +55,8 @@
                         app:riv_corner_radius="10dp"
                         app:riv_mutate_background="true"
                         />
+
+
                 <TextView
                         android:layout_marginTop="15dp"
                         android:id="@+id/tv_product_name"
@@ -67,20 +69,35 @@
 
                         android:textColor="@color/black_again"
                         android:textSize="15sp" />
-                <TextView
-                        android:layout_marginTop="8dp"
-                        android:id="@+id/tv_product_price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:gravity="center_vertical"
-                        android:letterSpacing=".00"
-                        android:maxLines="1"
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                        android:textColor="@color/black_again"
-                        android:textSize="15sp" />
+                    <TextView
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginTop="8dp"
+                            android:id="@+id/tv_product_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:gravity="center_vertical"
+                            android:letterSpacing=".00"
+                            android:maxLines="1"
+                            android:textColor="@color/black_again"
+                            android:textSize="15sp" />
+                    <ImageView
+                            android:layout_alignParentRight="true"
+                            android:id="@+id/img_like"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_gravity="end"
+                            android:background="@color/transparent"
+                            android:src="@drawable/img_like" />
+                </RelativeLayout>
+
                 <TextView
-                        android:layout_marginTop="8dp"
+
                         android:id="@+id/tv_product_code"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

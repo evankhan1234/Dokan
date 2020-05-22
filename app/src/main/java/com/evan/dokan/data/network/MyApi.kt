@@ -34,6 +34,11 @@ interface MyApi {
         @Header("Authorization") Authorization:String,
         @Body productPost: ProductPost
     ): Response<ProductResponses>
+    @POST("product-like.php")
+    suspend fun getProductLike(
+        @Header("Authorization") Authorization:String,
+        @Body productLikePost: ProductLikePost
+    ): Response<BasicResponses>
     @POST("customer-product-category.php")
     suspend fun getCategory(
         @Header("Authorization") Authorization:String,
