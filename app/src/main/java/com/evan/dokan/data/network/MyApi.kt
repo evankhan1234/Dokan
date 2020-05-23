@@ -44,6 +44,17 @@ interface MyApi {
         @Header("Authorization") Authorization:String,
         @Body wishListCreatePost: WishListCreatePost
     ): Response<BasicResponses>
+    @POST("delete-cart-items.php")
+    suspend fun  deleteCartList(
+        @Header("Authorization") Authorization:String,
+        @Body deleteCartPost: DeleteCartPost
+    ): Response<BasicResponses>
+    @POST("update-cart-order-details.php")
+    suspend fun  updateCartOrderDetails(
+        @Header("Authorization") Authorization:String,
+        @Body cartOrderDetailsPost: CartOrderDetailsPost
+    ): Response<BasicResponses>
+
     @POST("delete-wish-list-product.php")
     suspend fun  deleteWishList(
         @Header("Authorization") Authorization:String,
@@ -54,6 +65,26 @@ interface MyApi {
         @Header("Authorization") Authorization:String,
         @Body shopUserIdPost: ShopUserIdPost
     ): Response<ProductResponses>
+    @POST("create-customer-order.php")
+    suspend fun  postOrderList(
+        @Header("Authorization") Authorization:String,
+        @Body customerOrderPost: CustomerOrderPost
+    ): Response<BasicResponses>
+    @POST("update-cart-quantity.php")
+    suspend fun  updateCartQuantity(
+        @Header("Authorization") Authorization:String,
+        @Body cartListQuantityPost: CartListQuantityPost
+    ): Response<BasicResponses>
+    @POST("cart-list-get.php")
+    suspend fun  getCartList(
+        @Header("Authorization") Authorization:String,
+        @Body shopUserIdPost: ShopUserIdPost
+    ): Response<CartListResponses>
+    @POST("create-cart-list.php")
+    suspend fun  createCart(
+        @Header("Authorization") Authorization:String,
+        @Body cartCreatePost: CartCreatePost
+    ): Response<BasicResponses>
     @POST("customer-product-category.php")
     suspend fun getCategory(
         @Header("Authorization") Authorization:String,

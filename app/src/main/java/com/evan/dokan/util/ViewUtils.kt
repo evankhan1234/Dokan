@@ -307,3 +307,52 @@ fun showDialogSuccessMessage(
     }
     infoDialog.show()
 }
+fun showDialogSuccessfull(
+    mContext: Context,
+    body: String?,
+    positiveAction: String?,
+    negetiveAction: String?,
+    dialogCallback: com.evan.dokan.util.DialogActionListener
+) {
+    val infoDialog = CustomDialog(mContext, R.style.CustomDialogTheme)
+    val inflator =
+        mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    val v: View = inflator.inflate(R.layout.layout_successfull_pop_up, null)
+    infoDialog.setContentView(v)
+    infoDialog.getWindow()?.setLayout(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.MATCH_PARENT
+    )
+    val main_root =
+        infoDialog.findViewById(R.id.main_root) as RelativeLayout
+    val btnOK = infoDialog.findViewById(R.id.btn_ok) as Button
+    val btnCancel =
+        infoDialog.findViewById(R.id.btn_cancel) as Button
+    val tv_info =
+        infoDialog.findViewById(R.id.tv_info) as TextView
+    if (body == null) {
+        tv_info.visibility = View.GONE
+    } else {
+        tv_info.visibility = View.VISIBLE
+        tv_info.text = body
+    }
+    if (positiveAction != null) {
+        btnOK.text = positiveAction
+    }
+    if (negetiveAction != null) {
+        btnCancel.text = negetiveAction
+    }
+    btnOK.setOnClickListener {
+        //your business logic
+
+        dialogCallback?.onPositiveClick()
+        infoDialog.dismiss()
+    }
+    btnCancel.setOnClickListener {
+        //your business logic
+
+        dialogCallback?.onNegativeClick()
+        infoDialog.dismiss()
+    }
+    infoDialog.show()
+}

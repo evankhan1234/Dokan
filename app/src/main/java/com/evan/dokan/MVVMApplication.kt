@@ -4,6 +4,7 @@ import android.app.Application
 import com.evan.dokan.data.db.AppDatabase
 import com.evan.dokan.data.network.MyApi
 import com.evan.dokan.data.network.NetworkConnectionInterceptor
+import com.evan.dokan.data.network.PushApi
 import com.evan.dokan.data.preferences.PreferenceProvider
 import com.evan.dokan.data.repositories.HomeRepository
 import com.evan.dokan.data.repositories.QuotesRepository
@@ -37,10 +38,11 @@ class MVVMApplication : Application(), KodeinAware {
 
         bind() from singleton { NetworkConnectionInterceptor(instance()) }
         bind() from singleton { MyApi(instance()) }
+        bind() from singleton { PushApi(instance()) }
         bind() from singleton { AppDatabase(instance()) }
         bind() from singleton { PreferenceProvider(instance()) }
         bind() from singleton { UserRepository(instance(), instance()) }
-        bind() from singleton { HomeRepository(instance()) }
+        bind() from singleton { HomeRepository(instance(),instance()) }
         bind() from singleton { QuotesRepository(instance(), instance(), instance()) }
         bind() from provider { AuthViewModelFactory(instance()) }
         bind() from provider { ShopModelFactory(instance(),instance()) }
