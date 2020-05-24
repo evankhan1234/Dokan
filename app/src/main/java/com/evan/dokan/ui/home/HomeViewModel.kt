@@ -4,11 +4,13 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.evan.dokan.data.network.post.*
 import com.evan.dokan.data.repositories.HomeRepository
+import com.evan.dokan.ui.home.cart.ICartCountListener
 import com.evan.dokan.ui.home.cart.ICartListDeleteListener
 import com.evan.dokan.ui.home.cart.ICartListListener
 import com.evan.dokan.ui.home.dashboard.category.ICategoryListListener
 import com.evan.dokan.ui.home.dashboard.product.details.ICreateCartListener
 import com.evan.dokan.ui.home.dashboard.product.details.IProductLikeListener
+import com.evan.dokan.ui.home.wishlist.IWishCountListener
 import com.evan.dokan.ui.home.wishlist.IWishDeleteListener
 import com.evan.dokan.ui.home.wishlist.IWishListCreateListener
 import com.evan.dokan.ui.home.wishlist.IWishListListener
@@ -37,6 +39,8 @@ class HomeViewModel (
     var createCartListener: ICreateCartListener?=null
     var cartListListener: ICartListListener?=null
     var cartListDeleteListener: ICartListDeleteListener?=null
+    var wishCountListener: IWishCountListener?=null
+    var cartCountListener: ICartCountListener?=null
     fun getCategory(token:String,shopUserId:Int) {
         categoryListListener?.onStarted()
         Coroutines.main {
@@ -253,5 +257,36 @@ class HomeViewModel (
         }
 
     }
+    fun countWishList(header:String,shopUserId:Int) {
+        Coroutines.main {
+            try {
+                shopUserIdPost= ShopUserIdPost(shopUserId)
+                Log.e("response", "response" + Gson().toJson(shopUserIdPost))
+                val response = repository.countWishList(header,shopUserIdPost!!)
+                wishCountListener?.onWishCount(response?.count!!)
+                Log.e("response", "response" + Gson().toJson(response))
+            } catch (e: ApiException) {
 
+            } catch (e: NoInternetException) {
+
+            }
+        }
+
+    }
+    fun countCartList(header:String,shopUserId:Int) {
+        Coroutines.main {
+            try {
+                shopUserIdPost= ShopUserIdPost(shopUserId)
+                Log.e("response", "response" + Gson().toJson(shopUserIdPost))
+                val response = repository.countCartList(header,shopUserIdPost!!)
+                Log.e("response", "response" + Gson().toJson(response))
+                cartCountListener?.onCartCount(response?.count!!)
+            } catch (e: ApiException) {
+
+            } catch (e: NoInternetException) {
+
+            }
+        }
+
+    }
 }

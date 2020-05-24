@@ -153,13 +153,18 @@ class ProductDetailsFragment : Fragment() ,KodeinAware,IProductLikeListener,
 
     override fun onSuccess(message: String) {
        Toast.makeText(context!!,message,Toast.LENGTH_SHORT).show()
-
+        if (activity is HomeActivity) {
+            (activity as HomeActivity).onCount()
+        }
     }
 
     override fun onSuccessCart(message: String) {
         Toast.makeText(context!!,message,Toast.LENGTH_SHORT).show()
         if (activity is HomeActivity) {
             (activity as HomeActivity).onBackPressed()
+        }
+        if (activity is HomeActivity) {
+            (activity as HomeActivity).onCount()
         }
     }
 

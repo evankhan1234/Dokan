@@ -8,33 +8,52 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.evan.dokan.R
 import com.evan.dokan.data.db.entities.Product
+import com.evan.dokan.ui.auth.AuthViewModelFactory
 import com.evan.dokan.ui.home.cart.CartFragment
+import com.evan.dokan.ui.home.cart.ICartCountListener
 import com.evan.dokan.ui.home.dashboard.DashboardFragment
 import com.evan.dokan.ui.home.dashboard.product.ProductCategoryWiseListFragment
 import com.evan.dokan.ui.home.dashboard.product.details.ProductDetailsFragment
 import com.evan.dokan.ui.home.order.OrderFragment
 import com.evan.dokan.ui.home.settings.SettingsFragment
+import com.evan.dokan.ui.home.wishlist.IWishCountListener
 import com.evan.dokan.ui.home.wishlist.WishListFragment
 import com.evan.dokan.ui.shop.ShopActivity
 import com.evan.dokan.util.*
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_layout.*
 import kotlinx.android.synthetic.main.bottom_navigation_layout.*
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.kodein
+import org.kodein.di.generic.instance
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCountListener{
     var mFragManager: FragmentManager? = null
     var fragTransaction: FragmentTransaction? = null
     var mCurrentFrag: Fragment? = null
     var CURRENT_PAGE: Int? = 1
     var shop_user_id:Int?=0
+    override val kodein by kodein()
+    private val factory : HomeViewModelFactory by instance()
+    private lateinit var viewModel: HomeViewModel
+    var token:String?=""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+        viewModel = ViewModelProviders.of(this, factory).get(HomeViewModel::class.java)
+        viewModel.cartCountListener=this
+        viewModel.wishCountListener=this
+        token = SharedPreferenceUtil.getShared(this, SharedPreferenceUtil.TYPE_AUTH_TOKEN)
+
         shop_user_id=intent.getIntExtra("ShopUserId",0)
+        viewModel.countCartList(token!!,shop_user_id!!)
+        viewModel.countWishList(token!!,shop_user_id!!)
         Log.e("shop_user_id","shop_user_id: "+shop_user_id)
         setUpHeader(FRAG_TOP)
         afterClickTabItem(FRAG_TOP, null)
@@ -45,6 +64,10 @@ class HomeActivity : AppCompatActivity() {
         img_back?.setOnClickListener {
             finish()
         }
+    }
+    fun onCount(){
+        viewModel.countCartList(token!!,shop_user_id!!)
+        viewModel.countWishList(token!!,shop_user_id!!)
     }
     fun btn_home_clicked(view: View) {
         setUpHeader(FRAG_TOP)
@@ -370,5 +393,25 @@ class HomeActivity : AppCompatActivity() {
                 R.anim.view_transition_out_right
             )
         }
+    }
+
+    override fun onWishCount(count: Int) {
+        if(count==0){
+            tv_wish_count?.visibility=View.GONE
+        }
+        else{
+            tv_wish_count?.visibility=View.VISIBLE
+        }
+        tv_wish_count?.text=count.toString()
+    }
+
+    override fun onCartCount(count: Int) {
+        if(count==0){
+            tv_cart_count?.visibility=View.GONE
+        }
+        else{
+            tv_cart_count?.visibility=View.VISIBLE
+        }
+        tv_cart_count?.text=count.toString()
     }
 }

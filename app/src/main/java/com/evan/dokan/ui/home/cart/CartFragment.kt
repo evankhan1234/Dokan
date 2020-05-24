@@ -19,6 +19,7 @@ import com.evan.bazar.ui.custom.CustomDialog
 import com.evan.dokan.R
 import com.evan.dokan.data.db.entities.Cart
 import com.evan.dokan.data.network.post.*
+import com.evan.dokan.ui.home.HomeActivity
 import com.evan.dokan.ui.home.HomeViewModel
 import com.evan.dokan.ui.home.HomeViewModelFactory
 import com.evan.dokan.ui.home.wishlist.WishListAdapter
@@ -121,6 +122,9 @@ class CartFragment : Fragment() ,KodeinAware,ICartListListener,ICartDeleteListen
 
     override fun onSuccess(message: String) {
         Toast.makeText(context!!,message, Toast.LENGTH_SHORT).show()
+        if (activity is HomeActivity) {
+            (activity as HomeActivity).onCount()
+        }
     }
 
     override fun onStarted() {
@@ -209,7 +213,7 @@ class CartFragment : Fragment() ,KodeinAware,ICartListListener,ICartDeleteListen
                             override fun onPositiveClick() {
                                 cartAdapter?.notifyDataSetChanged()
                                 cart_list?.clear()
-                                push= Push("Evan","Khan")
+                                push= Push("Orders","You have received a new Order")
                                 pushPost= PushPost("dLUUTXsxTMuVuo0dJCS7Vp:APA91bHIndSf7cvchmC_0fii1MJfmu5W1FoCIeydrDo5VPdxRDLxZezC6GLxBTGYP8r3mYfJp6TRnPhZJdIcirbIaEhz3OQyqiXxcFA8SJOBsEXsE2xwnkpF-_p6YbCh_NZz-K1E1ouP",push)
                                 viewModel.sendPush("key=AAAAdCyJ2hw:APA91bGF6x20oQnuC2ZeAXsJju-OCAZ67dBpQvaLx7h18HSAnhl9CPWupCJaV0552qJvm1qIHL_LAZoOvv5oWA9Iraar_XQkWe3JEUmJ1v7iKq09QYyPB3ZGMeSinzC-GlKwpaJU_IvO",pushPost!!)
                                 onData()

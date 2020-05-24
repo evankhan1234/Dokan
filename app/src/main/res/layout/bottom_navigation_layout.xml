@@ -75,9 +75,11 @@
                     android:background="@color/transparent"
                     android:src="@drawable/img_footer_store_selector" />
             <TextView
+                    android:paddingTop="2dp"
+                    android:id="@+id/tv_cart_count"
                     android:background="@drawable/background_circle"
                     android:layout_marginLeft="57dp"
-                    android:text="3"
+                    android:text="0"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="11sp"
@@ -121,9 +123,11 @@
                     android:src="@drawable/img_footer_orders_selector" />
 
             <TextView
+                    android:paddingTop="2dp"
+                    android:id="@+id/tv_wish_count"
                     android:background="@drawable/background_circle"
                     android:layout_marginLeft="57dp"
-                    android:text="7"
+                    android:text="0"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="11sp"
