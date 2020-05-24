@@ -44,6 +44,16 @@ interface MyApi {
         @Header("Authorization") Authorization:String,
         @Body wishListCreatePost: WishListCreatePost
     ): Response<BasicResponses>
+    @POST("wish-list-count.php")
+    suspend fun  countWishList(
+        @Header("Authorization") Authorization:String,
+        @Body shopUserIdPost: ShopUserIdPost
+    ): Response<CountResponses>
+    @POST("cart-list-count.php")
+    suspend fun  countCartList(
+        @Header("Authorization") Authorization:String,
+        @Body shopUserIdPost: ShopUserIdPost
+    ): Response<CountResponses>
     @POST("delete-cart-items.php")
     suspend fun  deleteCartList(
         @Header("Authorization") Authorization:String,

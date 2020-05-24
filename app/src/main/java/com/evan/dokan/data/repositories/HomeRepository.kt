@@ -66,6 +66,10 @@ class HomeRepository (
     suspend fun sendPush(header:String, post: PushPost): PushResponses {
         return apiRequest { push_api.sendPush(header,post) }
     }
-
-
+    suspend fun countWishList(header:String, post: ShopUserIdPost): CountResponses {
+        return apiRequest { api.countWishList(header,post) }
+    }
+    suspend fun countCartList(header:String, post: ShopUserIdPost): CountResponses {
+        return apiRequest { api.countCartList(header,post) }
+    }
 }

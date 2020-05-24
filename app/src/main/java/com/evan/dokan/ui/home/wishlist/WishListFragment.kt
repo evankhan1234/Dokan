@@ -62,6 +62,9 @@ class WishListFragment : Fragment() ,KodeinAware,IWishListListener,
 
     override fun onSuccess(message: String) {
         Toast.makeText(context!!,message, Toast.LENGTH_SHORT).show()
+        if (activity is HomeActivity) {
+            (activity as HomeActivity).onCount()
+        }
     }
 
     override fun onStarted() {
@@ -86,6 +89,7 @@ class WishListFragment : Fragment() ,KodeinAware,IWishListListener,
     override fun onProduct(product: Product) {
         viewModel?.deleteWishList(token!!,product?.ShopUserId!!,product?.Id!!)
         wishAdapter?.notifyDataSetChanged()
+
     }
     fun removeChild() {
         val f =
