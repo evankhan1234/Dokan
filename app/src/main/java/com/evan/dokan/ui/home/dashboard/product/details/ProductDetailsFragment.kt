@@ -7,15 +7,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 
 import com.evan.dokan.R
 import com.evan.dokan.data.db.entities.Product
+import com.evan.dokan.ui.home.HomeActivity
 import com.evan.dokan.ui.home.HomeViewModel
 import com.evan.dokan.ui.home.HomeViewModelFactory
 import com.evan.dokan.ui.home.dashboard.category.CategoryAdapter
@@ -33,7 +31,7 @@ import java.util.*
 
 
 class ProductDetailsFragment : Fragment() ,KodeinAware,IProductLikeListener,
-    IWishListCreateListener, IWishDeleteListener {
+    IWishListCreateListener, IWishDeleteListener,ICreateCartListener {
     override val kodein by kodein()
 
     var categoryAdapter: CategoryAdapter?=null
@@ -50,10 +48,12 @@ class ProductDetailsFragment : Fragment() ,KodeinAware,IProductLikeListener,
     var img_like:ImageView?=null
     var img_plus:ImageView?=null
     var img_minus:ImageView?=null
+    var btn_ok:Button?=null
     var progress_bar:ProgressBar?=null
     var is_like:Boolean?=null
     var token:String?=""
     var quantity:Int?=1
+    var total_price: Double? = 0.0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -64,6 +64,8 @@ class ProductDetailsFragment : Fragment() ,KodeinAware,IProductLikeListener,
         viewModel.productLikeListener=this
         viewModel.wishListCreateListener=this
         viewModel.wishDeleteListener=this
+        viewModel.createCartListener=this
+        btn_ok=root?.findViewById(R.id.btn_ok)
         img_product=root?.findViewById(R.id.img_product)
         progress_bar=root?.findViewById(R.id.progress_bar)
         img_plus=root?.findViewById(R.id.img_plus)
@@ -88,7 +90,7 @@ class ProductDetailsFragment : Fragment() ,KodeinAware,IProductLikeListener,
                 var product_code: String = ""
                 var product_details: String = ""
                 var product_stock: String = ""
-                var total_price: Double? = 0.0
+
                 total_price=product?.SellPrice!!-product?.Discount!!
                 product_name = "<b> <font color=#BF3E15>Product Name: </font> : </b>" + product?.Name.toString()
                 product_stock = "<b> <font color=#BF3E15>Stock: </font> : </b>" + product?.Stock.toString()+" "+product?.UnitName
@@ -135,6 +137,12 @@ class ProductDetailsFragment : Fragment() ,KodeinAware,IProductLikeListener,
             }
 
         }
+        btn_ok?.setOnClickListener {
+
+            val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+            val currentDate = sdf.format(Date())
+            viewModel.createCart(token!!,product?.Name!!,total_price!!,quantity!!,product?.Id!!,1,product?.ShopUserId!!,product?.ProductImage!!,currentDate)
+        }
             return root
     }
 
@@ -146,6 +154,13 @@ class ProductDetailsFragment : Fragment() ,KodeinAware,IProductLikeListener,
     override fun onSuccess(message: String) {
        Toast.makeText(context!!,message,Toast.LENGTH_SHORT).show()
 
+    }
+
+    override fun onSuccessCart(message: String) {
+        Toast.makeText(context!!,message,Toast.LENGTH_SHORT).show()
+        if (activity is HomeActivity) {
+            (activity as HomeActivity).onBackPressed()
+        }
     }
 
     override fun onStarted() {

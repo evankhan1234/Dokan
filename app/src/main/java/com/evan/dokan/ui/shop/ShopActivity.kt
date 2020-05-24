@@ -43,7 +43,7 @@ class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateL
     var shop_adapter:ShopAdapter?=null
     var shoplist_adapter:ShopListAdapter?=null
     var activity: Activity?=null
-    private lateinit var viewModel: ShopViewModel
+    private  var viewModel: ShopViewModel?=null
 
     var rcv_shop:RecyclerView?=null
     var rcv_shop_search:RecyclerView?=null
@@ -65,7 +65,7 @@ class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateL
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop)
         viewModel = ViewModelProviders.of(this, factory).get(ShopViewModel::class.java)
-         viewModel.shopListener=this
+         viewModel?.shopListener=this
         activity=this
         edit_content=findViewById(R.id.edit_content)
         rcv_shop=findViewById(R.id.rcv_shop)
@@ -108,7 +108,7 @@ class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateL
         }
     }
     fun replace(){
-        viewModel.replaceSubscription(this)
+        viewModel?.replaceSubscription(this)
         startListening()
     }
     override fun onResume() {
@@ -130,7 +130,7 @@ class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateL
         rcv_shop_search?.visibility= View.GONE
         rcv_shop?.visibility= View.VISIBLE
 
-        viewModel.listOfAlerts?.observe(this, Observer {
+        viewModel?.listOfAlerts?.observe(this, Observer {
             shop_adapter?.submitList(it)
         })
 
@@ -138,7 +138,7 @@ class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateL
 
 
     private fun initState() {
-        viewModel.getNetworkState().observe(this, Observer { state ->
+        viewModel?.getNetworkState()?.observe(this, Observer { state ->
             when (state.status) {
                 NetworkState.Status.LOADIND -> {
                     progress_bar?.visibility= View.VISIBLE
@@ -154,7 +154,7 @@ class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateL
     }
 
     override fun show(data: MutableList<Shop>) {
-        viewModel.replaceSubscription(this)
+        viewModel?.replaceSubscription(this)
         rcv_shop_search?.visibility= View.VISIBLE
         rcv_shop?.visibility= View.GONE
         shoplist_adapter = ShopListAdapter(this,data!!,this)
@@ -202,7 +202,7 @@ class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateL
                 else{
                     var keyword:String?=""
                     keyword=s.toString()+"%"
-                    viewModel.getSearch(token!!,keyword)
+                    viewModel?.getSearch(token!!,keyword)
                 }
 
             } catch (e: Exception) {
@@ -216,7 +216,7 @@ class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateL
     override fun exit(){
         rcv_shop_search?.visibility= View.GONE
         rcv_shop?.visibility= View.GONE
-        viewModel.replaceSubscription(this)
+        viewModel?.replaceSubscription(this)
     }
 
     private fun enableView() {
