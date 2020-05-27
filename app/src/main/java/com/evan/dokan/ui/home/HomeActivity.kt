@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.evan.dokan.R
+import com.evan.dokan.data.db.entities.Order
 import com.evan.dokan.data.db.entities.Product
 import com.evan.dokan.ui.auth.AuthViewModelFactory
 import com.evan.dokan.ui.home.cart.CartFragment
@@ -20,6 +21,7 @@ import com.evan.dokan.ui.home.dashboard.DashboardFragment
 import com.evan.dokan.ui.home.dashboard.product.ProductCategoryWiseListFragment
 import com.evan.dokan.ui.home.dashboard.product.details.ProductDetailsFragment
 import com.evan.dokan.ui.home.order.OrderFragment
+import com.evan.dokan.ui.home.order.details.OrderDetailsFragment
 import com.evan.dokan.ui.home.settings.SettingsFragment
 import com.evan.dokan.ui.home.wishlist.IWishCountListener
 import com.evan.dokan.ui.home.wishlist.WishListFragment
@@ -64,6 +66,11 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
         img_back?.setOnClickListener {
             finish()
         }
+        btn_orders?.setOnClickListener {
+            setUpHeader(FRAG_ORDER)
+            afterClickTabItem(FRAG_ORDER, null)
+            setUpFooter(FRAG_ORDER)
+        }
     }
     fun onCount(){
         viewModel.countCartList(token!!,shop_user_id!!)
@@ -100,7 +107,13 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
 
     @Suppress("UNUSED_PARAMETER")
     fun afterClickTabItem(fragId: Int, obj: Any?) {
-        addFragment(fragId, false, obj)
+        if(fragId==7){
+            addFragment(fragId, true, obj)
+        }
+        else{
+            addFragment(fragId, false, obj)
+        }
+
     }
     fun goToProductListCategoryFragment() {
         setUpHeader(FRAG_CATEGORY)
@@ -130,6 +143,18 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
                 storeFragment.removeChild()
                 setUpHeader(FRAG_WISHLIST )
             }
+            else if (f is CartFragment) {
+                val cartFragment: CartFragment =
+                    mFragManager?.findFragmentByTag(FRAG_STORE.toString()) as CartFragment
+               // cartFragment.removeChild()
+                setUpHeader(FRAG_STORE )
+            }
+            else if (f is OrderFragment) {
+                val orderFragment: OrderFragment =
+                    mFragManager?.findFragmentByTag(FRAG_ORDER.toString()) as OrderFragment
+                //storeFragment.removeChild()
+                setUpHeader(FRAG_ORDER )
+            }
 //            if (f is SupplierFragment) {
 //                val supplierFragment: SupplierFragment =
 //                    mFragManager?.findFragmentByTag(FRAG_SUPPLIER.toString()) as SupplierFragment
@@ -157,6 +182,53 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
     fun backPress() {
         hideKeyboard(this)
         onBackPressed()
+
+    }
+    fun goToOrderDetailsFragment(order: Order) {
+        setUpHeader(FRAG_ORDER_DETAILS)
+        mFragManager = supportFragmentManager
+        // create transaction
+        var fragId:Int?=0
+        fragId=FRAG_ORDER_DETAILS
+        fragTransaction = mFragManager?.beginTransaction()
+        //check if there is any backstack if yes then remove it
+        val count = mFragManager?.getBackStackEntryCount()
+        if (count != 0) {
+            //this will clear the back stack and displays no animation on the screen
+            // mFragManager?.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        }
+        // check current fragment is wanted fragment
+        if (mCurrentFrag != null && mCurrentFrag!!.getTag() != null && mCurrentFrag!!.getTag() == fragId.toString()) {
+            return
+        }
+        var newFrag: Fragment? = null
+
+        // identify which fragment will be called
+
+        newFrag = OrderDetailsFragment()
+        val b= Bundle()
+        b.putParcelable(Order::class.java?.getSimpleName(), order)
+//        var list: ArrayList<Product> = arrayListOf()
+//        b.putParcelableArrayList(Product::class.java?.getSimpleName(), list)
+
+        newFrag.setArguments(b)
+
+        mCurrentFrag = newFrag
+
+        fragTransaction!!.setCustomAnimations(
+            R.anim.view_transition_in_left,
+            R.anim.view_transition_out_left,
+            R.anim.view_transition_in_right,
+            R.anim.view_transition_out_right
+        )
+
+        // param 1: container id, param 2: new fragment, param 3: fragment id
+
+        fragTransaction?.replace(R.id.main_container, newFrag!!, fragId.toString())
+        // prevent showed when user press back fabReview
+        fragTransaction?.addToBackStack(fragId.toString())
+        //  fragTransaction?.hide(active).show(guideFragment).commit();
+        fragTransaction!!.commit()
 
     }
     fun goToProductDetailsFragment(product: Product) {
@@ -239,6 +311,9 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
             FRAG_CATEGORY-> {
                 newFrag = ProductCategoryWiseListFragment()
             }
+            FRAG_ORDER-> {
+                newFrag = OrderFragment()
+            }
         }
         val b= Bundle()
         b.putInt("ShopUserId", shop_user_id!!)
@@ -272,17 +347,18 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
                 ll_back_header?.visibility = View.GONE
                 rlt_header?.visibility = View.VISIBLE
                 tv_title.text = resources.getString(R.string.home)
+                btn_footer_home.setSelected(true)
             }
             FRAG_STORE -> {
                 ll_back_header?.visibility = View.GONE
                 rlt_header?.visibility = View.VISIBLE
                 tv_title.text = resources.getString(R.string.cart)
-
+                btn_footer_store.setSelected(true)
             }
             FRAG_WISHLIST -> {
                 ll_back_header?.visibility = View.GONE
                 rlt_header?.visibility = View.VISIBLE
-
+                btn_footer_wish_list.setSelected(true)
                 tv_title.text = resources.getString(R.string.wish_list)
 
             }
@@ -305,6 +381,21 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
                 rlt_header?.visibility = View.GONE
                 tv_details.text = resources.getString(R.string.details)
                 btn_footer_home.setSelected(true)
+
+            }
+            FRAG_ORDER_DETAILS -> {
+                ll_back_header?.visibility = View.VISIBLE
+                rlt_header?.visibility = View.GONE
+                tv_details.text = resources.getString(R.string.details)
+                btn_footer_home.setSelected(true)
+
+            }
+
+            FRAG_ORDER -> {
+                ll_back_header?.visibility = View.VISIBLE
+                rlt_header?.visibility = View.GONE
+                tv_details.text = resources.getString(R.string.order)
+
 
             }
             else -> {

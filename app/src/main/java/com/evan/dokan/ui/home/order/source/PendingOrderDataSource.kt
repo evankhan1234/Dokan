@@ -1,32 +1,33 @@
-package com.evan.dokan.ui.shop
+package com.evan.dokan.ui.home.order.source
 
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
-import com.evan.dokan.data.db.entities.Shop
-import com.evan.dokan.data.network.post.LimitPost
+import com.evan.dokan.data.db.entities.Order
+import com.evan.dokan.data.network.post.PaginationLimit
 import com.evan.dokan.data.network.post.ShopPost
 import com.evan.dokan.data.repositories.HomeRepository
 import com.evan.dokan.util.*
 
-class ShopDataSource (val context: Context, val alertRepository: HomeRepository) :
-    PageKeyedDataSource<Int, Shop>() {
+class PendingOrderDataSource (val context: Context, val alertRepository: HomeRepository) :
+    PageKeyedDataSource<Int, Order>() {
 
     var networkState: MutableLiveData<NetworkState> = MutableLiveData()
-    var post: ShopPost? = null
+    var post: PaginationLimit? = null
     override fun loadInitial(
         params: LoadInitialParams<Int>,
-        callback: LoadInitialCallback<Int, Shop>
+        callback: LoadInitialCallback<Int, Order>
     ) {
         Coroutines.main {
             networkState.postValue(NetworkState.DONE)
 
-            var data=SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_LATITUDE)!!
             try {
                 networkState.postValue(NetworkState.LOADING)
-                post = ShopPost(SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_LATITUDE)!!,SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_LONGITUDE)!!,10, 1)
-                val response = alertRepository.getShopPagination(SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_AUTH_TOKEN)!!,post!!)
+                post = PaginationLimit(
+                    SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_SHOP_ID)!!.toInt(),
+                    10, 1)
+                val response = alertRepository.getPendingPagination(SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_AUTH_TOKEN)!!,post!!)
                 Log.e("response","response"+response)
                 response.success.let { isSuccessful ->
                     if (isSuccessful!!) {
@@ -52,13 +53,14 @@ class ShopDataSource (val context: Context, val alertRepository: HomeRepository)
         }
     }
 
-    override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Shop>) {
+    override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Order>) {
         Coroutines.main {
             try {
                 networkState.postValue(NetworkState.LOADING)
-                post = ShopPost(SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_LATITUDE)!!,SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_LONGITUDE)!!,10, params.key)
+                post = PaginationLimit(
+                    SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_SHOP_ID)!!.toInt(), 10, params.key)
                 val response =
-                    alertRepository.getShopPagination(SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_AUTH_TOKEN)!!,post!!)
+                    alertRepository.getPendingPagination(SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_AUTH_TOKEN)!!,post!!)
                 response.success.let { isSuccessful ->
                     if (isSuccessful!!) {
                         val nextPageKey =
@@ -84,7 +86,7 @@ class ShopDataSource (val context: Context, val alertRepository: HomeRepository)
         }
     }
 
-    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Shop>) {
+    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Order>) {
     }
 
 

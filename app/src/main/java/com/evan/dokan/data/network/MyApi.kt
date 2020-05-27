@@ -34,6 +34,26 @@ interface MyApi {
         @Header("Authorization") Authorization:String,
         @Body productPost: ProductPost
     ): Response<ProductResponses>
+    @POST("delivered-pagination.php")
+    suspend fun getDeliveredPagination(
+        @Header("Authorization") Authorization:String,
+        @Body post: PaginationLimit
+    ): Response<OrderResponses>
+    @POST("customer-orders-details.php")
+    suspend fun getCustomerDetailsList(
+        @Header("Authorization") Authorization:String,
+        @Body post: OrderIdPost
+    ): Response<OrderDetailsResponse>
+    @POST("processing-pagination.php")
+    suspend fun getProcessingPagination(
+        @Header("Authorization") Authorization:String,
+        @Body post: PaginationLimit
+    ): Response<OrderResponses>
+    @POST("pending-pagination.php")
+    suspend fun getPendingPagination(
+        @Header("Authorization") Authorization:String,
+        @Body post: PaginationLimit
+    ): Response<OrderResponses>
     @POST("product-like.php")
     suspend fun getProductLike(
         @Header("Authorization") Authorization:String,

@@ -72,4 +72,18 @@ class HomeRepository (
     suspend fun countCartList(header:String, post: ShopUserIdPost): CountResponses {
         return apiRequest { api.countCartList(header,post) }
     }
+    suspend fun getPendingPagination(header:String,post: PaginationLimit): OrderResponses {
+        return apiRequest { api.getPendingPagination(header,post) }
+    }
+
+    suspend fun getProcessingPagination(header:String,post: PaginationLimit): OrderResponses {
+        return apiRequest { api.getProcessingPagination(header,post) }
+    }
+    suspend fun getDeliveredPagination(header:String,post: PaginationLimit): OrderResponses {
+        return apiRequest { api.getDeliveredPagination(header,post) }
+    }
+    suspend fun getCustomerDetailsList(header:String,post: OrderIdPost): OrderDetailsResponse {
+        return apiRequest { api.getCustomerDetailsList(header,post) }
+    }
+
 }
