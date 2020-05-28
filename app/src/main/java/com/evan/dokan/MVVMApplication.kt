@@ -16,6 +16,18 @@ import com.evan.dokan.ui.home.dashboard.product.ProductCategoryWiseDataSource
 import com.evan.dokan.ui.home.dashboard.product.ProductCategoryWiseModelFactory
 import com.evan.dokan.ui.home.dashboard.product.ProductCategoryWiseSourceFactory
 import com.evan.dokan.ui.home.dashboard.product.ProductCategoryWiseViewModel
+import com.evan.dokan.ui.home.order.modelfactory.DeliveredOrderModelFactory
+import com.evan.dokan.ui.home.order.modelfactory.PendingOrderModelFactory
+import com.evan.dokan.ui.home.order.modelfactory.ProcessingOrderModelFactory
+import com.evan.dokan.ui.home.order.source.DeliveredDataSource
+import com.evan.dokan.ui.home.order.source.PendingOrderDataSource
+import com.evan.dokan.ui.home.order.source.ProcessingDataSource
+import com.evan.dokan.ui.home.order.sourcefactory.DeliveredOrderSourceFactory
+import com.evan.dokan.ui.home.order.sourcefactory.PendingOrderSourceFactory
+import com.evan.dokan.ui.home.order.sourcefactory.ProcessingOrderSourceFactory
+import com.evan.dokan.ui.home.order.viewmodel.DeliveredOrderViewModel
+import com.evan.dokan.ui.home.order.viewmodel.PendingOrderViewModel
+import com.evan.dokan.ui.home.order.viewmodel.ProcessingOrderViewModel
 import com.evan.dokan.ui.home.profile.ProfileViewModelFactory
 import com.evan.dokan.ui.home.quotes.QuotesViewModelFactory
 import com.evan.dokan.ui.shop.ShopDataSource
@@ -47,11 +59,23 @@ class MVVMApplication : Application(), KodeinAware {
         bind() from provider { AuthViewModelFactory(instance()) }
         bind() from provider { ShopModelFactory(instance(),instance()) }
         bind() from provider { ProductCategoryWiseModelFactory(instance(),instance()) }
+        bind() from provider { DeliveredOrderModelFactory(instance(),instance()) }
+        bind() from provider { ProcessingOrderModelFactory(instance(),instance()) }
+        bind() from provider { PendingOrderModelFactory(instance(),instance()) }
         bind() from provider { ShopSourceFactory(instance()) }
+        bind() from provider { DeliveredOrderSourceFactory(instance()) }
+        bind() from provider { ProcessingOrderSourceFactory(instance()) }
+        bind() from provider { PendingOrderSourceFactory(instance()) }
         bind() from provider { ProductCategoryWiseSourceFactory(instance()) }
         bind() from provider { ShopViewModel(instance(),instance()) }
+        bind() from provider { DeliveredOrderViewModel(instance(),instance()) }
+        bind() from provider { ProcessingOrderViewModel(instance(),instance()) }
+        bind() from provider { PendingOrderViewModel(instance(),instance()) }
         bind() from provider { ProductCategoryWiseViewModel(instance(),instance()) }
         bind() from provider { ShopDataSource(instance(),instance()) }
+        bind() from provider { DeliveredDataSource(instance(),instance()) }
+        bind() from provider { ProcessingDataSource(instance(),instance()) }
+        bind() from provider { PendingOrderDataSource(instance(),instance()) }
         bind() from provider { ProductCategoryWiseDataSource(instance(),instance()) }
         bind() from provider { ProfileViewModelFactory(instance()) }
         bind() from provider { HomeViewModelFactory(instance()) }

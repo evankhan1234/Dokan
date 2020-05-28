@@ -14,6 +14,9 @@
     <string name="home">Home</string>
     <string name="cart">Cart</string>
     <string name="order">Orders</string>
+    <string name="pending">Pending</string>
+    <string name="processing">Processing</string>
+    <string name="delivered">Delivered</string>
     <string name="my_page">My Page</string>
     <string name="product">Product</string>
     <string name="details">Details</string>

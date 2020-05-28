@@ -10,6 +10,7 @@ import com.evan.dokan.ui.home.cart.ICartListListener
 import com.evan.dokan.ui.home.dashboard.category.ICategoryListListener
 import com.evan.dokan.ui.home.dashboard.product.details.ICreateCartListener
 import com.evan.dokan.ui.home.dashboard.product.details.IProductLikeListener
+import com.evan.dokan.ui.home.order.details.IOrderDetailsListener
 import com.evan.dokan.ui.home.wishlist.IWishCountListener
 import com.evan.dokan.ui.home.wishlist.IWishDeleteListener
 import com.evan.dokan.ui.home.wishlist.IWishListCreateListener
@@ -24,6 +25,7 @@ class HomeViewModel (
 ) : ViewModel() {
 
     var shopUserIdPost:ShopUserIdPost?=null
+    var orderIdPost:OrderIdPost?=null
     var deleteCartPost:DeleteCartPost?=null
     var cartOrderDetailsPost:CartOrderDetailsPost?=null
     var cartListQuantityPost:CartListQuantityPost?=null
@@ -38,6 +40,7 @@ class HomeViewModel (
     var wishListListener: IWishListListener?=null
     var createCartListener: ICreateCartListener?=null
     var cartListListener: ICartListListener?=null
+    var orderDetailsListener: IOrderDetailsListener?=null
     var cartListDeleteListener: ICartListDeleteListener?=null
     var wishCountListener: IWishCountListener?=null
     var cartCountListener: ICartCountListener?=null
@@ -285,6 +288,26 @@ class HomeViewModel (
 
             } catch (e: NoInternetException) {
 
+            }
+        }
+
+    }
+    fun getCustomerDetailsList(header:String,orderId:Int) {
+        orderDetailsListener?.onStarted()
+        Coroutines.main {
+            try {
+                orderIdPost= OrderIdPost(orderId!!)
+                Log.e("Search", "Search" + Gson().toJson(orderIdPost))
+                val response = repository.getCustomerDetailsList(header,orderIdPost!!)
+                Log.e("Search", "Search" + Gson().toJson(response))
+                orderDetailsListener?.cart(response?.data!!)
+                orderDetailsListener?.onEnd()
+                Log.e("Search", "Search" + Gson().toJson(response))
+
+            } catch (e: ApiException) {
+                orderDetailsListener?.onEnd()
+            } catch (e: NoInternetException) {
+                orderDetailsListener?.onEnd()
             }
         }
 
