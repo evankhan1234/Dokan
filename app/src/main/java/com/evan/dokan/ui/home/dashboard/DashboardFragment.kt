@@ -3,8 +3,10 @@ package com.evan.dokan.ui.home.dashboard
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,6 +37,7 @@ class DashboardFragment : Fragment(),KodeinAware, ICategoryListListener , ICateg
     private lateinit var viewModel: HomeViewModel
     var token:String?=""
     var shopUserId:Int?=0
+    var edit_content: EditText?=null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,6 +50,15 @@ class DashboardFragment : Fragment(),KodeinAware, ICategoryListListener , ICateg
         val args: Bundle? = arguments
         shopUserId = args?.getInt("ShopUserId")
         viewModel.getCategory(token!!,shopUserId!!)
+        edit_content=root?.findViewById(R.id.edit_content)
+        edit_content?.setOnTouchListener(object : View.OnTouchListener {
+            override fun onTouch(v: View, m: MotionEvent): Boolean {
+                if (activity is HomeActivity) {
+                    (activity as HomeActivity).goToProductSearchFragment()
+                }
+                return false
+            }
+        })
         return root
     }
 

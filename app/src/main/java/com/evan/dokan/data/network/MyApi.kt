@@ -29,10 +29,20 @@ interface MyApi {
         @Header("Authorization") Authorization:String,
         @Body productSearchPost: ProductSearchPost
     ): Response<ProductResponses>
+    @POST("customer-product-search.php")
+    suspend fun getProductSearchByCustomer(
+        @Header("Authorization") Authorization:String,
+        @Body productSearchPost: CustomerProductSearchPost
+    ): Response<ProductResponses>
     @POST("product-category-product-list.php")
     suspend fun getProductCategory(
         @Header("Authorization") Authorization:String,
         @Body productPost: ProductPost
+    ): Response<ProductResponses>
+    @POST("customer-search-product-list-pagination.php")
+    suspend fun getProductBySearchPagination(
+        @Header("Authorization") Authorization:String,
+        @Body post: PaginationLimit
     ): Response<ProductResponses>
     @POST("delivered-pagination.php")
     suspend fun getDeliveredPagination(

@@ -20,6 +20,7 @@ import com.evan.dokan.ui.home.cart.ICartCountListener
 import com.evan.dokan.ui.home.dashboard.DashboardFragment
 import com.evan.dokan.ui.home.dashboard.product.ProductCategoryWiseListFragment
 import com.evan.dokan.ui.home.dashboard.product.details.ProductDetailsFragment
+import com.evan.dokan.ui.home.dashboard.search.ProductSearchFragment
 import com.evan.dokan.ui.home.order.OrderFragment
 import com.evan.dokan.ui.home.order.details.OrderDetailsFragment
 import com.evan.dokan.ui.home.settings.SettingsFragment
@@ -118,6 +119,11 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
     fun goToProductListCategoryFragment() {
         setUpHeader(FRAG_CATEGORY)
         addFragment(FRAG_CATEGORY, true, null)
+
+    }
+    fun goToProductSearchFragment() {
+        setUpHeader(FRAG_SEARCH)
+        addFragment(FRAG_SEARCH, true, null)
 
     }
     override fun onBackPressed() {
@@ -314,6 +320,9 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
             FRAG_ORDER-> {
                 newFrag = OrderFragment()
             }
+            FRAG_SEARCH-> {
+                newFrag = ProductSearchFragment()
+            }
         }
         val b= Bundle()
         b.putInt("ShopUserId", shop_user_id!!)
@@ -387,6 +396,13 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
                 ll_back_header?.visibility = View.VISIBLE
                 rlt_header?.visibility = View.GONE
                 tv_details.text = resources.getString(R.string.details)
+                btn_footer_home.setSelected(true)
+
+            }
+            FRAG_SEARCH -> {
+                ll_back_header?.visibility = View.VISIBLE
+                rlt_header?.visibility = View.GONE
+                tv_details.text = resources.getString(R.string.product)
                 btn_footer_home.setSelected(true)
 
             }

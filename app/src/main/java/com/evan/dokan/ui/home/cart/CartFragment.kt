@@ -217,6 +217,9 @@ class CartFragment : Fragment() ,KodeinAware,ICartListListener,ICartDeleteListen
                                 pushPost= PushPost("dLUUTXsxTMuVuo0dJCS7Vp:APA91bHIndSf7cvchmC_0fii1MJfmu5W1FoCIeydrDo5VPdxRDLxZezC6GLxBTGYP8r3mYfJp6TRnPhZJdIcirbIaEhz3OQyqiXxcFA8SJOBsEXsE2xwnkpF-_p6YbCh_NZz-K1E1ouP",push)
                                 viewModel.sendPush("key=AAAAdCyJ2hw:APA91bGF6x20oQnuC2ZeAXsJju-OCAZ67dBpQvaLx7h18HSAnhl9CPWupCJaV0552qJvm1qIHL_LAZoOvv5oWA9Iraar_XQkWe3JEUmJ1v7iKq09QYyPB3ZGMeSinzC-GlKwpaJU_IvO",pushPost!!)
                                 onData()
+                                if (activity is HomeActivity) {
+                                    (activity as HomeActivity).onCount()
+                                }
                             }
 
                             override fun onNegativeClick() {
