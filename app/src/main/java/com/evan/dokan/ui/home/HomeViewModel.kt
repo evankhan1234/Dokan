@@ -300,7 +300,7 @@ class HomeViewModel (
                 Log.e("Search", "Search" + Gson().toJson(orderIdPost))
                 val response = repository.getCustomerDetailsList(header,orderIdPost!!)
                 Log.e("Search", "Search" + Gson().toJson(response))
-                orderDetailsListener?.cart(response?.data!!)
+                orderDetailsListener?.order(response?.data!!)
                 orderDetailsListener?.onEnd()
                 Log.e("Search", "Search" + Gson().toJson(response))
 

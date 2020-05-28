@@ -85,5 +85,11 @@ class HomeRepository (
     suspend fun getCustomerDetailsList(header:String,post: OrderIdPost): OrderDetailsResponse {
         return apiRequest { api.getCustomerDetailsList(header,post) }
     }
+    suspend fun getProductBySearchPagination(header:String,post: PaginationLimit): ProductResponses {
+        return apiRequest { api.getProductBySearchPagination(header,post) }
+    }
+    suspend fun getProductSearchByCustomer(header:String,post: CustomerProductSearchPost): ProductResponses {
+        return apiRequest { api.getProductSearchByCustomer(header,post) }
+    }
 
 }

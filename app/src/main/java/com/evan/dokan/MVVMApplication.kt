@@ -16,6 +16,10 @@ import com.evan.dokan.ui.home.dashboard.product.ProductCategoryWiseDataSource
 import com.evan.dokan.ui.home.dashboard.product.ProductCategoryWiseModelFactory
 import com.evan.dokan.ui.home.dashboard.product.ProductCategoryWiseSourceFactory
 import com.evan.dokan.ui.home.dashboard.product.ProductCategoryWiseViewModel
+import com.evan.dokan.ui.home.dashboard.search.ProductSearchDataSource
+import com.evan.dokan.ui.home.dashboard.search.ProductSearchModelFactory
+import com.evan.dokan.ui.home.dashboard.search.ProductSearchSourceFactory
+import com.evan.dokan.ui.home.dashboard.search.ProductSearchViewModel
 import com.evan.dokan.ui.home.order.modelfactory.DeliveredOrderModelFactory
 import com.evan.dokan.ui.home.order.modelfactory.PendingOrderModelFactory
 import com.evan.dokan.ui.home.order.modelfactory.ProcessingOrderModelFactory
@@ -68,6 +72,10 @@ class MVVMApplication : Application(), KodeinAware {
         bind() from provider { PendingOrderSourceFactory(instance()) }
         bind() from provider { ProductCategoryWiseSourceFactory(instance()) }
         bind() from provider { ShopViewModel(instance(),instance()) }
+        bind() from provider { ProductSearchModelFactory(instance(),instance()) }
+        bind() from provider { ProductSearchSourceFactory(instance()) }
+        bind() from provider { ProductSearchViewModel(instance(),instance()) }
+        bind() from provider { ProductSearchDataSource(instance(),instance()) }
         bind() from provider { DeliveredOrderViewModel(instance(),instance()) }
         bind() from provider { ProcessingOrderViewModel(instance(),instance()) }
         bind() from provider { PendingOrderViewModel(instance(),instance()) }
