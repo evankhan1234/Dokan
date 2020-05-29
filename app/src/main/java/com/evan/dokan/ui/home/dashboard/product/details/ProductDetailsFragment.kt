@@ -92,11 +92,12 @@ class ProductDetailsFragment : Fragment() ,KodeinAware,IProductLikeListener,
                 var product_stock: String = ""
 
                 total_price=product?.SellPrice!!-product?.Discount!!
+                val number2digitsub: Double = String.format("%.2f", total_price).toDouble()
                 product_name = "<b> <font color=#BF3E15>Product Name: </font> : </b>" + product?.Name.toString()
                 product_stock = "<b> <font color=#BF3E15>Stock: </font> : </b>" + product?.Stock.toString()+" "+product?.UnitName
                 product_code = "<b> <font color=#BF3E15>Product Code: </font> : </b>" + product?.ProductCode.toString()
                 product_details = "<b> <font color=#BF3E15>Product Details: </font> : </b>" + product?.Details.toString()
-                product_price = "<b> <font color=#BF3E15>Product Price : ট </font>  </b>" + total_price.toString()
+                product_price = "<b> <font color=#BF3E15>Product Price : ট </font>  </b>" + number2digitsub.toString()
                 tv_product_name?.text = Html.fromHtml(product_name!!)
                 tv_product_code?.text = Html.fromHtml(product_code!!)
                 tv_product_details?.text = Html.fromHtml(product_details!!)

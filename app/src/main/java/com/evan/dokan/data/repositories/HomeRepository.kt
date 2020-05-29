@@ -91,5 +91,14 @@ class HomeRepository (
     suspend fun getProductSearchByCustomer(header:String,post: CustomerProductSearchPost): ProductResponses {
         return apiRequest { api.getProductSearchByCustomer(header,post) }
     }
+    suspend fun getCustomerUser(header:String): CustomerResponses {
+        return apiRequest { api.getCustomerUser(header) }
+    }
+    suspend fun updateUserDetails(header:String,post: UserUpdatePost): BasicResponses {
+        return apiRequest { api.updateUserDetails(header,post) }
+    }
+    suspend fun updatePassword(header:String,post: PasswordPost): BasicResponses {
+        return apiRequest { api.updatePassword(header,post) }
+    }
 
 }

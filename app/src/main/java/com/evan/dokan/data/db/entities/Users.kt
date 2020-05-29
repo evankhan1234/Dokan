@@ -1,7 +1,10 @@
 package com.evan.dokan.data.db.entities
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class Users (
     @SerializedName("Id")
     var Id: Int?,
@@ -19,6 +22,8 @@ data class Users (
     var Picture: String?,
     @SerializedName("Status")
     var Status: Int?,
+    @SerializedName("Gender")
+    var Gender: Int?,
     @SerializedName("Created")
     var Created: String?
-)
+):Parcelable

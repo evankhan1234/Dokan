@@ -19,7 +19,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.evan.dokan.BuildConfig
 import com.evan.dokan.R
-import com.evan.dokan.ui.auth.interfaces.DialogActionListener
 import com.evan.dokan.ui.auth.interfaces.ISignUpListener
 import com.evan.dokan.util.*
 import java.io.File

@@ -1,104 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:background="@color/white"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
-    <RelativeLayout
-            android:layout_below="@+id/tv_register"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="0dp"
+    <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/root_layout"
-            android:visibility="visible"
-            android:alpha="1.5">
-        <androidx.cardview.widget.CardView
+            android:layout_height="wrap_content">
 
-                android:layout_marginTop="10dp"
-
-                android:id="@+id/card_view"
+        <LinearLayout
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_width="match_parent"
-
                 android:layout_height="wrap_content"
-
-
-                android:layout_marginLeft="15dp"
-
-                android:layout_marginRight="15dp"
-
-                card_view:cardBackgroundColor="#FFFFFF"
-                card_view:cardCornerRadius="5dp"
-                card_view:cardElevation="4dp"
-                card_view:cardUseCompatPadding="true">
-
-            <EditText
+                android:orientation="vertical">
 
 
 
-                    android:drawablePadding="25px"
-                    android:id="@+id/edit_content"
+
+                <androidx.cardview.widget.CardView
+
+                        android:id="@+id/card_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        card_view:cardBackgroundColor="#FFFFFF"
+                        card_view:cardCornerRadius="5dp"
+                        card_view:cardElevation="4dp"
+                        card_view:cardUseCompatPadding="true">
+
+                    <EditText
+
+
+                            android:id="@+id/edit_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="140px"
+                            android:background="@null"
+                            android:drawableLeft="@drawable/icon_search"
+                            android:drawablePadding="25px"
+                            android:hint="What you want to like buy?"
+                            android:inputType="text|textNoSuggestions"
+                            android:paddingLeft="40px"
+                            android:paddingTop="20px"
+                            android:paddingBottom="20px"
+                            android:textColorHint="#4D6A6B6B" />
+
+
+                </androidx.cardview.widget.CardView>
+
+            <com.daimajia.slider.library.SliderLayout
+                    android:id="@+id/slider"
+                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
-                    android:layout_height="140px"
-                    android:background="@null"
-                    android:inputType="text|textNoSuggestions"
-                    android:drawableLeft="@drawable/icon_search"
-                    android:hint="What you want to like buy?"
-                    android:paddingLeft="40px"
-                    android:paddingTop="20px"
-                    android:paddingBottom="20px"
-                    android:textColorHint="#4D6A6B6B" />
+                    android:layout_height="200dp" />
 
+                <RelativeLayout
+                        android:id="@+id/relative"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/card_view"
+                        android:layout_marginTop="12dp">
 
-        </androidx.cardview.widget.CardView>
+                    <TextView
+                            android:id="@+id/tv_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="18dp"
+                            android:layout_marginTop="5dp"
+                            android:gravity="center_vertical"
+                            android:letterSpacing=".00"
+                            android:maxLines="1"
+                            android:text="Categories"
+                            android:textColor="@color/black_again"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
 
-        <RelativeLayout
-                android:layout_below="@id/card_view"
-                android:id="@+id/relative"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp">
+                    <TextView
+                            android:id="@+id/text_view"
+                            android:layout_width="120dp"
+                            android:layout_height="45dp"
+                            android:layout_alignParentRight="true"
+                            android:background="@drawable/btn_yes"
+                            android:paddingTop="9dp"
+                            android:text="Newsfeed"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="15sp" />
+                </RelativeLayout>
 
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcv_category"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/relative"
+                        android:layout_marginTop="8dp"
+                        android:visibility="visible" />
             <TextView
                     android:id="@+id/tv_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="18dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="15dp"
                     android:gravity="center_vertical"
                     android:letterSpacing=".00"
                     android:maxLines="1"
-                    android:textStyle="bold"
-                    android:text="Categories"
+                    android:text="Recent Products"
                     android:textColor="@color/black_again"
-                    android:textSize="21sp" />
-
-            <TextView
-                    android:id="@+id/text_view"
-                    android:layout_width="120dp"
-                    android:layout_height="45dp"
-                    android:layout_alignParentRight="true"
-                    android:background="@drawable/btn_yes"
-                    android:paddingTop="9dp"
-                    android:text="Newsfeed"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="15sp" />
-        </RelativeLayout>
-        <androidx.recyclerview.widget.RecyclerView
-                android:layout_below="@+id/relative"
-                android:layout_marginTop="8dp"
-                android:id="@+id/rcv_category"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="visible" />
-
-
-    </RelativeLayout>
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcv_products"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/relative"
+                    android:layout_marginTop="8dp"
+                    android:visibility="visible" />
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"/>
+        </LinearLayout>
+    </ScrollView>
 
     <ProgressBar
             android:id="@+id/progress_bar"

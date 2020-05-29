@@ -1,20 +1,30 @@
 package com.evan.dokan.ui.home
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
+import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.Navigation
-import androidx.navigation.ui.NavigationUI
+import com.evan.dokan.BuildConfig
 import com.evan.dokan.R
 import com.evan.dokan.data.db.entities.Order
 import com.evan.dokan.data.db.entities.Product
-import com.evan.dokan.ui.auth.AuthViewModelFactory
+import com.evan.dokan.data.db.entities.Users
+import com.evan.dokan.ui.auth.ImageUpdateActivity
 import com.evan.dokan.ui.home.cart.CartFragment
 import com.evan.dokan.ui.home.cart.ICartCountListener
 import com.evan.dokan.ui.home.dashboard.DashboardFragment
@@ -24,9 +34,10 @@ import com.evan.dokan.ui.home.dashboard.search.ProductSearchFragment
 import com.evan.dokan.ui.home.order.OrderFragment
 import com.evan.dokan.ui.home.order.details.OrderDetailsFragment
 import com.evan.dokan.ui.home.settings.SettingsFragment
+import com.evan.dokan.ui.home.settings.password.ChangePasswordFragment
+import com.evan.dokan.ui.home.settings.profile.ProfileUpdateFragment
 import com.evan.dokan.ui.home.wishlist.IWishCountListener
 import com.evan.dokan.ui.home.wishlist.WishListFragment
-import com.evan.dokan.ui.shop.ShopActivity
 import com.evan.dokan.util.*
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_layout.*
@@ -34,6 +45,8 @@ import kotlinx.android.synthetic.main.bottom_navigation_layout.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
+import java.io.File
+import java.io.IOException
 
 class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCountListener{
     var mFragManager: FragmentManager? = null
@@ -121,6 +134,37 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
         addFragment(FRAG_CATEGORY, true, null)
 
     }
+    fun goToChangePasswordFragment(users: Users) {
+        setUpHeader(FRAG_CHANGE_PASSWORD)
+        mFragManager = supportFragmentManager
+        var fragId:Int?=0
+        fragId=FRAG_CHANGE_PASSWORD
+        fragTransaction = mFragManager?.beginTransaction()
+        val count = mFragManager?.getBackStackEntryCount()
+        if (count != 0) {
+
+        }
+        if (mCurrentFrag != null && mCurrentFrag!!.getTag() != null && mCurrentFrag!!.getTag() == fragId.toString()) {
+            return
+        }
+        var newFrag: Fragment? = null
+        newFrag = ChangePasswordFragment()
+        val b= Bundle()
+        b.putParcelable(Users::class.java?.getSimpleName(), users)
+        newFrag.setArguments(b)
+        mCurrentFrag = newFrag
+        fragTransaction!!.setCustomAnimations(
+            R.anim.view_transition_in_left,
+            R.anim.view_transition_out_left,
+            R.anim.view_transition_in_right,
+            R.anim.view_transition_out_right
+        )
+
+        fragTransaction?.replace(R.id.main_container, newFrag!!, fragId.toString())
+        fragTransaction?.addToBackStack(fragId.toString())
+        fragTransaction!!.commit()
+
+    }
     fun goToProductSearchFragment() {
         setUpHeader(FRAG_SEARCH)
         addFragment(FRAG_SEARCH, true, null)
@@ -161,6 +205,10 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
                 //storeFragment.removeChild()
                 setUpHeader(FRAG_ORDER )
             }
+            else if (f is SettingsFragment) {
+
+                setUpHeader(FRAG_SETTINGS )
+            }
 //            if (f is SupplierFragment) {
 //                val supplierFragment: SupplierFragment =
 //                    mFragManager?.findFragmentByTag(FRAG_SUPPLIER.toString()) as SupplierFragment
@@ -188,6 +236,40 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
     fun backPress() {
         hideKeyboard(this)
         onBackPressed()
+
+    }
+    fun finishs(){
+        finishAffinity()
+    }
+    fun goToProfileUpdateFragment(users: Users) {
+        setUpHeader(FRAG_PROFILE_UPDATE)
+        mFragManager = supportFragmentManager
+        var fragId:Int?=0
+        fragId=FRAG_PROFILE_UPDATE
+        fragTransaction = mFragManager?.beginTransaction()
+        val count = mFragManager?.getBackStackEntryCount()
+        if (count != 0) {
+
+        }
+        if (mCurrentFrag != null && mCurrentFrag!!.getTag() != null && mCurrentFrag!!.getTag() == fragId.toString()) {
+            return
+        }
+        var newFrag: Fragment? = null
+        newFrag = ProfileUpdateFragment()
+        val b= Bundle()
+        b.putParcelable(Users::class.java?.getSimpleName(), users)
+        newFrag.setArguments(b)
+        mCurrentFrag = newFrag
+        fragTransaction!!.setCustomAnimations(
+            R.anim.view_transition_in_left,
+            R.anim.view_transition_out_left,
+            R.anim.view_transition_in_right,
+            R.anim.view_transition_out_right
+        )
+
+        fragTransaction?.replace(R.id.main_container, newFrag!!, fragId.toString())
+        fragTransaction?.addToBackStack(fragId.toString())
+        fragTransaction!!.commit()
 
     }
     fun goToOrderDetailsFragment(order: Order) {
@@ -373,7 +455,7 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
             }
             FRAG_SETTINGS -> {
                 ll_back_header?.visibility = View.GONE
-                rlt_header?.visibility = View.GONE
+                rlt_header?.visibility = View.VISIBLE
                 tv_title.text = resources.getString(R.string.my_page)
                 btn_footer_settings.setSelected(true)
 
@@ -399,6 +481,21 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
                 btn_footer_home.setSelected(true)
 
             }
+            FRAG_PROFILE_UPDATE -> {
+                ll_back_header?.visibility = View.VISIBLE
+                rlt_header?.visibility = View.GONE
+                tv_details.text = resources.getString(R.string.update)
+                btn_footer_settings.setSelected(true)
+
+            }
+            FRAG_CHANGE_PASSWORD -> {
+                ll_back_header?.visibility = View.VISIBLE
+                rlt_header?.visibility = View.GONE
+                tv_details.text = resources.getString(R.string.change)
+                btn_footer_settings.setSelected(true)
+
+            }
+
             FRAG_SEARCH -> {
                 ll_back_header?.visibility = View.VISIBLE
                 rlt_header?.visibility = View.GONE
@@ -520,5 +617,251 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
             tv_cart_count?.visibility=View.VISIBLE
         }
         tv_cart_count?.text=count.toString()
+    }
+    private val CAMERA_PERMISSION_REQUEST_CODE = 1001
+    private val RESULT_TAKE_PHOTO = 10
+    private val RESULT_LOAD_IMG = 101
+    private val REQUEST_EXTERNAL_STORAGE_FROM_CAPTURE = 1002
+    private val RESULT_UPDATE_IMAGE = 11
+
+    fun openImageChooser() {
+        showImagePickerDialog(this, object :
+            DialogActionListener {
+            override fun onPositiveClick() {
+                openCamera()
+            }
+
+            override fun onNegativeClick() {
+                checkGalleryPermission()
+            }
+        })
+    }
+    private fun checkGalleryPermission() {
+        if (isCameraePermissionGranted(this)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) !== PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(
+                        arrayOf<String?>(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                        REQUEST_EXTERNAL_STORAGE_FROM_CAPTURE
+                    )
+                } else {
+                    //start your camera
+
+                    getImageFromGallery()
+                }
+            } else {
+                getImageFromGallery()
+            }
+        } else {
+            //required permission
+
+            ActivityCompat.requestPermissions(
+                this,
+                PERMISSIONS_STORAGE,
+                REQUEST_EXTERNAL_STORAGE_FROM_CAPTURE
+            )
+        }
+    }
+    fun openCamera() {
+        if (isCameraePermissionGranted(this)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (checkSelfPermission(Manifest.permission.CAMERA) !== PackageManager.PERMISSION_GRANTED&&checkSelfPermission(
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) !== PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(
+                        arrayOf<String?>(
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE),
+                        CAMERA_PERMISSION_REQUEST_CODE
+                    )
+                } else {
+                    //start your camera
+
+                    takePhoto()
+                }
+            } else {
+                takePhoto()
+            }
+        } else {
+            //required permission
+
+            ActivityCompat.requestPermissions(
+                this,
+                PERMISSIONS_CAMERA,
+                CAMERA_PERMISSION_REQUEST_CODE
+            )
+        }
+    }
+
+    // Receive the permissions request result
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            CAMERA_PERMISSION_REQUEST_CODE -> {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //Start your camera handling here
+
+                    takePhoto()
+                }
+            }
+            REQUEST_EXTERNAL_STORAGE_FROM_CAPTURE -> {
+                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //Start your camera handling here
+                    getImageFromGallery()
+                }
+            }
+        }
+    }
+
+    private var mTakeUri: Uri? = null
+    private var mFile: File? = null
+    private var mCurrentPhotoPath: String? = null
+    private fun takePhoto() {
+        val intent =
+            Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (intent.resolveActivity(this.getPackageManager()) != null) {
+            // Create the File where the photo should go
+            mFile = null
+            try {
+                mFile = createImageFile(this)
+                mCurrentPhotoPath = mFile?.getAbsolutePath()
+            } catch (ex: IOException) {
+                // Error occurred while creating the File
+
+            }
+            // Continue only if the File was successfully created
+
+
+            if (mFile != null) {
+                mTakeUri = FileProvider.getUriForFile(
+                    this,
+                    BuildConfig.APPLICATION_ID, mFile!!
+                )
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                } else {
+                    val packageManager: PackageManager =
+                        this.getPackageManager()
+                    val activities: List<ResolveInfo> =
+                        packageManager.queryIntentActivities(
+                            intent,
+                            PackageManager.MATCH_DEFAULT_ONLY
+                        )
+                    for (resolvedIntentInfo in activities) {
+                        val packageName: String? =
+                            resolvedIntentInfo.activityInfo.packageName
+                        this.grantUriPermission(
+                            packageName,
+                            mTakeUri,
+                            Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                        )
+                    }
+                }
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, mTakeUri)
+                startActivityForResult(intent, RESULT_TAKE_PHOTO)
+            }
+        }
+    }
+
+    private fun getImageFromGallery() {
+        val photoPickerIntent =
+            Intent(Intent.ACTION_PICK)
+        photoPickerIntent.type = "image/*"
+        startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG)
+    }
+
+    @SuppressLint("MissingSuperCall")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        // Check which request we're responding to
+        Log.e("requestCode", resultCode.toString() + " requestCode" + requestCode)
+        Log.e("RESULT_OK", "RESULT_OK" + RESULT_OK)
+
+
+        when (requestCode) {
+            RESULT_LOAD_IMG -> {
+                try {
+                    val imageUri = data?.data
+                    if (imageUri != null) {
+                        val file = File(getRealPathFromURI(imageUri, this))
+                        goImagePreviewPage(imageUri, file)
+                    }
+                } catch (e: Exception) {
+                    Log.e("exc", "" + e.message)
+                    Toast.makeText(this,"Can not found this image", Toast.LENGTH_SHORT).show()
+                    e.printStackTrace()
+                }
+            }
+            RESULT_TAKE_PHOTO -> {
+                //return if photopath is null
+                if(mCurrentPhotoPath == null)
+                    return
+                mCurrentPhotoPath = getRightAngleImage(mCurrentPhotoPath!!)
+                try {
+                    val imgFile = File(mCurrentPhotoPath)
+                    if (imgFile.exists()) {
+                        goImagePreviewPage(mTakeUri, imgFile)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+            RESULT_UPDATE_IMAGE -> {
+                if (data != null && data?.hasExtra("updated_image_url")) {
+                    val updated_image_url: String? = data?.getStringExtra("updated_image_url")
+                    Log.e("updated_image_url", "--$updated_image_url")
+                    if (updated_image_url != null) {
+                        if (updated_image_url == "") {
+
+                        } else {
+                            //update in
+                            val f = getVisibleFragment()
+                            if (f != null) {
+                                if (f is ProfileUpdateFragment) {
+
+                                    f.showImage(updated_image_url)
+                                }
+
+                            }
+
+
+
+                        }
+                    }
+                }
+            }
+
+
+
+
+
+        }
+
+    }
+    fun goImagePreviewPage(uri: Uri?, imageFile: File) {
+        val fileSize = imageFile.length().toInt()
+        if (fileSize <= SERVER_SEND_FILE_SIZE_MAX_LIMIT) {
+            val i = Intent(
+                this,
+                ImageUpdateActivity::class.java
+            )
+            i.putExtra("from", FRAG_CREATE_NEW_DELIVERY)
+            temporary_profile_picture = imageFile
+            temporary_profile_picture_uri = uri
+            startActivityForResult(i, RESULT_UPDATE_IMAGE)
+            overridePendingTransition(R.anim.right_to_left, R.anim.stand_by)
+        } else {
+            showDialogSuccessMessage(
+                this,
+                resources.getString(R.string.image_size_is_too_large),
+                resources.getString(R.string.txt_close),
+
+
+                null
+            )
+        }
     }
 }
