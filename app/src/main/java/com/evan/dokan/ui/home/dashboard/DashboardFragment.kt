@@ -6,6 +6,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
@@ -15,13 +16,16 @@ import com.daimajia.slider.library.SliderTypes.BaseSliderView
 import com.daimajia.slider.library.SliderTypes.TextSliderView
 import com.evan.dokan.R
 import com.evan.dokan.data.db.entities.Category
+import com.evan.dokan.data.db.entities.Product
 import com.evan.dokan.ui.home.HomeActivity
 import com.evan.dokan.ui.home.HomeViewModel
 import com.evan.dokan.ui.home.HomeViewModelFactory
 import com.evan.dokan.ui.home.dashboard.category.CategoryAdapter
 import com.evan.dokan.ui.home.dashboard.category.ICategoryListListener
 import com.evan.dokan.ui.home.dashboard.category.ICategoryUpdateListener
+import com.evan.dokan.ui.home.dashboard.product.IProductCategoryWiseUpdateListener
 import com.evan.dokan.ui.home.dashboard.product.ProductCategoryWiseListFragment
+import com.evan.dokan.ui.home.dashboard.product.ProductCategoryWiseSearchAdapter
 import com.evan.dokan.util.SharedPreferenceUtil
 import com.evan.dokan.util.hide
 import com.evan.dokan.util.show
@@ -31,7 +35,8 @@ import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
 
-class DashboardFragment : Fragment(),KodeinAware, ICategoryListListener , ICategoryUpdateListener {
+class DashboardFragment : Fragment(),KodeinAware, ICategoryListListener , ICategoryUpdateListener,IRecentProductListener,
+    IProductCategoryWiseUpdateListener {
     override val kodein by kodein()
 
     var categoryAdapter: CategoryAdapter?=null
@@ -39,9 +44,13 @@ class DashboardFragment : Fragment(),KodeinAware, ICategoryListListener , ICateg
     private lateinit var viewModel: HomeViewModel
     var token:String?=""
     var shopUserId:Int?=0
+    var shopUserName:String?=""
     var edit_content: EditText?=null
     var slider: SliderLayout?=null
     var rcv_category: RecyclerView?=null
+    var rcv_products: RecyclerView?=null
+    var tv_store: TextView?=null
+    var productSearchAdapter: ProductCategoryWiseSearchAdapter?=null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,11 +59,18 @@ class DashboardFragment : Fragment(),KodeinAware, ICategoryListListener , ICateg
         val root= inflater.inflate(R.layout.fragment_dashboard, container, false)
         viewModel = ViewModelProviders.of(this, factory).get(HomeViewModel::class.java)
         viewModel.categoryListListener=this
+        viewModel.recentProductListener=this
         token = SharedPreferenceUtil.getShared(activity!!, SharedPreferenceUtil.TYPE_AUTH_TOKEN)
         val args: Bundle? = arguments
         shopUserId = args?.getInt("ShopUserId")
+        shopUserName = args?.getString("ShopUserName")
         viewModel.getCategory(token!!,shopUserId!!)
+        viewModel.getRecentProduct(token!!,shopUserId!!)
         edit_content=root?.findViewById(R.id.edit_content)
+        tv_store=root?.findViewById(R.id.tv_store)
+        tv_store?.text="Welcome to the "+shopUserName+" Online Shopping Store.Take a tour and shop as you please :)"
+        tv_store?.isSelected=true
+        rcv_products=root?.findViewById(R.id.rcv_products)
         rcv_category=root?.findViewById(R.id.rcv_category)
         slider=root?.findViewById(R.id.slider)
         edit_content?.setOnTouchListener(object : View.OnTouchListener {
@@ -77,6 +93,7 @@ class DashboardFragment : Fragment(),KodeinAware, ICategoryListListener , ICateg
         slider?.addSlider(textSliderView1)
         slider?.addSlider(textSliderView2)
         rcv_category?.setNestedScrollingEnabled(false)
+        rcv_products?.setNestedScrollingEnabled(false)
 
         return root
     }
@@ -87,6 +104,15 @@ class DashboardFragment : Fragment(),KodeinAware, ICategoryListListener , ICateg
             layoutManager = GridLayoutManager(context, 3)
             setHasFixedSize(true)
             adapter = categoryAdapter
+        }
+    }
+
+    override fun product(data: MutableList<Product>?) {
+        productSearchAdapter = ProductCategoryWiseSearchAdapter(context!!, data!!, this)
+        rcv_products?.apply {
+            layoutManager = GridLayoutManager(context, 2)
+            setHasFixedSize(true)
+            adapter = productSearchAdapter
         }
     }
 
@@ -114,6 +140,11 @@ class DashboardFragment : Fragment(),KodeinAware, ICategoryListListener , ICateg
             transaction.remove(f)
             transaction.commit()
             childFragmentManager.popBackStack()
+        }
+    }
+    override fun onUpdate(product: Product) {
+        if (activity is HomeActivity) {
+            (activity as HomeActivity).goToProductDetailsFragment(product)
         }
     }
 }

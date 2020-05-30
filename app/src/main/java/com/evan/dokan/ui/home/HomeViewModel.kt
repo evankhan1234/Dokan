@@ -7,6 +7,7 @@ import com.evan.dokan.data.repositories.HomeRepository
 import com.evan.dokan.ui.home.cart.ICartCountListener
 import com.evan.dokan.ui.home.cart.ICartListDeleteListener
 import com.evan.dokan.ui.home.cart.ICartListListener
+import com.evan.dokan.ui.home.dashboard.IRecentProductListener
 import com.evan.dokan.ui.home.dashboard.category.ICategoryListListener
 import com.evan.dokan.ui.home.dashboard.product.details.ICreateCartListener
 import com.evan.dokan.ui.home.dashboard.product.details.IProductLikeListener
@@ -50,6 +51,7 @@ class HomeViewModel (
     var cartCountListener: ICartCountListener?=null
     var userListener: IUserListener?=null
     var profileUpdateListener: IProfileUpdateListener?=null
+    var recentProductListener: IRecentProductListener?=null
     fun getCategory(token:String,shopUserId:Int) {
         categoryListListener?.onStarted()
         Coroutines.main {
@@ -377,6 +379,25 @@ class HomeViewModel (
         }
 
     }
+    fun getRecentProduct(header:String,shopUserId:Int) {
+        recentProductListener?.onStarted()
+        Coroutines.main {
+            try {
+                shopUserIdPost= ShopUserIdPost(shopUserId)
+                Log.e("Search", "Search" + Gson().toJson(shopUserIdPost))
+                val response = repository.getRecentProduct(header,shopUserIdPost!!)
+                Log.e("Search", "Search" + Gson().toJson(response))
+                recentProductListener?.product(response?.data!!)
+                recentProductListener?.onEnd()
+                Log.e("Search", "Search" + Gson().toJson(response))
 
+            } catch (e: ApiException) {
+                recentProductListener?.onEnd()
+            } catch (e: NoInternetException) {
+                recentProductListener?.onEnd()
+            }
+        }
+
+    }
 
 }
