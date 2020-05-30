@@ -100,5 +100,8 @@ class HomeRepository (
     suspend fun updatePassword(header:String,post: PasswordPost): BasicResponses {
         return apiRequest { api.updatePassword(header,post) }
     }
+    suspend fun getRecentProduct(header:String,post: ShopUserIdPost): ProductResponses {
+        return apiRequest { api.getRecentProduct(header,post) }
+    }
 
 }

@@ -54,6 +54,7 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
     var mCurrentFrag: Fragment? = null
     var CURRENT_PAGE: Int? = 1
     var shop_user_id:Int?=0
+    var shop_user_name:String?=""
     override val kodein by kodein()
     private val factory : HomeViewModelFactory by instance()
     private lateinit var viewModel: HomeViewModel
@@ -68,6 +69,7 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
         token = SharedPreferenceUtil.getShared(this, SharedPreferenceUtil.TYPE_AUTH_TOKEN)
 
         shop_user_id=intent.getIntExtra("ShopUserId",0)
+        shop_user_name=intent.getStringExtra("ShopUserName")
         viewModel.countCartList(token!!,shop_user_id!!)
         viewModel.countWishList(token!!,shop_user_id!!)
         Log.e("shop_user_id","shop_user_id: "+shop_user_id)
@@ -408,6 +410,7 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
         }
         val b= Bundle()
         b.putInt("ShopUserId", shop_user_id!!)
+        b.putString("ShopUserName", shop_user_name!!)
         newFrag?.setArguments(b)
         mCurrentFrag = newFrag
         // init argument

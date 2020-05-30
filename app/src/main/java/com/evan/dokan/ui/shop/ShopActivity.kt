@@ -180,6 +180,7 @@ class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateL
     override fun onUpdate(shop: Shop) {
         val intent =Intent(this,HomeActivity::class.java)
         intent.putExtra("ShopUserId",shop?.ShopUserId)
+        intent.putExtra("ShopUserName",shop?.Name)
         startActivity(intent)
         SharedPreferenceUtil.saveShared(this, SharedPreferenceUtil.TYPE_SHOP_ID, shop?.ShopUserId.toString())
 
