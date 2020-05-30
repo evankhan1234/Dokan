@@ -11,6 +11,8 @@ import com.evan.dokan.ui.home.dashboard.category.ICategoryListListener
 import com.evan.dokan.ui.home.dashboard.product.details.ICreateCartListener
 import com.evan.dokan.ui.home.dashboard.product.details.IProductLikeListener
 import com.evan.dokan.ui.home.order.details.IOrderDetailsListener
+import com.evan.dokan.ui.home.settings.IUserListener
+import com.evan.dokan.ui.home.settings.profile.IProfileUpdateListener
 import com.evan.dokan.ui.home.wishlist.IWishCountListener
 import com.evan.dokan.ui.home.wishlist.IWishDeleteListener
 import com.evan.dokan.ui.home.wishlist.IWishListCreateListener
@@ -26,6 +28,8 @@ class HomeViewModel (
 
     var shopUserIdPost:ShopUserIdPost?=null
     var orderIdPost:OrderIdPost?=null
+    var userUpdatePost:UserUpdatePost?=null
+    var passwordPost:PasswordPost?=null
     var deleteCartPost:DeleteCartPost?=null
     var cartOrderDetailsPost:CartOrderDetailsPost?=null
     var cartListQuantityPost:CartListQuantityPost?=null
@@ -44,6 +48,8 @@ class HomeViewModel (
     var cartListDeleteListener: ICartListDeleteListener?=null
     var wishCountListener: IWishCountListener?=null
     var cartCountListener: ICartCountListener?=null
+    var userListener: IUserListener?=null
+    var profileUpdateListener: IProfileUpdateListener?=null
     fun getCategory(token:String,shopUserId:Int) {
         categoryListListener?.onStarted()
         Coroutines.main {
@@ -312,4 +318,65 @@ class HomeViewModel (
         }
 
     }
+
+    fun getCustomerUser(header:String) {
+        userListener?.onStarted()
+        Coroutines.main {
+            try {
+                val response = repository.getCustomerUser(header)
+                Log.e("response", "response" + Gson().toJson(response))
+                userListener?.onUser(response?.data!!)
+                userListener?.onEnd()
+            } catch (e: ApiException) {
+                userListener?.onEnd()
+            } catch (e: NoInternetException) {
+                userListener?.onEnd()
+            }
+        }
+
+    }
+    fun updateUserDetails(header:String,id:Int,name:String,address:String,picture:String,gender:Int) {
+        profileUpdateListener?.onStarted()
+        Coroutines.main {
+            try {
+                userUpdatePost= UserUpdatePost(id!!,name!!,address!!,picture!!,gender)
+                Log.e("Search", "Search" + Gson().toJson(userUpdatePost))
+                val response = repository.updateUserDetails(header,userUpdatePost!!)
+                Log.e("response", "response" + Gson().toJson(response))
+                profileUpdateListener?.onUser(response?.message!!)
+                profileUpdateListener?.onEnd()
+
+            } catch (e: ApiException) {
+                profileUpdateListener?.onEnd()
+                profileUpdateListener?.onFailure(e?.message!!)
+            } catch (e: NoInternetException) {
+                profileUpdateListener?.onEnd()
+                profileUpdateListener?.onFailure(e?.message!!)
+            }
+        }
+
+    }
+    fun updatePassword(header:String,id:Int,password:String) {
+        profileUpdateListener?.onStarted()
+        Coroutines.main {
+            try {
+                passwordPost= PasswordPost(id!!,password!!)
+                Log.e("Search", "Search" + Gson().toJson(passwordPost))
+                val response = repository.updatePassword(header,passwordPost!!)
+                Log.e("response", "response" + Gson().toJson(response))
+                profileUpdateListener?.onUser(response?.message!!)
+                profileUpdateListener?.onEnd()
+
+            } catch (e: ApiException) {
+                profileUpdateListener?.onEnd()
+                profileUpdateListener?.onFailure(e?.message!!)
+            } catch (e: NoInternetException) {
+                profileUpdateListener?.onEnd()
+                profileUpdateListener?.onFailure(e?.message!!)
+            }
+        }
+
+    }
+
+
 }

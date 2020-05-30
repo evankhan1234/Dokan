@@ -19,7 +19,20 @@ interface MyApi {
         @Field("email") email: String,
         @Field("password") password: String
     ) : Response<AuthResponse>
-
+    @GET("customer-user-details.php")
+    suspend fun getCustomerUser(
+        @Header("Authorization") Authorization:String
+    ): Response<CustomerResponses>
+    @POST("update-customer-user-details.php")
+    suspend fun  updateUserDetails(
+        @Header("Authorization") Authorization:String,
+        @Body userUpdatePost: UserUpdatePost
+    ): Response<BasicResponses>
+    @POST("update-customer-password.php")
+    suspend fun  updatePassword(
+        @Header("Authorization") Authorization:String,
+        @Body passwordPost: PasswordPost
+    ): Response<BasicResponses>
     @POST("login-customer-api.php")
     suspend fun userLoginFor(
         @Body authPost: AuthPost

@@ -20,6 +20,8 @@
     <string name="my_page">My Page</string>
     <string name="product">Product</string>
     <string name="details">Details</string>
+    <string name="update">Update</string>
+    <string name="change">Change</string>
     <string name="wish_list">Wish List</string>
 
     <!-- TODO: Remove or change this placeholder text -->

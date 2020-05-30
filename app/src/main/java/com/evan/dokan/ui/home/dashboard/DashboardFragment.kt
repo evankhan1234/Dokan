@@ -1,16 +1,18 @@
 package com.evan.dokan.ui.home.dashboard
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-
+import androidx.recyclerview.widget.RecyclerView
+import com.daimajia.slider.library.SliderLayout
+import com.daimajia.slider.library.SliderTypes.BaseSliderView
+import com.daimajia.slider.library.SliderTypes.TextSliderView
 import com.evan.dokan.R
 import com.evan.dokan.data.db.entities.Category
 import com.evan.dokan.ui.home.HomeActivity
@@ -38,6 +40,8 @@ class DashboardFragment : Fragment(),KodeinAware, ICategoryListListener , ICateg
     var token:String?=""
     var shopUserId:Int?=0
     var edit_content: EditText?=null
+    var slider: SliderLayout?=null
+    var rcv_category: RecyclerView?=null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,6 +55,8 @@ class DashboardFragment : Fragment(),KodeinAware, ICategoryListListener , ICateg
         shopUserId = args?.getInt("ShopUserId")
         viewModel.getCategory(token!!,shopUserId!!)
         edit_content=root?.findViewById(R.id.edit_content)
+        rcv_category=root?.findViewById(R.id.rcv_category)
+        slider=root?.findViewById(R.id.slider)
         edit_content?.setOnTouchListener(object : View.OnTouchListener {
             override fun onTouch(v: View, m: MotionEvent): Boolean {
                 if (activity is HomeActivity) {
@@ -59,6 +65,19 @@ class DashboardFragment : Fragment(),KodeinAware, ICategoryListListener , ICateg
                 return false
             }
         })
+        val textSliderView = TextSliderView(context!!)
+        val textSliderView2 = TextSliderView(context!!)
+        val textSliderView1 = TextSliderView(context!!)
+        textSliderView.description("Store").image("https://i.pinimg.com/736x/6b/69/3b/6b693b3c9b002841406cec19a9e1e1f4.jpg")
+        textSliderView2.description("Shop").image("https://www.retaildetail.eu/sites/default/files/styles/news/public/news/shutterstock_324322787_0.jpg?itok=ypsEGJja")
+            .setScaleType(BaseSliderView.ScaleType.Fit)
+        textSliderView1.description("Mart").image("https://m.economictimes.com/thumb/msid-73320353,width-1200,height-900,resizemode-4,imgsize-789754/kirana-bccl.jpg")
+            .setScaleType(BaseSliderView.ScaleType.Fit)
+        slider?.addSlider(textSliderView)
+        slider?.addSlider(textSliderView1)
+        slider?.addSlider(textSliderView2)
+        rcv_category?.setNestedScrollingEnabled(false)
+
         return root
     }
 

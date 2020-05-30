@@ -22,12 +22,14 @@ import androidx.core.app.ActivityCompat
 import com.evan.bazar.ui.custom.CustomDialog
 import com.evan.dokan.R
 import com.evan.dokan.ui.auth.interfaces.ClickInterface
-import com.evan.dokan.ui.auth.interfaces.DialogActionListener
 import com.google.android.material.snackbar.Snackbar
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.nio.charset.StandardCharsets
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -240,7 +242,7 @@ fun isCameraePermissionGranted(activity: Activity?): Boolean {
         false
     } else true
 }
-fun showImagePickerDialog(mContext: Context, dialogCallback: DialogActionListener?) {
+fun showImagePickerDialog(mContext: Context, dialogCallback: DialogActionListener) {
     val infoDialog = CustomDialog(mContext, R.style.CustomDialogTheme)
     val inflator =
         mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -351,8 +353,23 @@ fun showDialogSuccessfull(
     btnCancel.setOnClickListener {
         //your business logic
 
-        dialogCallback?.onNegativeClick()
+        dialogCallback.onNegativeClick()
         infoDialog.dismiss()
     }
     infoDialog.show()
+}
+ fun getHashPassWordMD5(password: String): String? {
+    var md: MessageDigest? = null
+    try {
+        md = MessageDigest.getInstance("MD5")
+    } catch (e: NoSuchAlgorithmException) {
+        e.printStackTrace()
+    }
+    val hashInBytes =
+        md!!.digest(password.toByteArray(StandardCharsets.UTF_8))
+    val sb = StringBuilder()
+    for (b in hashInBytes) {
+        sb.append(String.format("%02x", b))
+    }
+    return sb.toString()
 }
