@@ -121,7 +121,7 @@ class DashboardFragment : Fragment(),KodeinAware, ICategoryListListener , ICateg
     }
 
     override fun onEnd() {
-        progress_bar?.hide()
+       progress_bar?.hide()
     }
 
     override fun onUpdate(category: Category) {
