@@ -103,5 +103,8 @@ class HomeRepository (
     suspend fun getRecentProduct(header:String,post: ShopUserIdPost): ProductResponses {
         return apiRequest { api.getRecentProduct(header,post) }
     }
+    suspend fun getNotice(header:String,post: NoticePost): NoticeResponses {
+        return apiRequest { api.getNotice(header,post) }
+    }
 
 }

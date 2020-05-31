@@ -21,6 +21,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProviders
 import com.evan.dokan.BuildConfig
 import com.evan.dokan.R
+import com.evan.dokan.data.db.entities.Notice
 import com.evan.dokan.data.db.entities.Order
 import com.evan.dokan.data.db.entities.Product
 import com.evan.dokan.data.db.entities.Users
@@ -31,6 +32,8 @@ import com.evan.dokan.ui.home.dashboard.DashboardFragment
 import com.evan.dokan.ui.home.dashboard.product.ProductCategoryWiseListFragment
 import com.evan.dokan.ui.home.dashboard.product.details.ProductDetailsFragment
 import com.evan.dokan.ui.home.dashboard.search.ProductSearchFragment
+import com.evan.dokan.ui.home.notice.NoticeFragment
+import com.evan.dokan.ui.home.notice.NoticeViewFragment
 import com.evan.dokan.ui.home.order.OrderFragment
 import com.evan.dokan.ui.home.order.details.OrderDetailsFragment
 import com.evan.dokan.ui.home.settings.SettingsFragment
@@ -87,6 +90,12 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
             afterClickTabItem(FRAG_ORDER, null)
             setUpFooter(FRAG_ORDER)
         }
+        btn_notice?.setOnClickListener {
+            setUpHeader(FRAG_NOTICE)
+            afterClickTabItem(FRAG_NOTICE, null)
+            setUpFooter(FRAG_NOTICE)
+        }
+
     }
     fun onCount(){
         viewModel.countCartList(token!!,shop_user_id!!)
@@ -211,6 +220,9 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
 
                 setUpHeader(FRAG_SETTINGS )
             }
+            else if (f is NoticeFragment) {
+                setUpHeader(FRAG_NOTICE )
+            }
 //            if (f is SupplierFragment) {
 //                val supplierFragment: SupplierFragment =
 //                    mFragManager?.findFragmentByTag(FRAG_SUPPLIER.toString()) as SupplierFragment
@@ -242,6 +254,37 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
     }
     fun finishs(){
         finishAffinity()
+    }
+    fun goToNoticeDetailsFragment(notice: Notice) {
+        setUpHeader(FRAG_NOTICE_DETAILS)
+        mFragManager = supportFragmentManager
+        var fragId:Int?=0
+        fragId= FRAG_NOTICE_DETAILS
+        fragTransaction = mFragManager?.beginTransaction()
+        val count = mFragManager?.getBackStackEntryCount()
+        if (count != 0) {
+
+        }
+        if (mCurrentFrag != null && mCurrentFrag!!.getTag() != null && mCurrentFrag!!.getTag() == fragId.toString()) {
+            return
+        }
+        var newFrag: Fragment? = null
+        newFrag = NoticeViewFragment()
+        val b= Bundle()
+        b.putParcelable(Notice::class.java?.getSimpleName(), notice)
+        newFrag.setArguments(b)
+        mCurrentFrag = newFrag
+        fragTransaction!!.setCustomAnimations(
+            R.anim.view_transition_in_left,
+            R.anim.view_transition_out_left,
+            R.anim.view_transition_in_right,
+            R.anim.view_transition_out_right
+        )
+
+        fragTransaction?.replace(R.id.main_container, newFrag!!, fragId.toString())
+        fragTransaction?.addToBackStack(fragId.toString())
+        fragTransaction!!.commit()
+
     }
     fun goToProfileUpdateFragment(users: Users) {
         setUpHeader(FRAG_PROFILE_UPDATE)
@@ -407,6 +450,9 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
             FRAG_SEARCH-> {
                 newFrag = ProductSearchFragment()
             }
+            FRAG_NOTICE->{
+                newFrag = NoticeFragment()
+            }
         }
         val b= Bundle()
         b.putInt("ShopUserId", shop_user_id!!)
@@ -481,8 +527,12 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
                 ll_back_header?.visibility = View.VISIBLE
                 rlt_header?.visibility = View.GONE
                 tv_details.text = resources.getString(R.string.details)
-                btn_footer_home.setSelected(true)
 
+            }
+            FRAG_NOTICE_DETAILS->{
+                ll_back_header?.visibility = View.VISIBLE
+                rlt_header?.visibility = View.GONE
+                tv_details.text = resources.getString(R.string.details)
             }
             FRAG_PROFILE_UPDATE -> {
                 ll_back_header?.visibility = View.VISIBLE
@@ -511,6 +561,13 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
                 ll_back_header?.visibility = View.VISIBLE
                 rlt_header?.visibility = View.GONE
                 tv_details.text = resources.getString(R.string.order)
+
+
+            }
+            FRAG_NOTICE -> {
+                ll_back_header?.visibility = View.VISIBLE
+                rlt_header?.visibility = View.GONE
+                tv_details.text = resources.getString(R.string.notice)
 
 
             }
@@ -562,12 +619,6 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
 
                 btn_footer_settings.setSelected(true)
                 tv_settings_menu.setSelected(true)
-            }
-            FRAG_NOTICE -> {
-                shadow_line?.visibility = View.VISIBLE
-                bottom_navigation?.visibility = View.VISIBLE
-
-
             }
 
 

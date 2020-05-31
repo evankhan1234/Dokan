@@ -20,6 +20,10 @@ import com.evan.dokan.ui.home.dashboard.search.ProductSearchDataSource
 import com.evan.dokan.ui.home.dashboard.search.ProductSearchModelFactory
 import com.evan.dokan.ui.home.dashboard.search.ProductSearchSourceFactory
 import com.evan.dokan.ui.home.dashboard.search.ProductSearchViewModel
+import com.evan.dokan.ui.home.notice.NoticeDataSource
+import com.evan.dokan.ui.home.notice.NoticeModelFactory
+import com.evan.dokan.ui.home.notice.NoticeSourceFactory
+import com.evan.dokan.ui.home.notice.NoticeViewModel
 import com.evan.dokan.ui.home.order.modelfactory.DeliveredOrderModelFactory
 import com.evan.dokan.ui.home.order.modelfactory.PendingOrderModelFactory
 import com.evan.dokan.ui.home.order.modelfactory.ProcessingOrderModelFactory
@@ -62,11 +66,13 @@ class MVVMApplication : Application(), KodeinAware {
         bind() from singleton { QuotesRepository(instance(), instance(), instance()) }
         bind() from provider { AuthViewModelFactory(instance()) }
         bind() from provider { ShopModelFactory(instance(),instance()) }
+        bind() from provider { NoticeModelFactory(instance(),instance()) }
         bind() from provider { ProductCategoryWiseModelFactory(instance(),instance()) }
         bind() from provider { DeliveredOrderModelFactory(instance(),instance()) }
         bind() from provider { ProcessingOrderModelFactory(instance(),instance()) }
         bind() from provider { PendingOrderModelFactory(instance(),instance()) }
         bind() from provider { ShopSourceFactory(instance()) }
+        bind() from provider { NoticeSourceFactory(instance()) }
         bind() from provider { DeliveredOrderSourceFactory(instance()) }
         bind() from provider { ProcessingOrderSourceFactory(instance()) }
         bind() from provider { PendingOrderSourceFactory(instance()) }
@@ -76,7 +82,9 @@ class MVVMApplication : Application(), KodeinAware {
         bind() from provider { ProductSearchSourceFactory(instance()) }
         bind() from provider { ProductSearchViewModel(instance(),instance()) }
         bind() from provider { ProductSearchDataSource(instance(),instance()) }
+        bind() from provider { NoticeDataSource(instance(),instance()) }
         bind() from provider { DeliveredOrderViewModel(instance(),instance()) }
+        bind() from provider { NoticeViewModel(instance(),instance()) }
         bind() from provider { ProcessingOrderViewModel(instance(),instance()) }
         bind() from provider { PendingOrderViewModel(instance(),instance()) }
         bind() from provider { ProductCategoryWiseViewModel(instance(),instance()) }

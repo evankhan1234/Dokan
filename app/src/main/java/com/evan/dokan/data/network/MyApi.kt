@@ -47,6 +47,11 @@ interface MyApi {
         @Header("Authorization") Authorization:String,
         @Body productSearchPost: CustomerProductSearchPost
     ): Response<ProductResponses>
+    @POST("notice-get.php")
+    suspend fun getNotice(
+        @Header("Authorization") Authorization:String,
+        @Body noticePost: NoticePost
+    ): Response<NoticeResponses>
     @POST("recent-customer-product.php")
     suspend fun getRecentProduct(
         @Header("Authorization") Authorization:String,
