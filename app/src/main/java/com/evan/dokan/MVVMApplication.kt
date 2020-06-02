@@ -20,6 +20,14 @@ import com.evan.dokan.ui.home.dashboard.search.ProductSearchDataSource
 import com.evan.dokan.ui.home.dashboard.search.ProductSearchModelFactory
 import com.evan.dokan.ui.home.dashboard.search.ProductSearchSourceFactory
 import com.evan.dokan.ui.home.dashboard.search.ProductSearchViewModel
+import com.evan.dokan.ui.home.newsfeed.ownpost.OwnPostDataSource
+import com.evan.dokan.ui.home.newsfeed.ownpost.OwnPostModelFactory
+import com.evan.dokan.ui.home.newsfeed.ownpost.OwnPostSourceFactory
+import com.evan.dokan.ui.home.newsfeed.ownpost.OwnPostViewModel
+import com.evan.dokan.ui.home.newsfeed.publicpost.PublicPostDataSource
+import com.evan.dokan.ui.home.newsfeed.publicpost.PublicPostModelFactory
+import com.evan.dokan.ui.home.newsfeed.publicpost.PublicPostSourceFactory
+import com.evan.dokan.ui.home.newsfeed.publicpost.PublicPostViewModel
 import com.evan.dokan.ui.home.notice.NoticeDataSource
 import com.evan.dokan.ui.home.notice.NoticeModelFactory
 import com.evan.dokan.ui.home.notice.NoticeSourceFactory
@@ -66,6 +74,8 @@ class MVVMApplication : Application(), KodeinAware {
         bind() from singleton { QuotesRepository(instance(), instance(), instance()) }
         bind() from provider { AuthViewModelFactory(instance()) }
         bind() from provider { ShopModelFactory(instance(),instance()) }
+        bind() from provider { OwnPostModelFactory(instance(),instance()) }
+        bind() from provider { PublicPostModelFactory(instance(),instance()) }
         bind() from provider { NoticeModelFactory(instance(),instance()) }
         bind() from provider { ProductCategoryWiseModelFactory(instance(),instance()) }
         bind() from provider { DeliveredOrderModelFactory(instance(),instance()) }
@@ -73,11 +83,15 @@ class MVVMApplication : Application(), KodeinAware {
         bind() from provider { PendingOrderModelFactory(instance(),instance()) }
         bind() from provider { ShopSourceFactory(instance()) }
         bind() from provider { NoticeSourceFactory(instance()) }
+        bind() from provider { OwnPostSourceFactory(instance()) }
+        bind() from provider { PublicPostSourceFactory(instance()) }
         bind() from provider { DeliveredOrderSourceFactory(instance()) }
         bind() from provider { ProcessingOrderSourceFactory(instance()) }
         bind() from provider { PendingOrderSourceFactory(instance()) }
         bind() from provider { ProductCategoryWiseSourceFactory(instance()) }
         bind() from provider { ShopViewModel(instance(),instance()) }
+        bind() from provider { OwnPostViewModel(instance(),instance()) }
+        bind() from provider { PublicPostViewModel(instance(),instance()) }
         bind() from provider { ProductSearchModelFactory(instance(),instance()) }
         bind() from provider { ProductSearchSourceFactory(instance()) }
         bind() from provider { ProductSearchViewModel(instance(),instance()) }
@@ -90,6 +104,8 @@ class MVVMApplication : Application(), KodeinAware {
         bind() from provider { ProductCategoryWiseViewModel(instance(),instance()) }
         bind() from provider { ShopDataSource(instance(),instance()) }
         bind() from provider { DeliveredDataSource(instance(),instance()) }
+        bind() from provider { OwnPostDataSource(instance(),instance()) }
+        bind() from provider { PublicPostDataSource(instance(),instance()) }
         bind() from provider { ProcessingDataSource(instance(),instance()) }
         bind() from provider { PendingOrderDataSource(instance(),instance()) }
         bind() from provider { ProductCategoryWiseDataSource(instance(),instance()) }

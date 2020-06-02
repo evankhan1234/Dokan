@@ -32,6 +32,7 @@ import com.evan.dokan.ui.home.dashboard.DashboardFragment
 import com.evan.dokan.ui.home.dashboard.product.ProductCategoryWiseListFragment
 import com.evan.dokan.ui.home.dashboard.product.details.ProductDetailsFragment
 import com.evan.dokan.ui.home.dashboard.search.ProductSearchFragment
+import com.evan.dokan.ui.home.newsfeed.NewsfeedFragment
 import com.evan.dokan.ui.home.notice.NoticeFragment
 import com.evan.dokan.ui.home.notice.NoticeViewFragment
 import com.evan.dokan.ui.home.order.OrderFragment
@@ -130,9 +131,13 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
         setUpFooter(FRAG_SETTINGS)
     }
 
+    fun goToNewsfeedFragment(){
+        setUpHeader(FRAG_NEWSFEED)
+        afterClickTabItem(FRAG_NEWSFEED, null)
+    }
     @Suppress("UNUSED_PARAMETER")
     fun afterClickTabItem(fragId: Int, obj: Any?) {
-        if(fragId==7){
+        if(fragId==7 || fragId==12 ){
             addFragment(fragId, true, obj)
         }
         else{
@@ -453,6 +458,9 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
             FRAG_NOTICE->{
                 newFrag = NoticeFragment()
             }
+            FRAG_NEWSFEED->{
+                newFrag = NewsfeedFragment()
+            }
         }
         val b= Bundle()
         b.putInt("ShopUserId", shop_user_id!!)
@@ -555,6 +563,12 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
                 tv_details.text = resources.getString(R.string.product)
                 btn_footer_home.setSelected(true)
 
+            }
+            FRAG_NEWSFEED->{
+                ll_back_header?.visibility = View.VISIBLE
+                rlt_header?.visibility = View.GONE
+                tv_details.text = resources.getString(R.string.newsfeed)
+                btn_footer_home.setSelected(true)
             }
 
             FRAG_ORDER -> {

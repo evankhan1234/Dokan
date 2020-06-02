@@ -28,6 +28,16 @@ interface MyApi {
         @Header("Authorization") Authorization:String,
         @Body userUpdatePost: UserUpdatePost
     ): Response<BasicResponses>
+    @POST("post-pagination.php")
+    suspend fun  getPublicPostPagination(
+        @Header("Authorization") Authorization:String,
+        @Body publicForPost: PublicForPost
+    ): Response<PostResponses>
+    @POST("own-post-pagination.php")
+    suspend fun  getOwnPostPagination(
+        @Header("Authorization") Authorization:String,
+        @Body ownForPost: OwnForPost
+    ): Response<PostResponses>
     @POST("update-customer-password.php")
     suspend fun  updatePassword(
         @Header("Authorization") Authorization:String,
