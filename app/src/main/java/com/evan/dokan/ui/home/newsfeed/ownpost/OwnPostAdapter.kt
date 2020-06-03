@@ -1,4 +1,4 @@
-package com.evan.dokan.ui.shop
+package com.evan.dokan.ui.home.newsfeed.ownpost
 
 import android.content.Context
 import android.text.Html
@@ -10,13 +10,15 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.evan.dokan.R
-import com.evan.dokan.data.db.entities.Shop
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import kotlinx.android.synthetic.main.layout_shop_list.view.*
+import com.evan.dokan.data.db.entities.Post
 
-class ShopAdapter(val context: Context, val iShopUpdateListener: IShopUpdateListener) :
-PagedListAdapter<Shop, RecyclerView.ViewHolder>(NewsDiffCallback) {
+import com.evan.dokan.ui.shop.IShopUpdateListener
+
+import kotlinx.android.synthetic.main.layout_own_post_list.view.*
+
+
+class OwnPostAdapter (val context: Context, val ownPostUpdatedListener: IOwnPostUpdatedListener) :
+    PagedListAdapter<Post, RecyclerView.ViewHolder>(NewsDiffCallback) {
     private val DATA_VIEW_TYPE = 1
     private val FOOTER_VIEW_TYPE = 2
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -29,7 +31,7 @@ PagedListAdapter<Shop, RecyclerView.ViewHolder>(NewsDiffCallback) {
                 context,
                 getItem(position),
                 position,
-                iShopUpdateListener
+                ownPostUpdatedListener
             )
     }
 
@@ -38,12 +40,12 @@ PagedListAdapter<Shop, RecyclerView.ViewHolder>(NewsDiffCallback) {
     }
 
     companion object {
-        val NewsDiffCallback = object : DiffUtil.ItemCallback<Shop>() {
-            override fun areItemsTheSame(oldItem: Shop, newItem: Shop): Boolean {
+        val NewsDiffCallback = object : DiffUtil.ItemCallback<Post>() {
+            override fun areItemsTheSame(oldItem: Post, newItem: Post): Boolean {
                 return oldItem.Id == newItem.Id
             }
 
-            override fun areContentsTheSame(oldItem: Shop, newItem: Shop): Boolean {
+            override fun areContentsTheSame(oldItem: Post, newItem: Post): Boolean {
                 return oldItem == newItem
             }
         }
@@ -53,25 +55,22 @@ PagedListAdapter<Shop, RecyclerView.ViewHolder>(NewsDiffCallback) {
 
 class AlertViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-    fun bind(context: Context, shop: Shop?, position: Int, listener: IShopUpdateListener) {
+    fun bind(context: Context, post: Post?, position: Int, listener: IOwnPostUpdatedListener) {
 
-        if (shop != null) {
+        if (post != null) {
 
-            itemView.text_update.setOnClickListener {
-                listener.onUpdate(shop)
-            }
+//            itemView.text_update.setOnClickListener {
+//                listener.onUpdate(post)
+//            }
             Glide.with(context)
-                .load("https://asaransom.com/wp-content/uploads/2018/12/shopping-in-east-aurora-ny-1500x609.jpg")
+                .load(post?.Image)
+                .into(itemView.img_icon!!)
+            Glide.with(context)
+                .load(post?.Picture)
                 .into(itemView.img_image!!)
 
-            var shop_name: String = ""
-            var shop_address: String = ""
-
-            shop_name = "<b> <font color=#15507E>Shop Name</font> : </b>" + shop?.Name
-            shop_address = "<b> <font color=#15507E>Shop Address</font> : </b>" + shop?.Address
-            itemView.tv_shop_name.text = Html.fromHtml(shop_name)
-            itemView.tv_shop_address.text = Html.fromHtml(shop_address)
-
+            itemView.tv_content.text =post?.Content
+            itemView.tv_name.text =post?.Name
 
         }
     }
@@ -79,7 +78,7 @@ class AlertViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     companion object {
         fun create(parent: ViewGroup): AlertViewHolder {
             val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.layout_shop_list, parent, false)
+                .inflate(R.layout.layout_own_post_list, parent, false)
 
             return AlertViewHolder(view)
         }

@@ -12,7 +12,7 @@ const val FRAG_DASHBOARD: Int = 0
 const val FRAG_CUSTOMER_LIST: Int = 1
 var PAGE_INDICATOR: Int = 0
 var IS_FILTER_TANSITION: Boolean = false
-
+var is_like:Boolean= false
 var PAGE_PREV_INDICATOR: Int = 0
 val RESULT_CAR_QR_SCAN_TAB = 2222
 val RESULT_LINE_QR_SCAN = 1111
@@ -31,7 +31,7 @@ const val FRAG_ORDER_DETAILS: Int = 8
 const val FRAG_SEARCH: Int = 10
 const val FRAG_PROFILE_UPDATE: Int = 9
 const val FRAG_CHANGE_PASSWORD: Int = 11
-const val FRAG_CREATE_PURCHASE: Int = 12
+const val FRAG_NEWSFEED: Int = 12
 const val FRAG_UPDATE_PURCHASE: Int = 13
 const val FRAG_PRODUCT: Int = 14
 const val FRAG_CREATE_PRODUCT: Int = 15

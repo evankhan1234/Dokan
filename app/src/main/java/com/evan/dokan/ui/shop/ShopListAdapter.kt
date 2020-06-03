@@ -36,7 +36,7 @@ class ShopListAdapter(val context: Context, val shop: MutableList<Shop>?, val iS
             iShopUpdateListener.onUpdate(shop?.get(position)!!)
         }
         Glide.with(context)
-            .load("https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/slideshows/powerhouse_vegetables_slideshow/650x350_powerhouse_vegetables_slideshow.jpg")
+            .load("https://asaransom.com/wp-content/uploads/2018/12/shopping-in-east-aurora-ny-1500x609.jpg")
             .into(holder.itemView.img_image!!)
 
         var shop_name: String = ""

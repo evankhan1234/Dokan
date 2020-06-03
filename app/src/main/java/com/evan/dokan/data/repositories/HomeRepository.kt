@@ -106,5 +106,11 @@ class HomeRepository (
     suspend fun getNotice(header:String,post: NoticePost): NoticeResponses {
         return apiRequest { api.getNotice(header,post) }
     }
+    suspend fun getPublicPostPagination(header:String,post: PublicForPost): PostResponses {
+        return apiRequest { api.getPublicPostPagination(header,post) }
+    }
+    suspend fun getOwnPostPagination(header:String,post: OwnForPost): PostResponses {
+        return apiRequest { api.getOwnPostPagination(header,post) }
+    }
 
 }

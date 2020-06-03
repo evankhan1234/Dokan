@@ -50,6 +50,7 @@ class DashboardFragment : Fragment(),KodeinAware, ICategoryListListener , ICateg
     var rcv_category: RecyclerView?=null
     var rcv_products: RecyclerView?=null
     var tv_store: TextView?=null
+    var tv_news_feed: TextView?=null
     var productSearchAdapter: ProductCategoryWiseSearchAdapter?=null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,6 +73,7 @@ class DashboardFragment : Fragment(),KodeinAware, ICategoryListListener , ICateg
         tv_store?.isSelected=true
         rcv_products=root?.findViewById(R.id.rcv_products)
         rcv_category=root?.findViewById(R.id.rcv_category)
+        tv_news_feed=root?.findViewById(R.id.tv_news_feed)
         slider=root?.findViewById(R.id.slider)
         edit_content?.setOnTouchListener(object : View.OnTouchListener {
             override fun onTouch(v: View, m: MotionEvent): Boolean {
@@ -94,7 +96,11 @@ class DashboardFragment : Fragment(),KodeinAware, ICategoryListListener , ICateg
         slider?.addSlider(textSliderView2)
         rcv_category?.setNestedScrollingEnabled(false)
         rcv_products?.setNestedScrollingEnabled(false)
-
+        tv_news_feed?.setOnClickListener {
+            if (activity is HomeActivity) {
+                (activity as HomeActivity).goToNewsfeedFragment()
+            }
+        }
         return root
     }
 
