@@ -1,6 +1,7 @@
 package com.evan.dokan.ui.home.newsfeed.publicpost
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,7 @@ import com.evan.dokan.ui.home.order.OrderAdapter
 import com.evan.dokan.ui.home.order.modelfactory.DeliveredOrderModelFactory
 import com.evan.dokan.ui.home.order.viewmodel.DeliveredOrderViewModel
 import com.evan.dokan.util.NetworkState
+import com.evan.dokan.util.SharedPreferenceUtil
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
@@ -31,7 +33,7 @@ class PublicPostFragment : Fragment() ,KodeinAware,IPublicPostUpdateListener,IPu
     var publicPostAdapter:PublicPostAdapter?=null
 
 
-    private lateinit var viewModel: PublicPostViewModel
+    var viewModel: PublicPostViewModel?=null
 
     var rcv_post: RecyclerView?=null
 
@@ -45,6 +47,8 @@ class PublicPostFragment : Fragment() ,KodeinAware,IPublicPostUpdateListener,IPu
         val root= inflater.inflate(R.layout.fragment_public_post, container, false)
         viewModel = ViewModelProviders.of(this, factory).get(PublicPostViewModel::class.java)
         rcv_post = root?.findViewById(R.id.rcv_post)
+        progress_bar = root?.findViewById(R.id.progress_bar)
+        token = SharedPreferenceUtil.getShared(activity!!, SharedPreferenceUtil.TYPE_AUTH_TOKEN)
         initAdapter()
         initState();
         return root
@@ -60,7 +64,7 @@ class PublicPostFragment : Fragment() ,KodeinAware,IPublicPostUpdateListener,IPu
     private fun startListening() {
 
 
-        viewModel.listOfAlerts?.observe(this, Observer {
+        viewModel?.listOfAlerts?.observe(this, Observer {
             publicPostAdapter?.submitList(it)
         })
 
@@ -68,7 +72,7 @@ class PublicPostFragment : Fragment() ,KodeinAware,IPublicPostUpdateListener,IPu
 
 
     private fun initState() {
-        viewModel.getNetworkState().observe(this, Observer { state ->
+        viewModel?.getNetworkState()!!.observe(this, Observer { state ->
             when (state.status) {
                 NetworkState.Status.LOADIND -> {
                     progress_bar?.visibility=View.VISIBLE
@@ -87,7 +91,20 @@ class PublicPostFragment : Fragment() ,KodeinAware,IPublicPostUpdateListener,IPu
 
     }
 
-    override fun onCount(count: Int?) {
+    override fun onCount(count: Int?,type:Int,id:Int) {
         publicPostAdapter?.notifyDataSetChanged()
+        viewModel?.updatedLikeCount(token!!,id,count!!)
+        if(type==1){
+            viewModel?.createdLove(token!!,id,2)
+        }
+        else{
+            viewModel?.deletedLove(token!!,id,2)
+        }
+        Log.e("count","count"+count)
+    }
+    fun reloadData(){
+        viewModel?.replaceSubscription(this)
+        startListening()
+        Log.e("data","data")
     }
 }

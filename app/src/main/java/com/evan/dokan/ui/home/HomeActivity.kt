@@ -33,6 +33,7 @@ import com.evan.dokan.ui.home.dashboard.product.ProductCategoryWiseListFragment
 import com.evan.dokan.ui.home.dashboard.product.details.ProductDetailsFragment
 import com.evan.dokan.ui.home.dashboard.search.ProductSearchFragment
 import com.evan.dokan.ui.home.newsfeed.NewsfeedFragment
+import com.evan.dokan.ui.home.newsfeed.ownpost.PostBottomsheetFragment
 import com.evan.dokan.ui.home.notice.NoticeFragment
 import com.evan.dokan.ui.home.notice.NoticeViewFragment
 import com.evan.dokan.ui.home.order.OrderFragment
@@ -254,8 +255,17 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
     }
     fun backPress() {
         hideKeyboard(this)
+
         onBackPressed()
 
+
+    }
+
+    fun onBottomBackPress(){
+        val f = getVisibleFragment()
+        if(f is NewsfeedFragment){
+           f.reload()
+        }
     }
     fun finishs(){
         finishAffinity()
@@ -601,6 +611,18 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
         }
         return null
     }
+    fun getVisibleFragments(): Fragment? {
+        val fragmentManager = mFragManager
+        val fragments = fragmentManager!!.fragments
+        fragments.reverse()
+        for (fragment in fragments!!) {
+            if(fragment is PostBottomsheetFragment ){
+
+                return fragment
+            }
+        }
+        return null
+    }
     fun setUpFooter(type: Int) {
         setUnselectAllmenu()
         CURRENT_PAGE = type
@@ -886,14 +908,27 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
 
                         } else {
                             //update in
-                            val f = getVisibleFragment()
-                            if (f != null) {
-                                if (f is ProfileUpdateFragment) {
+                            if ( image_update.equals("profile")){
+                                val f = getVisibleFragment()
+                                if (f != null) {
+                                    if (f is ProfileUpdateFragment) {
 
-                                    f.showImage(updated_image_url)
+                                        f.showImage(updated_image_url)
+                                    }
+
                                 }
-
                             }
+                            else{
+                                val f = getVisibleFragments()
+                                if (f != null) {
+                                    if (f is PostBottomsheetFragment) {
+
+                                        f.showImage(updated_image_url)
+                                    }
+
+                                }
+                            }
+
 
 
 

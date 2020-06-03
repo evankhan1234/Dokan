@@ -23,6 +23,28 @@ interface MyApi {
     suspend fun getCustomerUser(
         @Header("Authorization") Authorization:String
     ): Response<CustomerResponses>
+
+    @POST("update-like-count.php")
+    suspend fun updatedLikeCount(
+        @Header("Authorization") Authorization:String,
+        @Body post: LikeCountPost
+    ): Response<BasicResponses>
+    @POST("create-love.php")
+    suspend fun createdLove(
+        @Header("Authorization") Authorization:String,
+        @Body post: LovePost
+    ): Response<BasicResponses>
+    @POST("deleted-love.php")
+    suspend fun deletedLove(
+        @Header("Authorization") Authorization:String,
+        @Body post: LovePost
+    ): Response<BasicResponses>
+    @POST("create-post.php")
+    suspend fun createdNewsFeedPost(
+        @Header("Authorization") Authorization:String,
+        @Body post: NewsfeedPost
+    ): Response<BasicResponses>
+
     @POST("update-customer-user-details.php")
     suspend fun  updateUserDetails(
         @Header("Authorization") Authorization:String,

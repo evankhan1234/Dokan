@@ -112,5 +112,18 @@ class HomeRepository (
     suspend fun getOwnPostPagination(header:String,post: OwnForPost): PostResponses {
         return apiRequest { api.getOwnPostPagination(header,post) }
     }
+    suspend fun updatedLikeCount(header:String,post: LikeCountPost): BasicResponses {
+        return apiRequest { api.updatedLikeCount(header,post) }
+    }
+    suspend fun createdLove(header:String,post: LovePost): BasicResponses {
+        return apiRequest { api.createdLove(header,post) }
+    }
+    suspend fun deletedLove(header:String,post: LovePost): BasicResponses {
+        return apiRequest { api.deletedLove(header,post) }
+    }
+    suspend fun createdNewsFeedPost(header:String,post: NewsfeedPost): BasicResponses {
+        return apiRequest { api.createdNewsFeedPost(header,post) }
+    }
+
 
 }

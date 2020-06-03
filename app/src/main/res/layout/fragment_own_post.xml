@@ -29,7 +29,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="10dp"
                 android:alpha="1.5"
-                android:id="@+id/btn_category_new"
+                android:id="@+id/img_post_new"
                 android:src="@drawable/add_icon" />
     </RelativeLayout>
 

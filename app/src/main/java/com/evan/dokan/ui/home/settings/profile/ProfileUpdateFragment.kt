@@ -17,10 +17,7 @@ import com.evan.dokan.data.db.entities.Users
 import com.evan.dokan.ui.home.HomeActivity
 import com.evan.dokan.ui.home.HomeViewModel
 import com.evan.dokan.ui.home.HomeViewModelFactory
-import com.evan.dokan.util.SharedPreferenceUtil
-import com.evan.dokan.util.hide
-import com.evan.dokan.util.show
-import com.evan.dokan.util.snackbar
+import com.evan.dokan.util.*
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_create_account.*
 
@@ -101,6 +98,7 @@ class ProfileUpdateFragment : Fragment(),KodeinAware ,IProfileUpdateListener{
         }
         img_user_add=root?.findViewById(R.id.img_user_add)
         img_user_add?.setOnClickListener{
+            image_update="profile"
             (activity as HomeActivity?)!!.openImageChooser()
         }
         btn_ok?.setOnClickListener {
