@@ -92,6 +92,16 @@ class LoginActivity : AppCompatActivity(),
     }
 
     override fun onSuccess(user: Users) {
+        SharedPreferenceUtil.saveShared(
+            this,
+            SharedPreferenceUtil.TYPE_NAME,
+            user?.Name!!
+        )
+        SharedPreferenceUtil.saveShared(
+            this,
+            SharedPreferenceUtil.TYPE_IMAGE,
+            user?.Picture!!
+        )
         progress_bar.hide()
         Intent(this, ShopActivity::class.java).also {
             it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

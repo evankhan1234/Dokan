@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/root_layout"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@color/white">
+
+    <RelativeLayout
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alpha="1.5"
+            android:visibility="visible">
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/linear_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Create a Status"
+                        android:textColor="@color/black"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+                <ImageView
+                        android:id="@+id/img_dismiss"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/forbidden"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+            </RelativeLayout>
+
+            <EditText
+                    android:id="@+id/et_content"
+                    android:hint="Enter Your thoughts here"
+                    android:background="@null"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                <ImageView
+                        android:visibility="gone"
+                        android:id="@+id/img_image_cross"
+                        android:layout_marginRight="20dp"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/close"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+            </RelativeLayout>
+            <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/img_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="148dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginRight="40dp"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone"
+                    app:riv_border_color="#333333"
+                    app:riv_corner_radius="10dp"
+                    app:riv_mutate_background="true" />
+
+           <RelativeLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+               <LinearLayout
+                       android:id="@+id/linear_photo"
+                       android:orientation="horizontal"
+                       android:layout_alignParentLeft="true"
+                       android:layout_marginTop="200dp"
+                       android:background="@drawable/background_image"
+                       android:layout_width="150dp"
+                       android:layout_height="40dp">
+                   <ImageView
+                           android:layout_marginLeft="15dp"
+                           android:id="@+id/img_dismiss"
+                           android:layout_marginTop="7dp"
+                           android:layout_marginRight="20dp"
+                           android:src="@drawable/art"
+                           android:layout_width="25dp"
+                           android:layout_height="25dp"/>
+                   <TextView
+                           android:layout_marginTop="7dp"
+                           android:text="Photos"
+                           android:textStyle="bold"
+                           android:textSize="17sp"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"/>
+
+               </LinearLayout>
+               <Button
+                       android:layout_alignParentRight="true"
+                       android:backgroundTint="#BF3E15"
+                       android:id="@+id/btn_ok"
+                       android:layout_width="130dp"
+                       android:layout_height="50dp"
+                       android:layout_marginTop="200dp"
+                       android:layout_marginBottom="8dp"
+                       android:stateListAnimator="@null"
+                       android:text="SHARE"
+                       android:textAllCaps="false"
+                       android:textColor="#fff"
+                       android:textSize="15sp" />
+           </RelativeLayout>
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+
+    <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:indeterminateDrawable="@drawable/progress"
+            android:visibility="gone" />
+</RelativeLayout>

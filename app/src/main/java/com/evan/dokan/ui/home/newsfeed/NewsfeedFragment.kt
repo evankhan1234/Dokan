@@ -2,6 +2,7 @@ package com.evan.dokan.ui.home.newsfeed
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -87,4 +88,12 @@ class NewsfeedFragment : Fragment() {
 //        }
 //    }
 
+    override fun onResume() {
+        super.onResume()
+        Log.e("data","data")
+    }
+    fun reload(){
+        fragmentAdapter?.secondtTab?.reloadData()
+        fragmentAdapter?.firstTab?.reloadData()
+    }
 }

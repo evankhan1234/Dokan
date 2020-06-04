@@ -22,7 +22,7 @@ val RESULT_CAR_QR_SCAN_FROM_CUSTOMER_EDIT = 4444
 var fragmentStack: Fragment? =  null
  var mFragManager: FragmentManager? = null
  var fragTransaction: FragmentTransaction? = null
-
+var image_update:String?=""
 const val FRAG_TOP: Int = 1
 const val FRAG_STORE: Int = 2
 const val FRAG_CATEGORY: Int = 6

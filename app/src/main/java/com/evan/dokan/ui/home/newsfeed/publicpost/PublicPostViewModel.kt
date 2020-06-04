@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.evan.dokan.data.db.entities.Post
+import com.evan.dokan.data.network.post.LikeCountPost
+import com.evan.dokan.data.network.post.LovePost
 
 import com.evan.dokan.data.network.post.SearchPost
 import com.evan.dokan.data.repositories.HomeRepository
@@ -24,7 +26,8 @@ class PublicPostViewModel (
     val repository: HomeRepository,
     val alertListSourceFactory: PublicPostSourceFactory
 ) : ViewModel() {
-
+    var likeCountPost:LikeCountPost?=null
+    var lovePost:LovePost?=null
 
     var listOfAlerts: LiveData<PagedList<Post>>? = null
     private val pageSize = 7
@@ -54,6 +57,50 @@ class PublicPostViewModel (
             alertListSourceFactory.mutableLiveData,
             PublicPostDataSource::networkState
         )
+    fun updatedLikeCount(header:String,id: Int,love:Int) {
+        Coroutines.main {
+            try {
+                likeCountPost= LikeCountPost(id,love)
+                val response = repository.updatedLikeCount(header,likeCountPost!!)
+                Log.e("response", "response" + Gson().toJson(response))
 
+            } catch (e: ApiException) {
+
+            } catch (e: NoInternetException) {
+
+            }
+        }
+
+    }
+    fun createdLove(header:String,postId: Int,type:Int) {
+        Coroutines.main {
+            try {
+                lovePost= LovePost(postId,type)
+                val response = repository.createdLove(header,lovePost!!)
+                Log.e("response", "response" + Gson().toJson(response))
+
+            } catch (e: ApiException) {
+
+            } catch (e: NoInternetException) {
+
+            }
+        }
+
+    }
+    fun deletedLove(header:String,postId: Int,type:Int) {
+        Coroutines.main {
+            try {
+                lovePost= LovePost(postId,type)
+                val response = repository.deletedLove(header,lovePost!!)
+                Log.e("response", "response" + Gson().toJson(response))
+
+            } catch (e: ApiException) {
+
+            } catch (e: NoInternetException) {
+
+            }
+        }
+
+    }
 
 }

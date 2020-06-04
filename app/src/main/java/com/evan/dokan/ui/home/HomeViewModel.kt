@@ -11,6 +11,7 @@ import com.evan.dokan.ui.home.dashboard.IRecentProductListener
 import com.evan.dokan.ui.home.dashboard.category.ICategoryListListener
 import com.evan.dokan.ui.home.dashboard.product.details.ICreateCartListener
 import com.evan.dokan.ui.home.dashboard.product.details.IProductLikeListener
+import com.evan.dokan.ui.home.newsfeed.ownpost.IPostListener
 import com.evan.dokan.ui.home.order.details.IOrderDetailsListener
 import com.evan.dokan.ui.home.settings.IUserListener
 import com.evan.dokan.ui.home.settings.profile.IProfileUpdateListener
@@ -28,9 +29,11 @@ class HomeViewModel (
 ) : ViewModel() {
 
     var shopUserIdPost:ShopUserIdPost?=null
+
     var orderIdPost:OrderIdPost?=null
     var userUpdatePost:UserUpdatePost?=null
     var passwordPost:PasswordPost?=null
+    var newsfeedPost:NewsfeedPost?=null
     var deleteCartPost:DeleteCartPost?=null
     var cartOrderDetailsPost:CartOrderDetailsPost?=null
     var cartListQuantityPost:CartListQuantityPost?=null
@@ -52,6 +55,7 @@ class HomeViewModel (
     var userListener: IUserListener?=null
     var profileUpdateListener: IProfileUpdateListener?=null
     var recentProductListener: IRecentProductListener?=null
+    var postListener: IPostListener?=null
     fun getCategory(token:String,shopUserId:Int) {
         categoryListListener?.onStarted()
         Coroutines.main {
@@ -395,6 +399,28 @@ class HomeViewModel (
                 recentProductListener?.onEnd()
             } catch (e: NoInternetException) {
                 recentProductListener?.onEnd()
+            }
+        }
+
+    }
+
+    fun createdNewsFeedPost(header:String,Name:String,content:String,picture:String,created:String,status:Int,type:Int,image:String,love:Int) {
+        postListener?.onStarted()
+        Coroutines.main {
+            try {
+                newsfeedPost= NewsfeedPost(Name!!,content!!,picture!!,created!!,status!!,type!!,image!!,love!!)
+                Log.e("Search", "Search" + Gson().toJson(newsfeedPost))
+                val response = repository.createdNewsFeedPost(header,newsfeedPost!!)
+                Log.e("response", "response" + Gson().toJson(response))
+                postListener?.onSuccess(response?.message!!)
+                postListener?.onEnd()
+
+            } catch (e: ApiException) {
+                postListener?.onEnd()
+                postListener?.onFailure(e?.message!!)
+            } catch (e: NoInternetException) {
+                postListener?.onEnd()
+                postListener?.onFailure(e?.message!!)
             }
         }
 

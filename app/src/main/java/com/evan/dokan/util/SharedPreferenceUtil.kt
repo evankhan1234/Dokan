@@ -7,6 +7,8 @@ object SharedPreferenceUtil {
     const val TYPE_AUTH_TOKEN = "auth_token"
     const val TYPE_SHOP_ID = "shop_id"
     const val TYPE_FRESH = "fresh"
+    const val TYPE_NAME= "name"
+    const val TYPE_IMAGE = "image"
     const val TYPE_LATITUDE = "latitude"
     const val TYPE_PRODUCT_CATEGORY= "category"
     const val TYPE_LONGITUDE = "longitude"

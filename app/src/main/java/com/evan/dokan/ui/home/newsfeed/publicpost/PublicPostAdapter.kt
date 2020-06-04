@@ -1,6 +1,7 @@
 package com.evan.dokan.ui.home.newsfeed.publicpost
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,13 +11,25 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.evan.dokan.R
 import com.evan.dokan.data.db.entities.Post
 import com.evan.dokan.data.db.entities.Shop
 import com.evan.dokan.ui.home.newsfeed.ownpost.IOwnPostUpdatedListener
 import com.evan.dokan.ui.shop.IShopUpdateListener
 import com.evan.dokan.util.is_like
+import kotlinx.android.synthetic.main.layout_own_post_list.view.*
+
 import kotlinx.android.synthetic.main.layout_public_post_list.view.*
+import kotlinx.android.synthetic.main.layout_public_post_list.view.img_auth
+import kotlinx.android.synthetic.main.layout_public_post_list.view.img_icon
+import kotlinx.android.synthetic.main.layout_public_post_list.view.img_image
+import kotlinx.android.synthetic.main.layout_public_post_list.view.progress_bar
+import kotlinx.android.synthetic.main.layout_public_post_list.view.tv_content
+import kotlinx.android.synthetic.main.layout_public_post_list.view.tv_name
 
 class PublicPostAdapter (val context: Context, val publicPostUpdateListener: IPublicPostUpdateListener,val publicPostLikeListener:IPublicPostLikeListener) :
     PagedListAdapter<Post, RecyclerView.ViewHolder>(NewsDiffCallback) {
@@ -61,14 +74,15 @@ class AlertViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         if (post != null) {
 
+
 //            itemView.text_update.setOnClickListener {
 //                listener.onUpdate(post)
 //            }
             Glide.with(context)
                 .load(post?.Image)
-                .into(itemView.img_icon!!)
+                .into(itemView.img_icon!!).dontAnimate()
             Glide.with(context)
-                .load(post?.Picture)
+                .load(post?.Picture).dontAnimate()
                 .into(itemView.img_image!!)
 
             itemView.tv_content.text =post?.Content
@@ -93,14 +107,14 @@ class AlertViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                     itemView.img_like?.isSelected = true
                     post?.value = true
                     post.Love= post.Love!!+1
-                    likeListener?.onCount(post.Love)
+                    likeListener?.onCount(post.Love,1,post.Id!!)
 
                 } else {
 
                     itemView.img_like?.isSelected = false
                     post?.value = false
                     post.Love= post.Love!!-1
-                    likeListener?.onCount(post.Love)
+                    likeListener?.onCount(post.Love,2,post.Id!!)
                 }
             }
 

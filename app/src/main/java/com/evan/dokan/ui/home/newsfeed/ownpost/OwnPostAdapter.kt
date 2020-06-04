@@ -1,6 +1,7 @@
 package com.evan.dokan.ui.home.newsfeed.ownpost
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
@@ -9,12 +10,21 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.evan.dokan.R
 import com.evan.dokan.data.db.entities.Post
 
 import com.evan.dokan.ui.shop.IShopUpdateListener
 
 import kotlinx.android.synthetic.main.layout_own_post_list.view.*
+import kotlinx.android.synthetic.main.layout_own_post_list.view.img_icon
+import kotlinx.android.synthetic.main.layout_own_post_list.view.img_image
+import kotlinx.android.synthetic.main.layout_own_post_list.view.tv_content
+import kotlinx.android.synthetic.main.layout_own_post_list.view.tv_name
+import kotlinx.android.synthetic.main.layout_public_post_list.view.*
 
 
 class OwnPostAdapter (val context: Context, val ownPostUpdatedListener: IOwnPostUpdatedListener) :
@@ -63,11 +73,13 @@ class AlertViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 //                listener.onUpdate(post)
 //            }
             Glide.with(context)
-                .load(post?.Image)
+                .load(post?.Image).dontAnimate()
                 .into(itemView.img_icon!!)
+
             Glide.with(context)
-                .load(post?.Picture)
+                .load(post?.Picture).dontAnimate()
                 .into(itemView.img_image!!)
+
 
             itemView.tv_content.text =post?.Content
             itemView.tv_name.text =post?.Name
