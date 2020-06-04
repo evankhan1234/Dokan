@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:background="@color/white"
         android:layout_height="match_parent">
     <RelativeLayout
@@ -11,7 +11,11 @@
             android:id="@+id/root_layout"
             android:visibility="visible"
             android:alpha="1.5">
-
+        <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
+                android:id="@+id/swipe_refresh"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:srl_direction="top">
 
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_below="@+id/card_view"
@@ -20,7 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="visible" />
-
+        </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
         <ImageView
                 android:layout_width="60dp"
                 android:layout_height="60dp"
@@ -31,6 +35,7 @@
                 android:alpha="1.5"
                 android:id="@+id/img_post_new"
                 android:src="@drawable/add_icon" />
+
     </RelativeLayout>
 
     <ProgressBar

@@ -21,7 +21,7 @@ import com.evan.dokan.data.db.entities.Shop
 import com.evan.dokan.ui.home.newsfeed.ownpost.IOwnPostUpdatedListener
 import com.evan.dokan.ui.shop.IShopUpdateListener
 import com.evan.dokan.util.is_like
-import kotlinx.android.synthetic.main.layout_own_post_list.view.*
+
 
 import kotlinx.android.synthetic.main.layout_public_post_list.view.*
 import kotlinx.android.synthetic.main.layout_public_post_list.view.img_auth
@@ -30,6 +30,9 @@ import kotlinx.android.synthetic.main.layout_public_post_list.view.img_image
 import kotlinx.android.synthetic.main.layout_public_post_list.view.progress_bar
 import kotlinx.android.synthetic.main.layout_public_post_list.view.tv_content
 import kotlinx.android.synthetic.main.layout_public_post_list.view.tv_name
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 class PublicPostAdapter (val context: Context, val publicPostUpdateListener: IPublicPostUpdateListener,val publicPostLikeListener:IPublicPostLikeListener) :
     PagedListAdapter<Post, RecyclerView.ViewHolder>(NewsDiffCallback) {
@@ -75,16 +78,23 @@ class AlertViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         if (post != null) {
 
 
-//            itemView.text_update.setOnClickListener {
-//                listener.onUpdate(post)
-//            }
+            itemView.text_view.setOnClickListener {
+                listener.onUpdate(post)
+            }
             Glide.with(context)
-                .load(post?.Image)
-                .into(itemView.img_icon!!).dontAnimate()
+                .load(post?.Image).dontAnimate()
+                .into(itemView.img_icon!!)
+
+            if(post.Picture.equals("empty")){
+                itemView.img_image!!.visibility=View.GONE
+
+            }
+            else{
+                itemView.img_image!!.visibility=View.VISIBLE
+            }
             Glide.with(context)
                 .load(post?.Picture).dontAnimate()
                 .into(itemView.img_image!!)
-
             itemView.tv_content.text =post?.Content
             itemView.tv_name.text =post?.Name
             itemView.tv_count.text =post?.Love?.toString()
@@ -116,6 +126,38 @@ class AlertViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                     post.Love= post.Love!!-1
                     likeListener?.onCount(post.Love,2,post.Id!!)
                 }
+            }
+            try {
+                val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                val past: Date = format.parse(post?.Created)
+                val currentDate = format.format(Date())
+                val now: Date = format.parse(currentDate)
+
+                val seconds: Long =
+                    TimeUnit.MILLISECONDS.toSeconds(now.getTime() - past.getTime())
+                val minutes: Long =
+                    TimeUnit.MILLISECONDS.toMinutes(now.getTime() - past.getTime())
+                val hours: Long =
+                    TimeUnit.MILLISECONDS.toHours(now.getTime() - past.getTime())
+                val days: Long = TimeUnit.MILLISECONDS.toDays(now.getTime() - past.getTime())
+                if (seconds < 60) {
+                    Log.e("ago","ago"+seconds+" seconds ago")
+                    itemView.tv_hour.text=seconds.toString()+" seconds ago"
+                } else if (minutes < 60) {
+                    println("$minutes minutes ago")
+                    Log.e("ago","ago"+minutes+" minutes ago")
+                    itemView.tv_hour.text=minutes.toString()+" minutes ago"
+                } else if (hours < 24) {
+                    println("$hours hours ago")
+                    Log.e("ago","ago"+hours+" hours ago")
+                    itemView.tv_hour.text=hours.toString()+" hours ago"
+                } else {
+                    println("$days days ago")
+                    Log.e("ago","ago"+days+" days ago")
+                    itemView.tv_hour.text=days.toString()+"  days ago"
+                }
+            } catch (j: Exception) {
+                j.printStackTrace()
             }
 
         }
