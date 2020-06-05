@@ -14,6 +14,7 @@ import com.bumptech.glide.request.RequestListener
 import com.evan.dokan.R
 import com.evan.dokan.ui.home.HomeActivity
 import com.bumptech.glide.request.target.Target
+import com.evan.dokan.data.db.entities.Post
 
 import com.evan.dokan.ui.home.HomeViewModel
 import com.evan.dokan.ui.home.HomeViewModelFactory
@@ -25,6 +26,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.activity_create_account.*
+import kotlinx.android.synthetic.main.activity_shop.*
+import kotlinx.android.synthetic.main.layout_own_post_list.view.*
 import kotlinx.android.synthetic.main.layout_shop_list.view.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -33,10 +36,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class PostBottomsheetFragment : BottomSheetDialogFragment(),KodeinAware,IPostListener {
+class PostBottomsheetFragment(posts: Post?) : BottomSheetDialogFragment(),KodeinAware,IPostListener {
     private var mBehavior: BottomSheetBehavior<*>? = null
     override val kodein by kodein()
-
+    var post: Post?=posts
     private val factory : HomeViewModelFactory by instance()
 
 
@@ -74,9 +77,18 @@ class PostBottomsheetFragment : BottomSheetDialogFragment(),KodeinAware,IPostLis
         dialog.setContentView(view)
         mBehavior =
             BottomSheetBehavior.from(view.parent as View)
-        Glide.with(context!!)
-            .load("https://asaransom.com/wp-content/uploads/2018/12/shopping-in-east-aurora-ny-1500x609.jpg")
-            .into(img_image!!)
+        if(post!=null){
+            image_address=post?.Picture
+            et_content?.setText(post?.Content)
+            if(!image_address.equals("empty")){
+                Log.e("picture","picture"+image_address)
+                img_image?.visibility=View.VISIBLE
+                Glide.with(this)
+                    .load(post?.Picture).dontAnimate()
+                    .into(img_image!!)
+            }
+
+        }
         img_dismiss?.setOnClickListener {
             dismiss()
             (activity as HomeActivity?)!!.onBottomBackPress()
@@ -96,7 +108,7 @@ class PostBottomsheetFragment : BottomSheetDialogFragment(),KodeinAware,IPostLis
         btn_ok?.setOnClickListener {
             var content:String=""
             content=et_content?.text.toString()
-            val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             val currentDate = sdf.format(Date())
 
             Log.e("name","name"+name)

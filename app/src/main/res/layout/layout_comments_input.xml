@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+
+            android:id="@+id/view_line_between"
+            android:orientation="vertical">
+
+        <View
+
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:background="#FAF7F7"/>
+
+        <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/rlt_footer_root"
+                android:background="@color/white">
+
+            <EditText
+
+                    android:layout_marginBottom="10px"
+                    android:id="@+id/edt_input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/btn_background_moment"
+                    android:gravity="center_vertical"
+                    android:hint="Enter Your Message"
+                    android:maxLines="10"
+                    android:minHeight="50dp"
+                    android:paddingLeft="26px"
+                    android:paddingRight="26px"
+                    android:layout_marginLeft="30px"
+                    android:layout_marginRight="10px"
+                    android:layout_marginTop="10px"
+
+                    android:inputType="textMultiLine"
+                    android:textColor="@color/gray_black"
+                    android:textColorHint="@color/gray_bold"
+                    android:textSize="15sp"
+                    android:autoLink="web"/>
+
+            <Button
+                    android:layout_marginBottom="10px"
+                    android:id="@+id/btn_sends"
+                    android:layout_width="80dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10px"
+                    android:layout_marginTop="10px"
+                    android:layout_marginRight="20px"
+                    android:background="@drawable/btn_more_background"
+                    android:stateListAnimator="@null"
+                    android:hint="Send"
+                    android:textColorHint="@color/white"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

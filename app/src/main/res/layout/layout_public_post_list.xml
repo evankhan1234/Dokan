@@ -88,7 +88,7 @@
                                 android:textSize="13sp" />
 
                         <TextView
-                                android:id="@+id/text_phone_number"
+                                android:id="@+id/tv_hour"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="10dp"
@@ -128,6 +128,7 @@
                     app:riv_border_color="#333333"
                     app:riv_corner_radius="10dp"
                     app:riv_mutate_background="true" />
+
 
             <RelativeLayout
                     android:layout_width="match_parent"

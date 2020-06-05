@@ -1,6 +1,7 @@
 package com.evan.dokan.ui.home.newsfeed.ownpost
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.evan.dokan.R
 import com.evan.dokan.data.db.entities.Post
 import com.evan.dokan.util.NetworkState
+import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
@@ -33,7 +35,7 @@ class OwnPostFragment : Fragment(),KodeinAware,IOwnPostUpdatedListener {
     private  var viewModel: OwnPostViewModel?=null
 
     var rcv_post: RecyclerView?=null
-
+    var swipe_refresh: SwipyRefreshLayout?=null
     var progress_bar: ProgressBar?=null
     var img_post_new: ImageView?=null
     var token:String?=""
@@ -46,14 +48,22 @@ class OwnPostFragment : Fragment(),KodeinAware,IOwnPostUpdatedListener {
         viewModel = ViewModelProviders.of(this, factory).get(OwnPostViewModel::class.java)
         rcv_post = root?.findViewById(R.id.rcv_post)
         img_post_new = root?.findViewById(R.id.img_post_new)
+        swipe_refresh = root?.findViewById(R.id.swipe_refresh)
         progress_bar = root?.findViewById(R.id.progress_bar)
         initAdapter()
         initState()
         img_post_new?.setOnClickListener {
-            val bottomSheetFragment = PostBottomsheetFragment()
+            val bottomSheetFragment = PostBottomsheetFragment(null)
             val manager =
                 (activity!! as AppCompatActivity).supportFragmentManager
             bottomSheetFragment.show(manager, bottomSheetFragment.tag)
+        }
+        swipe_refresh?.setOnRefreshListener {
+            viewModel?.replaceSubscription(this)
+            startListening()
+            Handler().postDelayed(Runnable {
+                swipe_refresh?.isRefreshing=false
+            },1000)
         }
         return root
     }
@@ -94,7 +104,10 @@ class OwnPostFragment : Fragment(),KodeinAware,IOwnPostUpdatedListener {
 
 
     override fun onUpdate(post: Post) {
-
+        val bottomSheetFragment = PostBottomsheetFragment(post)
+        val manager =
+            (activity!! as AppCompatActivity).supportFragmentManager
+        bottomSheetFragment.show(manager, bottomSheetFragment.tag)
     }
     override fun onResume() {
         super.onResume()

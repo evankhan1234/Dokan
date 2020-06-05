@@ -271,7 +271,8 @@ class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateL
                     override fun onLocationChanged(location: Location?) {
                         if (location != null) {
                             locationNetwork = location
-
+                            SharedPreferenceUtil.saveShared(activity!!, SharedPreferenceUtil.TYPE_LATITUDE, locationGps!!.latitude.toString())
+                            SharedPreferenceUtil.saveShared(activity!!, SharedPreferenceUtil.TYPE_LONGITUDE, locationGps!!.longitude.toString())
                             Log.d("rears", " Network Latitude : " + locationNetwork!!.latitude)
                             Log.d("rears", " Network Longitude : " + locationNetwork!!.longitude)
                         }
@@ -297,6 +298,8 @@ class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateL
             }
 
             if(locationGps!= null && locationNetwork!= null){
+                SharedPreferenceUtil.saveShared(activity!!, SharedPreferenceUtil.TYPE_LATITUDE, locationGps!!.latitude.toString())
+                SharedPreferenceUtil.saveShared(activity!!, SharedPreferenceUtil.TYPE_LONGITUDE, locationGps!!.longitude.toString())
                 if(locationGps!!.accuracy > locationNetwork!!.accuracy){
 
                     Log.d("rearsa", " Network Latitude : " + locationNetwork!!.latitude)

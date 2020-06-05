@@ -179,7 +179,8 @@ class LoginActivity : AppCompatActivity(),
                     override fun onLocationChanged(location: Location?) {
                         if (location != null) {
                             locationNetwork = location
-
+                            SharedPreferenceUtil.saveShared(activity!!, SharedPreferenceUtil.TYPE_LATITUDE, locationGps!!.latitude.toString())
+                            SharedPreferenceUtil.saveShared(activity!!, SharedPreferenceUtil.TYPE_LONGITUDE, locationGps!!.longitude.toString())
                             Log.d("Khan", " Network Latitude : " + locationNetwork!!.latitude)
                             Log.d("Khan", " Network Longitude : " + locationNetwork!!.longitude)
                         }
