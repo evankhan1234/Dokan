@@ -2,6 +2,7 @@ package com.evan.dokan.ui.home.settings
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -107,4 +108,8 @@ class SettingsFragment : Fragment() ,KodeinAware,IUserListener{
         text_email?.setText(users?.Email)
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.e("evan","evan")
+    }
 }

@@ -13,6 +13,7 @@ const val FRAG_CUSTOMER_LIST: Int = 1
 var PAGE_INDICATOR: Int = 0
 var IS_FILTER_TANSITION: Boolean = false
 var is_like:Boolean= false
+var value_for:String= ""
 var PAGE_PREV_INDICATOR: Int = 0
 val RESULT_CAR_QR_SCAN_TAB = 2222
 val RESULT_LINE_QR_SCAN = 1111
