@@ -23,7 +23,37 @@ interface MyApi {
     suspend fun getCustomerUser(
         @Header("Authorization") Authorization:String
     ): Response<CustomerResponses>
+    @POST("comments-get.php")
+    suspend fun getComments(
+        @Header("Authorization") Authorization:String,
+        @Body post: CommentsPost
+    ): Response<CommentsResponse>
+    @POST("create-comments.php")
+    suspend fun createComments(
+        @Header("Authorization") Authorization:String,
+        @Body post: CommentsForPost
+    ): Response<BasicResponses>
+    @POST("update-own-post.php")
+    suspend fun updateOwnPost(
+        @Header("Authorization") Authorization:String,
+        @Body post: OwnUpdatedPost
+    ): Response<BasicResponses>
 
+    @POST("create-likes.php")
+    suspend fun createdLike(
+        @Header("Authorization") Authorization:String,
+        @Body post: CommentsPost
+    ): Response<BasicResponses>
+    @POST("deleted-like.php")
+    suspend fun deletedLike(
+        @Header("Authorization") Authorization:String,
+        @Body post: CommentsPost
+    ): Response<BasicResponses>
+    @POST("update-comments-like.php")
+    suspend fun updatedCommentsLikeCount(
+        @Header("Authorization") Authorization:String,
+        @Body post: LikeCountPost
+    ): Response<BasicResponses>
     @POST("update-like-count.php")
     suspend fun updatedLikeCount(
         @Header("Authorization") Authorization:String,

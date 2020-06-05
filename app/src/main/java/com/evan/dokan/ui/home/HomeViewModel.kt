@@ -12,6 +12,9 @@ import com.evan.dokan.ui.home.dashboard.category.ICategoryListListener
 import com.evan.dokan.ui.home.dashboard.product.details.ICreateCartListener
 import com.evan.dokan.ui.home.dashboard.product.details.IProductLikeListener
 import com.evan.dokan.ui.home.newsfeed.ownpost.IPostListener
+import com.evan.dokan.ui.home.newsfeed.publicpost.comments.ICommentsListener
+import com.evan.dokan.ui.home.newsfeed.publicpost.comments.ICommentsPostListener
+import com.evan.dokan.ui.home.newsfeed.publicpost.comments.ISucceslistener
 import com.evan.dokan.ui.home.order.details.IOrderDetailsListener
 import com.evan.dokan.ui.home.settings.IUserListener
 import com.evan.dokan.ui.home.settings.profile.IProfileUpdateListener
@@ -29,6 +32,10 @@ class HomeViewModel (
 ) : ViewModel() {
 
     var shopUserIdPost:ShopUserIdPost?=null
+    var commentsPost:CommentsPost?=null
+    var ownUpdatedPost:OwnUpdatedPost?=null
+    var likeCountPost:LikeCountPost?=null
+    var commentsForPost:CommentsForPost?=null
 
     var orderIdPost:OrderIdPost?=null
     var userUpdatePost:UserUpdatePost?=null
@@ -56,6 +63,9 @@ class HomeViewModel (
     var profileUpdateListener: IProfileUpdateListener?=null
     var recentProductListener: IRecentProductListener?=null
     var postListener: IPostListener?=null
+    var commentsPostListener: ICommentsPostListener?=null
+    var commentsListener: ICommentsListener?=null
+    var succeslistener: ISucceslistener?=null
     fun getCategory(token:String,shopUserId:Int) {
         categoryListListener?.onStarted()
         Coroutines.main {
@@ -425,5 +435,131 @@ class HomeViewModel (
         }
 
     }
+    fun getComments(header:String,postId:Int,type:Int) {
+        commentsListener?.onStarted()
+        Coroutines.main {
+            try {
+                commentsPost= CommentsPost(postId,type)
+                Log.e("Search", "Search" + Gson().toJson(commentsPost))
+                val response = repository.getComments(header,commentsPost!!)
+                Log.e("Search", "Search" + Gson().toJson(response))
+                commentsListener?.load(response?.data!!)
+                commentsListener?.onEnd()
+                Log.e("Search", "Search" + Gson().toJson(response))
 
+            } catch (e: ApiException) {
+                commentsListener?.onEnd()
+            } catch (e: NoInternetException) {
+                commentsListener?.onEnd()
+            }
+        }
+
+    }
+    fun getCommentsAgain(header:String,postId:Int,type:Int) {
+
+        Coroutines.main {
+            try {
+                commentsPost= CommentsPost(postId,type)
+                Log.e("Search", "Search" + Gson().toJson(commentsPost))
+                val response = repository.getComments(header,commentsPost!!)
+                Log.e("Search", "Search" + Gson().toJson(response))
+
+                succeslistener?.onShow()
+                Log.e("Search", "Search" + Gson().toJson(response))
+
+            } catch (e: ApiException) {
+
+            } catch (e: NoInternetException) {
+
+            }
+        }
+
+    }
+    fun updateNewsFeedPost(header:String,Name:String,content:String,picture:String,type:Int,image:String) {
+        postListener?.onStarted()
+        Coroutines.main {
+            try {
+                ownUpdatedPost= OwnUpdatedPost(Name!!,content!!,picture!!,type!!,image!!)
+                Log.e("Search", "Search" + Gson().toJson(ownUpdatedPost))
+                val response = repository.updateOwnPost(header,ownUpdatedPost!!)
+                Log.e("response", "response" + Gson().toJson(response))
+                postListener?.onSuccess(response?.message!!)
+                postListener?.onEnd()
+
+            } catch (e: ApiException) {
+                postListener?.onEnd()
+                postListener?.onFailure(e?.message!!)
+            } catch (e: NoInternetException) {
+                postListener?.onEnd()
+                postListener?.onFailure(e?.message!!)
+            }
+        }
+
+    }
+    fun updatedCommentsLikeCount(header:String,id: Int,love:Int) {
+        Coroutines.main {
+            try {
+                likeCountPost= LikeCountPost(id,love)
+                val response = repository.updatedCommentsLikeCount(header,likeCountPost!!)
+                Log.e("response", "response" + Gson().toJson(response))
+
+            } catch (e: ApiException) {
+
+            } catch (e: NoInternetException) {
+
+            }
+        }
+
+    }
+    fun createdLike(header:String,postId: Int,type:Int) {
+        Coroutines.main {
+            try {
+                commentsPost= CommentsPost(postId,type)
+                val response = repository.createdLike(header,commentsPost!!)
+                Log.e("response", "response" + Gson().toJson(response))
+
+            } catch (e: ApiException) {
+
+            } catch (e: NoInternetException) {
+
+            }
+        }
+
+    }
+    fun deletedLike(header:String,postId: Int,type:Int) {
+        Coroutines.main {
+            try {
+                commentsPost= CommentsPost(postId,type)
+                val response = repository.deletedLike(header,commentsPost!!)
+                Log.e("response", "response" + Gson().toJson(response))
+
+            } catch (e: ApiException) {
+
+            } catch (e: NoInternetException) {
+
+            }
+        }
+
+    }
+    fun createComments(header:String,Name:String,content:String,created:String,status:Int,type:Int,image:String,love:Int,postId:Int) {
+        commentsPostListener?.onStarted()
+        Coroutines.main {
+            try {
+                commentsForPost= CommentsForPost(Name!!,content!!,created!!,status!!,type!!,image!!,love!!,postId!!)
+                Log.e("Search", "Search" + Gson().toJson(newsfeedPost))
+                val response = repository.createComments(header,commentsForPost!!)
+                Log.e("response", "response" + Gson().toJson(response))
+                commentsPostListener?.onSuccess(response?.message!!)
+                commentsPostListener?.onEnd()
+
+            } catch (e: ApiException) {
+                commentsPostListener?.onEnd()
+                commentsPostListener?.onFailure(e?.message!!)
+            } catch (e: NoInternetException) {
+                commentsPostListener?.onEnd()
+                commentsPostListener?.onFailure(e?.message!!)
+            }
+        }
+
+    }
 }

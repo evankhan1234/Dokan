@@ -120,7 +120,13 @@ class PostBottomsheetFragment(posts: Post?) : BottomSheetDialogFragment(),Kodein
                 Toast.makeText(context!!,"Please Enter your thoughts",Toast.LENGTH_SHORT).show()
             }
             else{
-                viewModel?.createdNewsFeedPost(token!!,name!!,content,image_address!!,currentDate,1,2,image!!,0)
+                if(post==null){
+                    viewModel?.createdNewsFeedPost(token!!,name!!,content,image_address!!,currentDate,1,2,image!!,0)
+                }
+                else{
+                    viewModel?.updateNewsFeedPost(token!!,name!!,content,image_address!!,2,image!!)
+
+                }
             }
         }
         return dialog
