@@ -58,9 +58,10 @@ class ProductCategoryWiseSearchAdapter(val context: Context, val product: Mutabl
         } else {
             var discounts: Double = 0.0
             discounts = product?.get(position)?.SellPrice!! - product?.get(position)?.Discount!!
+            val number2digitsub: Double = String.format("%.2f", discounts).toDouble()
             discount_prices =
                 "<b> <font color=#BF3E15>ট </font> : </b>" + product?.get(position)?.SellPrice.toString()
-            total_prices = "<b> <font color=#BF3E15>ট </font> : </b>" + discounts
+            total_prices = "<b> <font color=#BF3E15>ট </font> : </b>" + number2digitsub
             holder.itemView.tv_product_price.text = Html.fromHtml(discount_prices!!)
             holder.itemView.tv_product_discount_price.text = Html.fromHtml(total_prices!!)
             holder.itemView.tv_product_price.setPaintFlags( holder.itemView.tv_product_price.getPaintFlags() or Paint.STRIKE_THRU_TEXT_FLAG)

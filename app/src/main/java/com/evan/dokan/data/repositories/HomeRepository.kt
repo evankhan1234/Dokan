@@ -124,6 +124,23 @@ class HomeRepository (
     suspend fun createdNewsFeedPost(header:String,post: NewsfeedPost): BasicResponses {
         return apiRequest { api.createdNewsFeedPost(header,post) }
     }
-
+    suspend fun getComments(header:String,post: CommentsPost): CommentsResponse {
+        return apiRequest { api.getComments(header,post) }
+    }
+    suspend fun createComments(header:String,post: CommentsForPost): BasicResponses {
+        return apiRequest { api.createComments(header,post) }
+    }
+    suspend fun updateOwnPost(header:String,post: OwnUpdatedPost): BasicResponses {
+        return apiRequest { api.updateOwnPost(header,post) }
+    }
+    suspend fun createdLike(header:String,post: CommentsPost): BasicResponses {
+        return apiRequest { api.createdLike(header,post) }
+    }
+    suspend fun deletedLike(header:String,post: CommentsPost): BasicResponses {
+        return apiRequest { api.deletedLike(header,post) }
+    }
+    suspend fun updatedCommentsLikeCount(header:String,post: LikeCountPost): BasicResponses {
+        return apiRequest { api.updatedCommentsLikeCount(header,post) }
+    }
 
 }

@@ -14,13 +14,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.evan.dokan.R
-import com.evan.dokan.data.db.entities.Order
 import com.evan.dokan.data.db.entities.Post
-import com.evan.dokan.ui.home.HomeActivity
-import com.evan.dokan.ui.home.newsfeed.ownpost.PostBottomsheetFragment
-import com.evan.dokan.ui.home.order.OrderAdapter
-import com.evan.dokan.ui.home.order.modelfactory.DeliveredOrderModelFactory
-import com.evan.dokan.ui.home.order.viewmodel.DeliveredOrderViewModel
+import com.evan.dokan.ui.home.newsfeed.publicpost.comments.CommentsFragment
 import com.evan.dokan.util.NetworkState
 import com.evan.dokan.util.SharedPreferenceUtil
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
@@ -102,7 +97,8 @@ class PublicPostFragment : Fragment() ,KodeinAware,IPublicPostUpdateListener,IPu
     }
 
     override fun onUpdate(post: Post) {
-        val bottomSheetFragment = CommentsFragment()
+        val bottomSheetFragment =
+            CommentsFragment(post)
         val manager =
             (activity!! as AppCompatActivity).supportFragmentManager
         bottomSheetFragment.show(manager, bottomSheetFragment.tag)
