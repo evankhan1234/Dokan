@@ -6,6 +6,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -29,6 +30,7 @@ import com.evan.dokan.ui.home.dashboard.product.ProductCategoryWiseSearchAdapter
 import com.evan.dokan.util.SharedPreferenceUtil
 import com.evan.dokan.util.hide
 import com.evan.dokan.util.show
+import com.evan.dokan.util.value_for
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -49,6 +51,7 @@ class DashboardFragment : Fragment(),KodeinAware, ICategoryListListener , ICateg
     var slider: SliderLayout?=null
     var rcv_category: RecyclerView?=null
     var rcv_products: RecyclerView?=null
+    var progress_bar: ProgressBar?=null
     var tv_store: TextView?=null
     var tv_news_feed: TextView?=null
     var productSearchAdapter: ProductCategoryWiseSearchAdapter?=null
@@ -67,7 +70,9 @@ class DashboardFragment : Fragment(),KodeinAware, ICategoryListListener , ICateg
         shopUserName = args?.getString("ShopUserName")
         viewModel.getCategory(token!!,shopUserId!!)
         viewModel.getRecentProduct(token!!,shopUserId!!)
+
         edit_content=root?.findViewById(R.id.edit_content)
+        progress_bar=root?.findViewById(R.id.progress_bar)
         tv_store=root?.findViewById(R.id.tv_store)
         tv_store?.text="Welcome to the "+shopUserName+" Online Shopping Store.Take a tour and shop as you please :)"
         tv_store?.isSelected=true
@@ -107,7 +112,7 @@ class DashboardFragment : Fragment(),KodeinAware, ICategoryListListener , ICateg
     override fun category(data: MutableList<Category>?) {
         categoryAdapter = CategoryAdapter(context!!,data!!,this)
         rcv_category?.apply {
-            layoutManager = GridLayoutManager(context, 3)
+            layoutManager = GridLayoutManager(context, 2)
             setHasFixedSize(true)
             adapter = categoryAdapter
         }

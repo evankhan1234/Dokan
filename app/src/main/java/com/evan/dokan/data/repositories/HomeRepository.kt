@@ -24,7 +24,7 @@ class HomeRepository (
     suspend fun getShopSearch(header:String,post: SearchPost): ShopResponse {
         return apiRequest { api.getShopSearch(header,post) }
     }
-    suspend fun getCategory(header:String, shopUserIdPost: ShopUserIdPost): CategoryResponses {
+     suspend fun getCategory(header:String, shopUserIdPost: ShopUserIdPost): CategoryResponses {
         return apiRequest { api.getCategory(header,shopUserIdPost) }
     }
     suspend fun getProductCategory(header:String, post: ProductPost): ProductResponses {

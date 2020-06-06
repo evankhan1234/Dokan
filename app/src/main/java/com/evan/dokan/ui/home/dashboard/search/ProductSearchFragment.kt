@@ -53,11 +53,11 @@ class ProductSearchFragment : Fragment() , KodeinAware, IProductCategoryWiseList
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_product_search, container, false)
         edit_content = root?.findViewById(R.id.edit_content)
-        edit_content?.setTextIsSelectable(true)
-        edit_content?.requestFocus()
-        val imm =
-            context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(edit_content, InputMethodManager.SHOW_IMPLICIT)
+//        edit_content?.setTextIsSelectable(true)
+//        edit_content?.requestFocus()
+//        val imm =
+//            context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//        imm.showSoftInput(edit_content, InputMethodManager.SHOW_IMPLICIT)
         rcv_category_search = root?.findViewById(R.id.rcv_category_search)
         progress_bar = root?.findViewById(R.id.progress_bar)
         rcv_category = root?.findViewById(R.id.rcv_category)

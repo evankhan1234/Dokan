@@ -42,6 +42,7 @@
                 android:screenOrientation="portrait"
                 />
         <activity android:name=".ui.home.HomeActivity"
+                android:launchMode="singleTop"
                 android:windowSoftInputMode="stateHidden|adjustPan"
                 android:screenOrientation="portrait"
                 />

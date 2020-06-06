@@ -82,6 +82,7 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
         afterClickTabItem(FRAG_TOP, null)
         setUpFooter(FRAG_TOP)
         img_header_back?.setOnClickListener {
+            value_for="temp"
             onBackPressed()
         }
         img_back?.setOnClickListener {
@@ -138,7 +139,7 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
     }
     @Suppress("UNUSED_PARAMETER")
     fun afterClickTabItem(fragId: Int, obj: Any?) {
-        if(fragId==7 || fragId==12 ){
+        if(fragId==7 || fragId==12|| fragId==5 ){
             addFragment(fragId, true, obj)
         }
         else{
@@ -177,7 +178,7 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
             R.anim.view_transition_out_right
         )
 
-        fragTransaction?.replace(R.id.main_container, newFrag!!, fragId.toString())
+        fragTransaction?.add(R.id.main_container, newFrag!!, fragId.toString())
         fragTransaction?.addToBackStack(fragId.toString())
         fragTransaction!!.commit()
 
@@ -227,6 +228,8 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
                 setUpHeader(FRAG_SETTINGS )
             }
             else if (f is NoticeFragment) {
+                val noticeFragment: NoticeFragment =
+                    mFragManager?.findFragmentByTag(FRAG_NOTICE.toString()) as NoticeFragment
                 setUpHeader(FRAG_NOTICE )
             }
 //            if (f is SupplierFragment) {
@@ -296,7 +299,7 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
             R.anim.view_transition_out_right
         )
 
-        fragTransaction?.replace(R.id.main_container, newFrag!!, fragId.toString())
+        fragTransaction?.add(R.id.main_container, newFrag!!, fragId.toString())
         fragTransaction?.addToBackStack(fragId.toString())
         fragTransaction!!.commit()
 
@@ -372,7 +375,7 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
 
         // param 1: container id, param 2: new fragment, param 3: fragment id
 
-        fragTransaction?.replace(R.id.main_container, newFrag!!, fragId.toString())
+        fragTransaction?.add(R.id.main_container, newFrag!!, fragId.toString())
         // prevent showed when user press back fabReview
         fragTransaction?.addToBackStack(fragId.toString())
         //  fragTransaction?.hide(active).show(guideFragment).commit();
@@ -419,7 +422,7 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
 
         // param 1: container id, param 2: new fragment, param 3: fragment id
 
-        fragTransaction?.replace(R.id.main_container, newFrag!!, fragId.toString())
+        fragTransaction?.add(R.id.main_container, newFrag!!, fragId.toString())
         // prevent showed when user press back fabReview
         fragTransaction?.addToBackStack(fragId.toString())
         //  fragTransaction?.hide(active).show(guideFragment).commit();
@@ -492,7 +495,13 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
         }
         // param 1: container id, param 2: new fragment, param 3: fragment id
 
-        fragTransaction?.replace(R.id.main_container, newFrag!!, fragId.toString())
+        if(fragId==4){
+            fragTransaction?.replace(R.id.main_container, newFrag!!, fragId.toString())
+        }
+        else{
+            fragTransaction?.add(R.id.main_container, newFrag!!, fragId.toString())
+        }
+
         // prevent showed when user press back fabReview
         fragTransaction?.addToBackStack(fragId.toString())
         //  fragTransaction?.hide(active).show(guideFragment).commit();
