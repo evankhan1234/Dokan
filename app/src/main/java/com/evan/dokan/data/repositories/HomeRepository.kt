@@ -142,5 +142,11 @@ class HomeRepository (
     suspend fun updatedCommentsLikeCount(header:String,post: LikeCountPost): BasicResponses {
         return apiRequest { api.updatedCommentsLikeCount(header,post) }
     }
+    suspend fun createReply(header:String,post: ReplyForPost): BasicResponses {
+        return apiRequest { api.createReply(header,post) }
+    }
+    suspend fun getReply(header:String,post: ReplyPost): ReplyResponses {
+        return apiRequest { api.getReply(header,post) }
+    }
 
 }

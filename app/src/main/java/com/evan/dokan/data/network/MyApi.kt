@@ -28,10 +28,20 @@ interface MyApi {
         @Header("Authorization") Authorization:String,
         @Body post: CommentsPost
     ): Response<CommentsResponse>
+    @POST("reply-get.php")
+    suspend fun getReply(
+        @Header("Authorization") Authorization:String,
+        @Body post: ReplyPost
+    ): Response<ReplyResponses>
     @POST("create-comments.php")
     suspend fun createComments(
         @Header("Authorization") Authorization:String,
         @Body post: CommentsForPost
+    ): Response<BasicResponses>
+    @POST("create-reply.php")
+    suspend fun createReply(
+        @Header("Authorization") Authorization:String,
+        @Body post: ReplyForPost
     ): Response<BasicResponses>
     @POST("update-own-post.php")
     suspend fun updateOwnPost(

@@ -262,6 +262,9 @@ fun showImagePickerDialog(mContext: Context, dialogCallback: DialogActionListene
         dialogCallback?.onPositiveClick()
         infoDialog.dismiss()
     }
+    main_root?.setOnClickListener {
+        infoDialog.dismiss()
+    }
     btn_gallery.setOnClickListener {
         dialogCallback?.onNegativeClick()
         infoDialog.dismiss()

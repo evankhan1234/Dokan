@@ -15,6 +15,8 @@ import com.evan.dokan.ui.home.newsfeed.ownpost.IPostListener
 import com.evan.dokan.ui.home.newsfeed.publicpost.comments.ICommentsListener
 import com.evan.dokan.ui.home.newsfeed.publicpost.comments.ICommentsPostListener
 import com.evan.dokan.ui.home.newsfeed.publicpost.comments.ISucceslistener
+import com.evan.dokan.ui.home.newsfeed.publicpost.reply.IReplyListener
+import com.evan.dokan.ui.home.newsfeed.publicpost.reply.IReplyPostListener
 import com.evan.dokan.ui.home.order.details.IOrderDetailsListener
 import com.evan.dokan.ui.home.settings.IUserListener
 import com.evan.dokan.ui.home.settings.profile.IProfileUpdateListener
@@ -33,9 +35,11 @@ class HomeViewModel (
 
     var shopUserIdPost:ShopUserIdPost?=null
     var commentsPost:CommentsPost?=null
+    var replyPost:ReplyPost?=null
     var ownUpdatedPost:OwnUpdatedPost?=null
     var likeCountPost:LikeCountPost?=null
     var commentsForPost:CommentsForPost?=null
+    var replyForPost:ReplyForPost?=null
 
     var orderIdPost:OrderIdPost?=null
     var userUpdatePost:UserUpdatePost?=null
@@ -66,6 +70,8 @@ class HomeViewModel (
     var commentsPostListener: ICommentsPostListener?=null
     var commentsListener: ICommentsListener?=null
     var succeslistener: ISucceslistener?=null
+    var replyListener: IReplyListener?=null
+    var replyPostListener: IReplyPostListener?=null
     fun getCategory(token:String,shopUserId:Int) {
         categoryListListener?.onStarted()
         Coroutines.main {
@@ -475,11 +481,12 @@ class HomeViewModel (
         }
 
     }
-    fun updateNewsFeedPost(header:String,Name:String,content:String,picture:String,type:Int,image:String) {
+
+    fun updateNewsFeedPost(header:String,id:Int,Name:String,content:String,picture:String,type:Int,image:String) {
         postListener?.onStarted()
         Coroutines.main {
             try {
-                ownUpdatedPost= OwnUpdatedPost(Name!!,content!!,picture!!,type!!,image!!)
+                ownUpdatedPost= OwnUpdatedPost(id,Name!!,content!!,picture!!,type!!,image!!)
                 Log.e("Search", "Search" + Gson().toJson(ownUpdatedPost))
                 val response = repository.updateOwnPost(header,ownUpdatedPost!!)
                 Log.e("response", "response" + Gson().toJson(response))
@@ -558,6 +565,67 @@ class HomeViewModel (
             } catch (e: NoInternetException) {
                 commentsPostListener?.onEnd()
                 commentsPostListener?.onFailure(e?.message!!)
+            }
+        }
+
+    }
+    fun getReply(header:String,commentId:Int) {
+        replyListener?.onStarted()
+        Coroutines.main {
+            try {
+                replyPost= ReplyPost(commentId)
+                Log.e("Search", "Search" + Gson().toJson(replyPost))
+                val response = repository.getReply(header,replyPost!!)
+                Log.e("Search", "Search" + Gson().toJson(response))
+                replyListener?.load(response?.data!!)
+                replyListener?.onEnd()
+                Log.e("Search", "Search" + Gson().toJson(response))
+
+            } catch (e: ApiException) {
+                replyListener?.onEnd()
+            } catch (e: NoInternetException) {
+                replyListener?.onEnd()
+            }
+        }
+
+    }
+    fun createReply(header:String,Name:String,content:String,created:String,status:Int,type:Int,image:String,commentsId:Int) {
+        replyPostListener?.onStarted()
+        Coroutines.main {
+            try {
+                replyForPost= ReplyForPost(Name!!,content!!,created!!,status!!,type!!,image!!,commentsId!!)
+                Log.e("Search", "Search" + Gson().toJson(replyForPost))
+                val response = repository.createReply(header,replyForPost!!)
+                Log.e("response", "response" + Gson().toJson(response))
+                replyPostListener?.onSuccess(response?.message!!)
+                replyPostListener?.onEnd()
+
+            } catch (e: ApiException) {
+                replyPostListener?.onEnd()
+                replyPostListener?.onFailure(e?.message!!)
+            } catch (e: NoInternetException) {
+                replyPostListener?.onEnd()
+                replyPostListener?.onFailure(e?.message!!)
+            }
+        }
+
+    }
+    fun geReplyAgain(header:String,commentId:Int) {
+
+        Coroutines.main {
+            try {
+                replyPost= ReplyPost(commentId)
+                Log.e("Search", "Search" + Gson().toJson(replyPost))
+                val response = repository.getReply(header,replyPost!!)
+                Log.e("Search", "Search" + Gson().toJson(response))
+
+                succeslistener?.onShow()
+                Log.e("Search", "Search" + Gson().toJson(response))
+
+            } catch (e: ApiException) {
+
+            } catch (e: NoInternetException) {
+
             }
         }
 

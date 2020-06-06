@@ -34,6 +34,7 @@ import com.evan.dokan.ui.home.dashboard.product.details.ProductDetailsFragment
 import com.evan.dokan.ui.home.dashboard.search.ProductSearchFragment
 import com.evan.dokan.ui.home.newsfeed.NewsfeedFragment
 import com.evan.dokan.ui.home.newsfeed.ownpost.PostBottomsheetFragment
+import com.evan.dokan.ui.home.newsfeed.publicpost.comments.CommentsFragment
 import com.evan.dokan.ui.home.notice.NoticeFragment
 import com.evan.dokan.ui.home.notice.NoticeViewFragment
 import com.evan.dokan.ui.home.order.OrderFragment
@@ -268,6 +269,12 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
         val f = getVisibleFragment()
         if(f is NewsfeedFragment){
            f.reload()
+        }
+    }
+    fun onBottomCommentsBackPress(){
+        val f = getVisibleFragmentsForComments()
+        if(f is CommentsFragment){
+            f.reload()
         }
     }
     fun finishs(){
@@ -626,6 +633,18 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
         fragments.reverse()
         for (fragment in fragments!!) {
             if(fragment is PostBottomsheetFragment ){
+
+                return fragment
+            }
+        }
+        return null
+    }
+    fun getVisibleFragmentsForComments(): Fragment? {
+        val fragmentManager = mFragManager
+        val fragments = fragmentManager!!.fragments
+        fragments.reverse()
+        for (fragment in fragments!!) {
+            if(fragment is CommentsFragment ){
 
                 return fragment
             }

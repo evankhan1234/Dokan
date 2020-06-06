@@ -65,7 +65,7 @@ class SettingsFragment : Fragment() ,KodeinAware,IUserListener{
         text_email=root?.findViewById(R.id.text_email)
 
         token = SharedPreferenceUtil.getShared(activity!!, SharedPreferenceUtil.TYPE_AUTH_TOKEN)
-        viewModel?.getCustomerUser(token!!)
+
         linear_profile?.setOnClickListener {
             if (activity is HomeActivity) {
                 (activity as HomeActivity).goToProfileUpdateFragment(user!!)
@@ -110,6 +110,7 @@ class SettingsFragment : Fragment() ,KodeinAware,IUserListener{
 
     override fun onResume() {
         super.onResume()
+        viewModel?.getCustomerUser(token!!)
         Log.e("evan","evan")
     }
 }
