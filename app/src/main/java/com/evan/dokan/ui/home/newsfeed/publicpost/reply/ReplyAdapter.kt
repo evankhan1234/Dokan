@@ -1,4 +1,4 @@
-package com.evan.dokan.ui.home.newsfeed.publicpost.comments
+package com.evan.dokan.ui.home.newsfeed.publicpost.reply
 
 import android.content.Context
 import android.util.Log
@@ -9,42 +9,43 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.evan.dokan.R
 import com.evan.dokan.data.db.entities.Comments
+import com.evan.dokan.data.db.entities.Reply
+import com.evan.dokan.ui.home.newsfeed.publicpost.comments.CommentsAdapter
+import com.evan.dokan.ui.home.newsfeed.publicpost.comments.ICommentsPostLikeListener
+import com.evan.dokan.ui.home.newsfeed.publicpost.comments.ICommentsUpdateListener
 import com.evan.dokan.util.is_like
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.layout_comments_list.view.*
+import kotlinx.android.synthetic.main.layout_reply_list.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class CommentsAdapter (val context: Context, val comments: MutableList<Comments>?, val commentsUpdateListener: ICommentsUpdateListener,val commentsPostLikeListener:ICommentsPostLikeListener) : RecyclerView.Adapter<CommentsAdapter.CustomViewHolder>() {
+class ReplyAdapter (val context: Context, val reply: MutableList<Reply>?) : RecyclerView.Adapter<ReplyAdapter.CustomViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
         val inflater = LayoutInflater.from(parent?.context)
-        val cellForRow = inflater.inflate(R.layout.layout_comments_list, parent, false)
+        val cellForRow = inflater.inflate(R.layout.layout_reply_list, parent, false)
         return CustomViewHolder(cellForRow)
     }
 
     override fun getItemCount(): Int {
-        Log.e("getList", "" + Gson().toJson(comments));
+        Log.e("getList", "" + Gson().toJson(reply));
 
-        return comments!!.size
+        return reply!!.size
     }
 
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
 
-        holder.itemView.text_view.setOnClickListener {
-            commentsUpdateListener.onShow(comments?.get(position)!!)
-        }
         Glide.with(context)
-            .load(comments?.get(position)?.UserImage).dontAnimate()
+            .load(reply?.get(position)?.UserImage).dontAnimate()
             .into(holder.itemView.img_icon!!)
 
 
-        holder.itemView.tv_content.text =comments?.get(position)?.Content
-        holder.itemView.tv_name.text =comments?.get(position)?.UserName
-        holder.itemView.tv_count.text =comments?.get(position)?.Love?.toString()
-        if(comments?.get(position)?.Type==2){
+        holder.itemView.tv_content.text =reply?.get(position)?.Content
+        holder.itemView.tv_name.text =reply?.get(position)?.Username
+
+        if(reply?.get(position)?.Type==2){
             holder.itemView.tv_type.text ="Customer"
             holder.itemView.img_auth?.setImageDrawable(context?.getDrawable(R.drawable.correct))
         }
@@ -52,30 +53,13 @@ class CommentsAdapter (val context: Context, val comments: MutableList<Comments>
             holder.itemView.tv_type.text ="ShopOwner"
             holder.itemView.img_auth?.setImageDrawable(context?.getDrawable(R.drawable.correct_blue))
         }
-        holder.itemView.img_like?.isSelected = comments?.get(position)?.IsValue!!
-        holder. itemView.img_like?.setOnClickListener {
-            if (!comments?.get(position)?.IsValue!!) {
 
-                holder.itemView.img_like?.isSelected = true
-                comments?.get(position)?.IsValue = true
-                comments?.get(position)?.Love= comments?.get(position)?.Love!!+1
-                commentsPostLikeListener?.onCount(comments?.get(position)?.Love,1,comments?.get(position)?.Id!!)
-
-            } else {
-
-                holder.itemView.img_like?.isSelected = false
-                comments?.get(position)?.IsValue = true
-                comments?.get(position)?.Love= comments?.get(position)?.Love!!-1
-                commentsPostLikeListener?.onCount(comments?.get(position)?.Love,2,comments?.get(position)?.Id!!)
-            }
-        }
         //post?.value = post?.UserForId != null
         Log.e("datas","dats"+ is_like);
 
-//
         try {
             val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-            val past: Date = format.parse(comments?.get(position)?.Created)
+            val past: Date = format.parse(reply?.get(position)?.Created)
             val currentDate = format.format(Date())
             val now: Date = format.parse(currentDate)
 
