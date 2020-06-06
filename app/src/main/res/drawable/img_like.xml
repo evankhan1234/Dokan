@@ -1,6 +1,6 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:drawable="@drawable/heart_on" android:state_selected="false" />
-    <item android:drawable="@drawable/heart_off" android:state_selected="true" />
+    <item android:drawable="@drawable/heart_love" android:state_selected="true" />
 
 </selector>

@@ -53,7 +53,7 @@ class CommentsAdapter (val context: Context, val comments: MutableList<Comments>
             holder.itemView.img_auth?.setImageDrawable(context?.getDrawable(R.drawable.correct_blue))
         }
         holder.itemView.img_like?.isSelected = comments?.get(position)?.IsValue!!
-        holder. itemView.img_like?.setOnClickListener {
+        holder.itemView.img_like?.setOnClickListener {
             if (!comments?.get(position)?.IsValue!!) {
 
                 holder.itemView.img_like?.isSelected = true
@@ -64,7 +64,7 @@ class CommentsAdapter (val context: Context, val comments: MutableList<Comments>
             } else {
 
                 holder.itemView.img_like?.isSelected = false
-                comments?.get(position)?.IsValue = true
+                comments?.get(position)?.IsValue = false
                 comments?.get(position)?.Love= comments?.get(position)?.Love!!-1
                 commentsPostLikeListener?.onCount(comments?.get(position)?.Love,2,comments?.get(position)?.Id!!)
             }

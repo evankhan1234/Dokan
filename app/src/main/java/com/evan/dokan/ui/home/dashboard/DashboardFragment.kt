@@ -1,10 +1,7 @@
 package com.evan.dokan.ui.home.dashboard
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -128,7 +125,7 @@ class DashboardFragment : Fragment(),KodeinAware, ICategoryListListener , ICateg
     }
 
     override fun onStarted() {
-        progress_bar?.show()
+        progress_bar?.visibility=View.VISIBLE
     }
 
     override fun onEnd() {

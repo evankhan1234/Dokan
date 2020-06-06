@@ -179,7 +179,7 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
             R.anim.view_transition_out_right
         )
 
-        fragTransaction?.add(R.id.main_container, newFrag!!, fragId.toString())
+        fragTransaction?.replace(R.id.main_container, newFrag!!, fragId.toString())
         fragTransaction?.addToBackStack(fragId.toString())
         fragTransaction!!.commit()
 

@@ -144,6 +144,15 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
+
+
+
+    <RelativeLayout
+            android:id="@+id/rlt_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    </RelativeLayout>
     <ProgressBar
             android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
@@ -153,13 +162,4 @@
             android:layout_gravity="center_horizontal|center_vertical"
             android:indeterminateDrawable="@drawable/progress"
             android:visibility="gone" />
-
-
-    <RelativeLayout
-            android:id="@+id/rlt_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-    </RelativeLayout>
-
 </RelativeLayout>
