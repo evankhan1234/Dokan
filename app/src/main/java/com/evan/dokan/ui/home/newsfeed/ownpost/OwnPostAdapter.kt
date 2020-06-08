@@ -12,6 +12,14 @@ import com.bumptech.glide.Glide
 import com.evan.dokan.R
 import com.evan.dokan.data.db.entities.Post
 import kotlinx.android.synthetic.main.layout_own_post_list.view.*
+import kotlinx.android.synthetic.main.layout_own_post_list.view.img_auth
+import kotlinx.android.synthetic.main.layout_own_post_list.view.img_icon
+import kotlinx.android.synthetic.main.layout_own_post_list.view.img_image
+import kotlinx.android.synthetic.main.layout_own_post_list.view.text_view
+import kotlinx.android.synthetic.main.layout_own_post_list.view.tv_content
+import kotlinx.android.synthetic.main.layout_own_post_list.view.tv_hour
+import kotlinx.android.synthetic.main.layout_own_post_list.view.tv_name
+import kotlinx.android.synthetic.main.layout_public_post_list.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -77,7 +85,14 @@ class AlertViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                 .load(post?.Picture).dontAnimate()
                 .into(itemView.img_image!!)
 
+            if(post?.Type==2){
 
+                itemView?.img_auth?.setImageDrawable(context?.getDrawable(R.drawable.correct))
+            }
+            else{
+
+                itemView?.img_auth?.setImageDrawable(context?.getDrawable(R.drawable.correct_blue))
+            }
             itemView.tv_content.text =post?.Content
             itemView.tv_name.text =post?.Name
             try {
