@@ -159,6 +159,11 @@ interface MyApi {
         @Header("Authorization") Authorization:String,
         @Body post: PaginationLimit
     ): Response<OrderResponses>
+    @POST("get-customer-order-information.php")
+    suspend fun getCustomerOrderInformation(
+        @Header("Authorization") Authorization:String,
+        @Body post: CutomerOrderPost
+    ): Response<CustomerOrderResponses>
     @POST("product-like.php")
     suspend fun getProductLike(
         @Header("Authorization") Authorization:String,

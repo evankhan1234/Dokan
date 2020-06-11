@@ -17,6 +17,7 @@ import com.evan.dokan.ui.home.newsfeed.publicpost.comments.ICommentsPostListener
 import com.evan.dokan.ui.home.newsfeed.publicpost.comments.ISucceslistener
 import com.evan.dokan.ui.home.newsfeed.publicpost.reply.IReplyListener
 import com.evan.dokan.ui.home.newsfeed.publicpost.reply.IReplyPostListener
+import com.evan.dokan.ui.home.order.details.ICustomerOrderListener
 import com.evan.dokan.ui.home.order.details.IOrderDetailsListener
 import com.evan.dokan.ui.home.settings.IUserListener
 import com.evan.dokan.ui.home.settings.profile.IProfileUpdateListener
@@ -42,6 +43,7 @@ class HomeViewModel (
     var replyForPost:ReplyForPost?=null
 
     var orderIdPost:OrderIdPost?=null
+    var cutomerOrderPost:CutomerOrderPost?=null
     var userUpdatePost:UserUpdatePost?=null
     var passwordPost:PasswordPost?=null
     var newsfeedPost:NewsfeedPost?=null
@@ -72,6 +74,7 @@ class HomeViewModel (
     var succeslistener: ISucceslistener?=null
     var replyListener: IReplyListener?=null
     var replyPostListener: IReplyPostListener?=null
+    var customerOrderListener: ICustomerOrderListener?=null
     fun getCategory(token:String,shopUserId:Int) {
         categoryListListener?.onStarted()
         Coroutines.main {
@@ -620,6 +623,31 @@ class HomeViewModel (
                 Log.e("Search", "Search" + Gson().toJson(response))
 
                 succeslistener?.onShow()
+                Log.e("Search", "Search" + Gson().toJson(response))
+
+            } catch (e: ApiException) {
+
+            } catch (e: NoInternetException) {
+
+            }
+        }
+
+    }
+    fun getCustomerOrderInformation(header:String,orderId:Int,shopId:Int) {
+
+        Coroutines.main {
+            try {
+                cutomerOrderPost= CutomerOrderPost(orderId,shopId)
+                Log.e("Search", "Search" + Gson().toJson(cutomerOrderPost))
+                val response = repository.getCustomerOrderInformation(header,cutomerOrderPost!!)
+                Log.e("OrderInformation", "OrderInformation" + Gson().toJson(response))
+                if(response.data!=null){
+                    customerOrderListener?.onShow(response?.data!!)
+                }
+                else{
+                    customerOrderListener?.onEmpty()
+                }
+             //   customerOrderListener?.onShow(response?.data!!)
                 Log.e("Search", "Search" + Gson().toJson(response))
 
             } catch (e: ApiException) {
