@@ -7,6 +7,7 @@ import com.evan.dokan.data.repositories.HomeRepository
 import com.evan.dokan.ui.home.cart.ICartCountListener
 import com.evan.dokan.ui.home.cart.ICartListDeleteListener
 import com.evan.dokan.ui.home.cart.ICartListListener
+import com.evan.dokan.ui.home.cart.IPushListener
 import com.evan.dokan.ui.home.dashboard.IRecentProductListener
 import com.evan.dokan.ui.home.dashboard.category.ICategoryListListener
 import com.evan.dokan.ui.home.dashboard.product.details.ICreateCartListener
@@ -44,6 +45,7 @@ class HomeViewModel (
 
     var orderIdPost:OrderIdPost?=null
     var cutomerOrderPost:CutomerOrderPost?=null
+    var tokenPost:TokenPost?=null
     var userUpdatePost:UserUpdatePost?=null
     var passwordPost:PasswordPost?=null
     var newsfeedPost:NewsfeedPost?=null
@@ -75,6 +77,7 @@ class HomeViewModel (
     var replyListener: IReplyListener?=null
     var replyPostListener: IReplyPostListener?=null
     var customerOrderListener: ICustomerOrderListener?=null
+    var pushListener: IPushListener?=null
     fun getCategory(token:String,shopUserId:Int) {
         categoryListListener?.onStarted()
         Coroutines.main {
@@ -261,7 +264,7 @@ class HomeViewModel (
                 val response = repository.sendPush(header,pushPost!!)
                 Log.e("response", "response" + Gson().toJson(response))
             } catch (e: ApiException) {
-
+                Log.e("response", "response" + e?.message)
             } catch (e: NoInternetException) {
 
             }
@@ -658,4 +661,39 @@ class HomeViewModel (
         }
 
     }
+    fun createToken(header:String,type:Int,data:String) {
+
+        Coroutines.main {
+            try {
+                tokenPost= TokenPost(type,data)
+                Log.e("createToken", "createToken" + Gson().toJson(tokenPost))
+                val response = repository.createToken(header,tokenPost!!)
+                Log.e("createToken", "createToken" + Gson().toJson(response))
+
+            } catch (e: ApiException) {
+
+            } catch (e: NoInternetException) {
+
+            }
+        }
+
+    }
+    fun getToken(header:String,type:Int,data:String) {
+
+        Coroutines.main {
+            try {
+                tokenPost= TokenPost(type,data)
+                Log.e("createToken", "createToken" + Gson().toJson(tokenPost))
+                val response = repository.getToken(header,tokenPost!!)
+                Log.e("createToken", "createToken" + Gson().toJson(response))
+                pushListener?.onLoad(response.data!!)
+            } catch (e: ApiException) {
+
+            } catch (e: NoInternetException) {
+
+            }
+        }
+
+    }
+
 }

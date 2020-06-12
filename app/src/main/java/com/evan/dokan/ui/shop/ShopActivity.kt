@@ -184,6 +184,7 @@ class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateL
         startActivity(intent)
         SharedPreferenceUtil.saveShared(this, SharedPreferenceUtil.TYPE_SHOP_ID, shop?.ShopUserId.toString())
 
+
     }
     var keyword: TextWatcher = object : TextWatcher {
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {

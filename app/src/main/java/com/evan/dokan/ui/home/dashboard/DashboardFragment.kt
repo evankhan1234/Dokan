@@ -42,6 +42,7 @@ class DashboardFragment : Fragment(),KodeinAware, ICategoryListListener , ICateg
     private val factory : HomeViewModelFactory by instance()
     private lateinit var viewModel: HomeViewModel
     var token:String?=""
+    var pushToken:String?=""
     var shopUserId:Int?=0
     var shopUserName:String?=""
     var edit_content: EditText?=null
@@ -62,12 +63,13 @@ class DashboardFragment : Fragment(),KodeinAware, ICategoryListListener , ICateg
         viewModel.categoryListListener=this
         viewModel.recentProductListener=this
         token = SharedPreferenceUtil.getShared(activity!!, SharedPreferenceUtil.TYPE_AUTH_TOKEN)
+        pushToken = SharedPreferenceUtil.getShared(activity!!, SharedPreferenceUtil.TYPE_PUSH_TOKEN)
         val args: Bundle? = arguments
         shopUserId = args?.getInt("ShopUserId")
         shopUserName = args?.getString("ShopUserName")
         viewModel.getCategory(token!!,shopUserId!!)
         viewModel.getRecentProduct(token!!,shopUserId!!)
-
+        viewModel.createToken(token!!,2,pushToken!!)
         edit_content=root?.findViewById(R.id.edit_content)
         progress_bar=root?.findViewById(R.id.progress_bar)
         tv_store=root?.findViewById(R.id.tv_store)

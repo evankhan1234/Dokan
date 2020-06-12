@@ -34,7 +34,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class CartFragment : Fragment() ,KodeinAware,ICartListListener,ICartDeleteListener,ICartQuantityListener,ICartListDeleteListener,ICartItemClickListener{
+class CartFragment : Fragment() ,KodeinAware,ICartListListener,ICartDeleteListener,ICartQuantityListener,ICartListDeleteListener,ICartItemClickListener,IPushListener{
 
     override val kodein by kodein()
     var progress_bar: ProgressBar?=null
@@ -66,6 +66,7 @@ class CartFragment : Fragment() ,KodeinAware,ICartListListener,ICartDeleteListen
         viewModel = ViewModelProviders.of(this, factory).get(HomeViewModel::class.java)
         viewModel.cartListListener=this
         viewModel.cartListDeleteListener=this
+        viewModel.pushListener=this
         root_layout=root?.findViewById(R.id.root_layout)
         progress_bar=root?.findViewById(R.id.progress_bar)
         ima_no_data=root?.findViewById(R.id.ima_no_data)
@@ -75,6 +76,8 @@ class CartFragment : Fragment() ,KodeinAware,ICartListListener,ICartDeleteListen
         token = SharedPreferenceUtil.getShared(activity!!, SharedPreferenceUtil.TYPE_AUTH_TOKEN)
         viewModel.getCartList(token!!,
             SharedPreferenceUtil.getShared(context!!, SharedPreferenceUtil.TYPE_SHOP_ID)!!.toInt())
+
+        viewModel.getToken(token!!,1,SharedPreferenceUtil.getShared(context!!, SharedPreferenceUtil.TYPE_SHOP_ID)!!)
         btn_ok?.setOnClickListener {
 
             showDialog(context!!)
@@ -214,7 +217,7 @@ class CartFragment : Fragment() ,KodeinAware,ICartListListener,ICartDeleteListen
                                 cartAdapter?.notifyDataSetChanged()
                                 cart_list?.clear()
                                 push= Push("Orders","You have received a new Order")
-                                pushPost= PushPost("dLUUTXsxTMuVuo0dJCS7Vp:APA91bHIndSf7cvchmC_0fii1MJfmu5W1FoCIeydrDo5VPdxRDLxZezC6GLxBTGYP8r3mYfJp6TRnPhZJdIcirbIaEhz3OQyqiXxcFA8SJOBsEXsE2xwnkpF-_p6YbCh_NZz-K1E1ouP",push)
+                                pushPost= PushPost(tokenData,push)
                                 viewModel.sendPush("key=AAAAdCyJ2hw:APA91bGF6x20oQnuC2ZeAXsJju-OCAZ67dBpQvaLx7h18HSAnhl9CPWupCJaV0552qJvm1qIHL_LAZoOvv5oWA9Iraar_XQkWe3JEUmJ1v7iKq09QYyPB3ZGMeSinzC-GlKwpaJU_IvO",pushPost!!)
                                 onData()
                                 if (activity is HomeActivity) {
@@ -269,5 +272,10 @@ class CartFragment : Fragment() ,KodeinAware,ICartListListener,ICartDeleteListen
             tv_total?.text="Total: "+price.toString()
         }
 
+    }
+
+    var tokenData:String?=""
+    override fun onLoad(data: String) {
+        tokenData=data
     }
 }

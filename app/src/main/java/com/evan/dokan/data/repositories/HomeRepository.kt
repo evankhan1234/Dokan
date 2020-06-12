@@ -151,5 +151,10 @@ class HomeRepository (
     suspend fun getCustomerOrderInformation(header:String,post: CutomerOrderPost): CustomerOrderResponses {
         return apiRequest { api.getCustomerOrderInformation(header,post) }
     }
-
+    suspend fun createToken(header:String,tokenPost: TokenPost): BasicResponses {
+        return apiRequest { api.createToken(header,tokenPost) }
+    }
+    suspend fun getToken(header:String,tokenPost: TokenPost): TokenResponses {
+        return apiRequest { api.getToken(header,tokenPost) }
+    }
 }
