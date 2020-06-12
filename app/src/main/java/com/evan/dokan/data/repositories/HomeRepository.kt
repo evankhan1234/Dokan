@@ -148,5 +148,8 @@ class HomeRepository (
     suspend fun getReply(header:String,post: ReplyPost): ReplyResponses {
         return apiRequest { api.getReply(header,post) }
     }
+    suspend fun getCustomerOrderInformation(header:String,post: CutomerOrderPost): CustomerOrderResponses {
+        return apiRequest { api.getCustomerOrderInformation(header,post) }
+    }
 
 }
