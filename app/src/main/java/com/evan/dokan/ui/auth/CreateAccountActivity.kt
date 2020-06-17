@@ -21,6 +21,9 @@ import com.evan.dokan.BuildConfig
 import com.evan.dokan.R
 import com.evan.dokan.ui.auth.interfaces.ISignUpListener
 import com.evan.dokan.util.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import java.io.File
 import java.io.IOException
 import kotlinx.android.synthetic.main.activity_create_account.*
@@ -41,11 +44,21 @@ class CreateAccountActivity : AppCompatActivity() ,KodeinAware , ISignUpListener
     private val factory : AuthViewModelFactory by instance()
     private lateinit var viewModel: AuthViewModel
     var image_address:String=""
+    var auth: FirebaseAuth? = null
+    var reference: DatabaseReference? = null
+
+    var name: String=""
+    var mobile: String=""
+    var email: String=""
+    var password: String=""
+    var address: String=""
+    var genderId: Int=0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_account)
         viewModel = ViewModelProviders.of(this, factory).get(AuthViewModel::class.java)
         viewModel.signUpListener=this
+        auth = FirebaseAuth.getInstance()
         et_password?.transformationMethod = MyPasswordTransformationMethod()
         show_pass?.setOnClickListener {
             onPasswordVisibleOrInvisible()
@@ -62,12 +75,6 @@ class CreateAccountActivity : AppCompatActivity() ,KodeinAware , ISignUpListener
         }
         btn_ok?.setOnClickListener {
 
-            var name: String=""
-            var mobile: String=""
-            var email: String=""
-            var password: String=""
-            var address: String=""
-            var genderId: Int=0
 
             if(radio_male?.isChecked!!){
                 genderId=1
@@ -374,10 +381,7 @@ class CreateAccountActivity : AppCompatActivity() ,KodeinAware , ISignUpListener
 
     override fun onSuccess(message: String) {
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show()
-        Intent(this, LoginActivity::class.java).also {
-            startActivity(it)
-            finish()
-        }
+        register()
     }
 
     override fun onFailure(message: String) {
@@ -386,5 +390,39 @@ class CreateAccountActivity : AppCompatActivity() ,KodeinAware , ISignUpListener
 
     override fun onEnd() {
         progress_bar?.visibility=View.GONE
+    }
+    open fun register() {
+        auth!!.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val firebaseUser = auth!!.currentUser!!
+                    val userid = firebaseUser.uid
+                    reference =
+                        FirebaseDatabase.getInstance().getReference("Users").child(userid)
+                    val hashMap =
+                        HashMap<String, String>()
+                    hashMap["id"] = userid
+                    hashMap["username"] = email
+                    hashMap["imageURL"] = image_address
+                    hashMap["status"] = "offline"
+                    hashMap["search"] = email.toLowerCase()
+                    reference!!.setValue(hashMap)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Intent(this, LoginActivity::class.java).also {
+                                    it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                    startActivity(it)
+                                    finish()
+                                }
+                            }
+                        }
+                } else {
+                    Toast.makeText(
+                        this@CreateAccountActivity,
+                        "You can't register with this email or password",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
     }
 }
