@@ -40,6 +40,7 @@ import com.evan.dokan.ui.home.notice.NoticeViewFragment
 import com.evan.dokan.ui.home.order.OrderFragment
 import com.evan.dokan.ui.home.order.details.OrderDetailsFragment
 import com.evan.dokan.ui.home.settings.SettingsFragment
+import com.evan.dokan.ui.home.settings.message.MessageListFragment
 import com.evan.dokan.ui.home.settings.password.ChangePasswordFragment
 import com.evan.dokan.ui.home.settings.profile.ProfileUpdateFragment
 import com.evan.dokan.ui.home.wishlist.IWishCountListener
@@ -138,9 +139,13 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
         setUpHeader(FRAG_NEWSFEED)
         afterClickTabItem(FRAG_NEWSFEED, null)
     }
+    fun goToMessageFragment(){
+        setUpHeader(FRAG_MESSAGE)
+        afterClickTabItem(FRAG_MESSAGE, null)
+    }
     @Suppress("UNUSED_PARAMETER")
     fun afterClickTabItem(fragId: Int, obj: Any?) {
-        if(fragId==7 || fragId==12|| fragId==5 ){
+        if(fragId==7 || fragId==12|| fragId==5|| fragId==18 ){
             addFragment(fragId, true, obj)
         }
         else{
@@ -481,6 +486,9 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
             FRAG_NEWSFEED->{
                 newFrag = NewsfeedFragment()
             }
+            FRAG_MESSAGE->{
+                newFrag = MessageListFragment()
+            }
         }
         val b= Bundle()
         b.putInt("ShopUserId", shop_user_id!!)
@@ -502,7 +510,7 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
         }
         // param 1: container id, param 2: new fragment, param 3: fragment id
 
-        if(fragId==4){
+        if(fragId==4 || fragId==18){
             fragTransaction?.replace(R.id.main_container, newFrag!!, fragId.toString())
         }
         else{
@@ -610,6 +618,11 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
                 tv_details.text = resources.getString(R.string.notice)
 
 
+            }
+            FRAG_MESSAGE->{
+                ll_back_header?.visibility = View.VISIBLE
+                rlt_header?.visibility = View.GONE
+                tv_details.text = resources.getString(R.string.message)
             }
             else -> {
 

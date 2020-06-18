@@ -695,5 +695,39 @@ class HomeViewModel (
         }
 
     }
+    fun createFirebaseId(header:String,type:Int,data:String) {
+
+        Coroutines.main {
+            try {
+                tokenPost= TokenPost(type,data)
+                Log.e("createToken", "createToken" + Gson().toJson(tokenPost))
+                val response = repository.createFirebaseId(header,tokenPost!!)
+                Log.e("createToken", "createToken" + Gson().toJson(response))
+
+            } catch (e: ApiException) {
+
+            } catch (e: NoInternetException) {
+
+            }
+        }
+
+    }
+    fun getFirebaseId(header:String,type:Int,data:String) {
+
+        Coroutines.main {
+            try {
+                tokenPost= TokenPost(type,data)
+                Log.e("createToken", "createToken" + Gson().toJson(tokenPost))
+                val response = repository.getFirebaseId(header,tokenPost!!)
+                Log.e("createToken", "createToken" + Gson().toJson(response))
+                pushListener?.onLoad(response.data!!)
+            } catch (e: ApiException) {
+                Log.e("createToken", "createToken" +e?.message)
+            } catch (e: NoInternetException) {
+
+            }
+        }
+
+    }
 
 }

@@ -157,4 +157,10 @@ class HomeRepository (
     suspend fun getToken(header:String,tokenPost: TokenPost): TokenResponses {
         return apiRequest { api.getToken(header,tokenPost) }
     }
+    suspend fun createFirebaseId(header:String,tokenPost: TokenPost): BasicResponses {
+        return apiRequest { api.createFirebaseId(header,tokenPost) }
+    }
+    suspend fun getFirebaseId(header:String,tokenPost: TokenPost): TokenResponses {
+        return apiRequest { api.getFirebaseId(header,tokenPost) }
+    }
 }

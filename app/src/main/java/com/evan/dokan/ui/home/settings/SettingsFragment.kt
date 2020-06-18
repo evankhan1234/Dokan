@@ -44,6 +44,7 @@ class SettingsFragment : Fragment() ,KodeinAware,IUserListener{
     var linear_profile:LinearLayout?=null
     var linear_change_password:LinearLayout?=null
     var linear_logout:LinearLayout?=null
+    var linear_message:LinearLayout?=null
     var user:Users?=null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,6 +58,7 @@ class SettingsFragment : Fragment() ,KodeinAware,IUserListener{
 
         linear_change_password=root?.findViewById(R.id.linear_change_password)
         linear_logout=root?.findViewById(R.id.linear_logout)
+        linear_message=root?.findViewById(R.id.linear_message)
         text_phone_number=root?.findViewById(R.id.text_phone_number)
         linear_profile=root?.findViewById(R.id.linear_profile)
         progress_bar=root?.findViewById(R.id.progress_bar)
@@ -65,7 +67,11 @@ class SettingsFragment : Fragment() ,KodeinAware,IUserListener{
         text_email=root?.findViewById(R.id.text_email)
 
         token = SharedPreferenceUtil.getShared(activity!!, SharedPreferenceUtil.TYPE_AUTH_TOKEN)
-
+        linear_message?.setOnClickListener {
+            if (activity is HomeActivity) {
+                (activity as HomeActivity).goToMessageFragment()
+            }
+        }
         linear_profile?.setOnClickListener {
             if (activity is HomeActivity) {
                 (activity as HomeActivity).goToProfileUpdateFragment(user!!)
