@@ -163,4 +163,7 @@ class HomeRepository (
     suspend fun getFirebaseId(header:String,tokenPost: TokenPost): TokenResponses {
         return apiRequest { api.getFirebaseId(header,tokenPost) }
     }
+    suspend fun createChat(header:String,post: ChatPost): BasicResponses {
+        return apiRequest { api.createChat(header,post) }
+    }
 }

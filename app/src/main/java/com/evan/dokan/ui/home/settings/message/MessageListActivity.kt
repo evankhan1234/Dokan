@@ -11,22 +11,28 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.evan.dokan.R
 import com.evan.dokan.data.db.entities.Chat
 import com.evan.dokan.data.db.entities.FIrebaseUser
+import com.evan.dokan.ui.home.HomeViewModel
+import com.evan.dokan.ui.home.HomeViewModelFactory
 import com.evan.dokan.util.SharedPreferenceUtil
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 
 import de.hdodenhof.circleimageview.CircleImageView
-import java.util.ArrayList
-import java.util.HashMap
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.kodein
+import org.kodein.di.generic.instance
+import java.text.SimpleDateFormat
+import java.util.*
 
-class MessageListActivity : AppCompatActivity() {
+class MessageListActivity : AppCompatActivity(),KodeinAware {
 
     var profile_image: CircleImageView? = null
     var username: TextView? = null
@@ -43,10 +49,13 @@ class MessageListActivity : AppCompatActivity() {
     var recyclerView: RecyclerView? = null
 
 
-
+    override val kodein by kodein()
+    private val factory : HomeViewModelFactory by instance()
+    private lateinit var viewModel: HomeViewModel
     var seenListener: ValueEventListener? = null
 
     var userid: String? = null
+    var token: String? = ""
 
 
     var notify = false
@@ -54,6 +63,7 @@ class MessageListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message_list)
+        viewModel = ViewModelProviders.of(this, factory).get(HomeViewModel::class.java)
         val toolbar: Toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         getSupportActionBar()!!.setTitle("")
@@ -61,6 +71,7 @@ class MessageListActivity : AppCompatActivity() {
         toolbar.setNavigationOnClickListener { // and this
            finish()
         }
+        token = SharedPreferenceUtil.getShared(this, SharedPreferenceUtil.TYPE_AUTH_TOKEN)
         //  apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService::class.java)
         recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
         recyclerView!!.setHasFixedSize(true)
@@ -83,6 +94,9 @@ class MessageListActivity : AppCompatActivity() {
             if (msg != "") {
                 Log.e("data","sender"+fuser!!.uid)
                 Log.e("data","receiver"+userid!!)
+                val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+                val currentDate = sdf.format(Date())
+                viewModel.createChat(token!!,SharedPreferenceUtil.getShared(this, SharedPreferenceUtil.TYPE_SHOP_ID)!!.toInt(),fuser!!.uid,currentDate)
                 sendMessage(fuser!!.uid, userid!!, msg)
             } else {
                 Toast.makeText(
