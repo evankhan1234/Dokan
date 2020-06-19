@@ -28,6 +28,7 @@ import com.evan.dokan.util.SharedPreferenceUtil
 import com.evan.dokan.util.hide
 import com.evan.dokan.util.show
 import com.evan.dokan.util.value_for
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -63,10 +64,18 @@ class DashboardFragment : Fragment(),KodeinAware, ICategoryListListener , ICateg
         viewModel.categoryListListener=this
         viewModel.recentProductListener=this
         token = SharedPreferenceUtil.getShared(activity!!, SharedPreferenceUtil.TYPE_AUTH_TOKEN)
+        var fuser = FirebaseAuth.getInstance().currentUser
+        val data = fuser!!.uid
+        viewModel.createFirebaseId(token!!,2,data)
         pushToken = SharedPreferenceUtil.getShared(activity!!, SharedPreferenceUtil.TYPE_PUSH_TOKEN)
         val args: Bundle? = arguments
         shopUserId = args?.getInt("ShopUserId")
         shopUserName = args?.getString("ShopUserName")
+        SharedPreferenceUtil.saveShared(
+            activity!!,
+            SharedPreferenceUtil.TYPE_SHOP_NAME,
+            shopUserName!!
+        )
         viewModel.getCategory(token!!,shopUserId!!)
         viewModel.getRecentProduct(token!!,shopUserId!!)
         viewModel.createToken(token!!,2,pushToken!!)

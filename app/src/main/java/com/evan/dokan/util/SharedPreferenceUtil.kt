@@ -14,6 +14,8 @@ object SharedPreferenceUtil {
     const val TYPE_LONGITUDE = "longitude"
     const val TYPE_AUTH_REFRESH_TOKEN = "refresh_token"
     const val TYPE_PUSH_TOKEN = "firebase_push_token"
+    const val TYPE_SHOP_NAME = "shop_names"
+    const val TYPE_FIRBASE_TOKEN = "shop_names"
 
     fun saveShared(c: Context, type: String, value: String) {
         val ed = c.getSharedPreferences(mSharedName, Context.MODE_PRIVATE).edit()

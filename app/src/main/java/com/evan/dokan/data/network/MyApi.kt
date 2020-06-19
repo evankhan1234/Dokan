@@ -114,6 +114,16 @@ interface MyApi {
         @Header("Authorization") Authorization:String,
         @Body productSearchPost: ProductSearchPost
     ): Response<ProductResponses>
+    @POST("get-firebase-id.php")
+    suspend fun getFirebaseId(
+        @Header("Authorization") Authorization:String,
+        @Body tokenPost: TokenPost
+    ): Response<TokenResponses>
+    @POST("user-firebaseid.php")
+    suspend fun createFirebaseId(
+        @Header("Authorization") Authorization:String,
+        @Body tokenPost: TokenPost
+    ): Response<BasicResponses>
     @POST("customer-product-search.php")
     suspend fun getProductSearchByCustomer(
         @Header("Authorization") Authorization:String,
