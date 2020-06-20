@@ -18,6 +18,10 @@ import com.evan.dokan.ui.home.HomeActivity
 import com.evan.dokan.ui.home.HomeViewModel
 import com.evan.dokan.ui.home.HomeViewModelFactory
 import com.evan.dokan.util.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_create_account.*
 
@@ -152,12 +156,21 @@ class ProfileUpdateFragment : Fragment(),KodeinAware ,IProfileUpdateListener{
     override fun onEnd() {
         progress_bar?.hide()
     }
-
+    var reference: DatabaseReference? = null
     override fun onUser(message: String) {
         Toast.makeText(context!!,message,Toast.LENGTH_SHORT).show()
         (activity as HomeActivity?)!!.onBackPressed()
+        status(image_address!!)
     }
-
+    open fun status(status: String) {
+        var fuser: FirebaseUser? = null
+        fuser = FirebaseAuth.getInstance().currentUser
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser!!.uid)
+        val hashMap =
+            HashMap<String, Any>()
+        hashMap["imageURL"] = status
+        reference!!.updateChildren(hashMap)
+    }
     override fun onFailure(message: String) {
         Toast.makeText(context!!,message,Toast.LENGTH_SHORT).show()
     }
