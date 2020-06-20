@@ -46,6 +46,7 @@ class HomeViewModel (
     var orderIdPost:OrderIdPost?=null
     var cutomerOrderPost:CutomerOrderPost?=null
     var tokenPost:TokenPost?=null
+    var chatPost:ChatPost?=null
     var userUpdatePost:UserUpdatePost?=null
     var passwordPost:PasswordPost?=null
     var newsfeedPost:NewsfeedPost?=null
@@ -721,6 +722,23 @@ class HomeViewModel (
                 val response = repository.getFirebaseId(header,tokenPost!!)
                 Log.e("createToken", "createToken" + Gson().toJson(response))
                 pushListener?.onLoad(response.data!!)
+            } catch (e: ApiException) {
+                Log.e("createToken", "createToken" +e?.message)
+            } catch (e: NoInternetException) {
+
+            }
+        }
+
+    }
+    fun createChat(header:String,shopId:Int,firebaseId:String,created:String) {
+
+        Coroutines.main {
+            try {
+                chatPost= ChatPost(shopId,0,firebaseId,created)
+                Log.e("createToken", "createToken" + Gson().toJson(chatPost))
+                val response = repository.createChat(header,chatPost!!)
+                Log.e("createToken", "createToken" + Gson().toJson(response))
+
             } catch (e: ApiException) {
                 Log.e("createToken", "createToken" +e?.message)
             } catch (e: NoInternetException) {

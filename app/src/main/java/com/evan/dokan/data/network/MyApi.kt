@@ -114,6 +114,11 @@ interface MyApi {
         @Header("Authorization") Authorization:String,
         @Body productSearchPost: ProductSearchPost
     ): Response<ProductResponses>
+    @POST("create-customer-chat.php")
+    suspend fun createChat(
+        @Header("Authorization") Authorization:String,
+        @Body chatPost: ChatPost
+    ): Response<BasicResponses>
     @POST("get-firebase-id.php")
     suspend fun getFirebaseId(
         @Header("Authorization") Authorization:String,
