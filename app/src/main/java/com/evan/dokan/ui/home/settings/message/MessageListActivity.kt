@@ -18,8 +18,11 @@ import com.bumptech.glide.Glide
 import com.evan.dokan.R
 import com.evan.dokan.data.db.entities.Chat
 import com.evan.dokan.data.db.entities.FIrebaseUser
+import com.evan.dokan.data.network.post.Push
+import com.evan.dokan.data.network.post.PushPost
 import com.evan.dokan.ui.home.HomeViewModel
 import com.evan.dokan.ui.home.HomeViewModelFactory
+import com.evan.dokan.ui.home.cart.IPushListener
 import com.evan.dokan.util.SharedPreferenceUtil
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -32,7 +35,7 @@ import org.kodein.di.generic.instance
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MessageListActivity : AppCompatActivity(),KodeinAware {
+class MessageListActivity : AppCompatActivity(),KodeinAware ,IPushListener {
 
     var profile_image: CircleImageView? = null
     var username: TextView? = null
@@ -56,7 +59,8 @@ class MessageListActivity : AppCompatActivity(),KodeinAware {
 
     var userid: String? = null
     var token: String? = ""
-
+    var pushPost: PushPost?=null
+    var push: Push?=null
 
     var notify = false
 
@@ -64,6 +68,7 @@ class MessageListActivity : AppCompatActivity(),KodeinAware {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message_list)
         viewModel = ViewModelProviders.of(this, factory).get(HomeViewModel::class.java)
+        viewModel.pushListener=this
         val toolbar: Toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         getSupportActionBar()!!.setTitle("")
@@ -73,6 +78,8 @@ class MessageListActivity : AppCompatActivity(),KodeinAware {
         }
         token = SharedPreferenceUtil.getShared(this, SharedPreferenceUtil.TYPE_AUTH_TOKEN)
         //  apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService::class.java)
+        viewModel.getToken(token!!,1,SharedPreferenceUtil.getShared(this, SharedPreferenceUtil.TYPE_SHOP_ID)!!)
+
         recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
         recyclerView!!.setHasFixedSize(true)
         val linearLayoutManager = LinearLayoutManager(getApplicationContext())
@@ -186,6 +193,9 @@ class MessageListActivity : AppCompatActivity(),KodeinAware {
                 val user: FIrebaseUser? = dataSnapshot.getValue(FIrebaseUser::class.java)
                 if (notify) {
                     //  sendNotifiaction(receiver, user!!.username!!, message)
+                    push= Push("New Message",message)
+                    pushPost= PushPost(tokenData,push)
+                    viewModel.sendPush("key=AAAAdCyJ2hw:APA91bGF6x20oQnuC2ZeAXsJju-OCAZ67dBpQvaLx7h18HSAnhl9CPWupCJaV0552qJvm1qIHL_LAZoOvv5oWA9Iraar_XQkWe3JEUmJ1v7iKq09QYyPB3ZGMeSinzC-GlKwpaJU_IvO",pushPost!!)
                 }
                 notify = false
             }
@@ -295,6 +305,10 @@ class MessageListActivity : AppCompatActivity(),KodeinAware {
         reference!!.removeEventListener(seenListener!!)
         status("offline")
         currentUser("none")
+    }
+    var tokenData:String?=""
+    override fun onLoad(data: String) {
+        tokenData=data
     }
 }
 
