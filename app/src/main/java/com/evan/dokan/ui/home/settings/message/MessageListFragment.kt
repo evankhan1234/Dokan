@@ -111,11 +111,14 @@ class MessageListFragment : Fragment(),KodeinAware, IPushListener {
                                 .equals(firebaseUser.uid)
                         ) {
                             theLastMessage = chat.message
-                            if(chat.isseen!!){
-                                last_msg.setTextColor(context!!.getColor(R.color.black_opacity_60))
-                            }
-                            else{
-                                last_msg.setTextColor(context!!.getColor(R.color.colorPrimary))
+                            try {
+                                if(chat.isseen!!){
+                                    last_msg.setTextColor(context!!.getColor(R.color.black_opacity_60))
+                                }
+                                else{
+                                    last_msg.setTextColor(context!!.getColor(R.color.colorPrimary))
+                                }
+                            } catch (e: Exception) {
                             }
                         }
                     }

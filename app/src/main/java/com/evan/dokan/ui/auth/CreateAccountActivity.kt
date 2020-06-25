@@ -392,6 +392,7 @@ class CreateAccountActivity : AppCompatActivity() ,KodeinAware , ISignUpListener
         progress_bar?.visibility=View.GONE
     }
     open fun register() {
+        progress_bar?.visibility=View.VISIBLE
         auth!!.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -413,6 +414,7 @@ class CreateAccountActivity : AppCompatActivity() ,KodeinAware , ISignUpListener
                                     it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                     startActivity(it)
                                     finish()
+                                    progress_bar?.visibility=View.GONE
                                 }
                             }
                         }

@@ -31,6 +31,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.evan.dokan.util.*
+import com.google.firebase.auth.FirebaseAuth
 
 private const val PERMISSION_REQUEST = 10
 class LoginActivity : AppCompatActivity(),
@@ -44,7 +45,7 @@ class LoginActivity : AppCompatActivity(),
     private var hasNetwork = false
     private var locationGps: Location? = null
     private var locationNetwork: Location? = null
-
+    var auth: FirebaseAuth? = null
     private var permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
 
 
@@ -54,6 +55,7 @@ class LoginActivity : AppCompatActivity(),
         val binding: ActivityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         val viewModel = ViewModelProviders.of(this, factory).get(AuthViewModel::class.java)
         binding.viewmodel = viewModel
+        auth = FirebaseAuth.getInstance()
         viewModel.authListener = this
         activity=this
         et_password?.transformationMethod = MyPasswordTransformationMethod()
@@ -102,11 +104,25 @@ class LoginActivity : AppCompatActivity(),
             SharedPreferenceUtil.TYPE_IMAGE,
             user?.Picture!!
         )
-        progress_bar.hide()
-        Intent(this, ShopActivity::class.java).also {
-            it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(it)
-        }
+
+        auth!!.signInWithEmailAndPassword(user.Email!!, et_password?.text.toString())
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    progress_bar.hide()
+                    Intent(this, ShopActivity::class.java).also {
+                        it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(it)
+                    }
+                    finish()
+                } else {
+                    progress_bar.hide()
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "Authentication failed!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
 
     }
 
@@ -179,8 +195,8 @@ class LoginActivity : AppCompatActivity(),
                     override fun onLocationChanged(location: Location?) {
                         if (location != null) {
                             locationNetwork = location
-                            SharedPreferenceUtil.saveShared(activity!!, SharedPreferenceUtil.TYPE_LATITUDE, locationGps!!.latitude.toString())
-                            SharedPreferenceUtil.saveShared(activity!!, SharedPreferenceUtil.TYPE_LONGITUDE, locationGps!!.longitude.toString())
+                            SharedPreferenceUtil.saveShared(activity!!, SharedPreferenceUtil.TYPE_LATITUDE, locationNetwork!!.latitude.toString())
+                            SharedPreferenceUtil.saveShared(activity!!, SharedPreferenceUtil.TYPE_LONGITUDE, locationNetwork!!.longitude.toString())
                             Log.d("Khan", " Network Latitude : " + locationNetwork!!.latitude)
                             Log.d("Khan", " Network Longitude : " + locationNetwork!!.longitude)
                         }

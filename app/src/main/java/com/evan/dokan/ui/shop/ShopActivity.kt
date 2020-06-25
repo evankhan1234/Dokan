@@ -18,6 +18,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -67,6 +68,15 @@ class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateL
         viewModel = ViewModelProviders.of(this, factory).get(ShopViewModel::class.java)
          viewModel?.shopListener=this
         activity=this
+//        val crashButton = Button(this)
+//        crashButton.text = "Crash!"
+//        crashButton.setOnClickListener {
+//            throw RuntimeException("Test Crash") // Force a crash
+//        }
+//
+//        addContentView(crashButton, ViewGroup.LayoutParams(
+//            ViewGroup.LayoutParams.MATCH_PARENT,
+//            ViewGroup.LayoutParams.WRAP_CONTENT))
         edit_content=findViewById(R.id.edit_content)
         rcv_shop=findViewById(R.id.rcv_shop)
         tv_status=findViewById(R.id.tv_status)
