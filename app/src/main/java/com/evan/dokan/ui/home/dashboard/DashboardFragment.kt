@@ -66,7 +66,7 @@ class DashboardFragment : Fragment(),KodeinAware, ICategoryListListener , ICateg
         token = SharedPreferenceUtil.getShared(activity!!, SharedPreferenceUtil.TYPE_AUTH_TOKEN)
         var fuser = FirebaseAuth.getInstance().currentUser
         val data = fuser!!.uid
-        viewModel.createFirebaseId(token!!,2,data)
+         viewModel.createFirebaseId(token!!,2,data)
         pushToken = SharedPreferenceUtil.getShared(activity!!, SharedPreferenceUtil.TYPE_PUSH_TOKEN)
         val args: Bundle? = arguments
         shopUserId = args?.getInt("ShopUserId")
