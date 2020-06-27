@@ -23,9 +23,11 @@ class ShopDataSource (val context: Context, val alertRepository: HomeRepository)
             networkState.postValue(NetworkState.DONE)
 
             var data=SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_LATITUDE)!!
+            Log.e("data","datas"+data)
             try {
                 networkState.postValue(NetworkState.LOADING)
-                post = ShopPost(SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_LATITUDE)!!,SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_LONGITUDE)!!,10, 1)
+               // post = ShopPost("23.7926304","90.3569598",10, 1)
+               post = ShopPost(SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_LATITUDE)!!,SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_LONGITUDE)!!,10, 1)
                 val response = alertRepository.getShopPagination(SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_AUTH_TOKEN)!!,post!!)
                 Log.e("response","response"+response)
                 response.success.let { isSuccessful ->
@@ -45,6 +47,7 @@ class ShopDataSource (val context: Context, val alertRepository: HomeRepository)
                 }
             } catch (e: ApiException) {
 
+                Log.e("response","response"+e.message)
                 networkState.postValue(NetworkState(NetworkState.Status.FAILED, e.localizedMessage))
             } catch (e: NoInternetException) {
                 networkState.postValue(NetworkState(NetworkState.Status.FAILED, e.localizedMessage))
@@ -56,6 +59,7 @@ class ShopDataSource (val context: Context, val alertRepository: HomeRepository)
         Coroutines.main {
             try {
                 networkState.postValue(NetworkState.LOADING)
+               // post = ShopPost("23.7926304","90.3569598",10, params.key)
                 post = ShopPost(SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_LATITUDE)!!,SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_LONGITUDE)!!,10, params.key)
                 val response =
                     alertRepository.getShopPagination(SharedPreferenceUtil.getShared(context, SharedPreferenceUtil.TYPE_AUTH_TOKEN)!!,post!!)

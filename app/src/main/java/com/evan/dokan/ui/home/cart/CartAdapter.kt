@@ -17,6 +17,7 @@ import com.evan.dokan.ui.home.wishlist.IWishListDeleteListener
 import com.evan.dokan.ui.home.wishlist.WishListAdapter
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.layout_cart_list.view.*
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -79,11 +80,10 @@ class CartAdapter (val context: Context, val cart: MutableList<Cart>?, val cartQ
 
     }
     fun getStartDate(startDate: String?): String? {
-        val inputFormat =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        val outputFormat =
-            DateTimeFormatter.ofPattern("dd,MMMM yyyy")
-        return LocalDate.parse(startDate, inputFormat).format(outputFormat)
+        val parser = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        val formatter = SimpleDateFormat("dd,MMMM yyyy")
+        val output: String = formatter.format(parser.parse(startDate!!))
+        return output
     }
     inner class CustomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
