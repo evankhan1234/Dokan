@@ -330,10 +330,10 @@ class CreateAccountActivity : AppCompatActivity() ,KodeinAware , ISignUpListener
 
                         } else {
                             img_user_add?.visibility= View.GONE
-                            image_address="http://192.168.0.106/"+updated_image_url
+                            image_address="http://hathbazzar.com/"+updated_image_url
                             //update in
                             Glide.with(this)
-                                .load("http://192.168.0.106/"+updated_image_url)
+                                .load("http://hathbazzar.com/"+updated_image_url)
                                 .into(img_user_profile!!)
 
 
