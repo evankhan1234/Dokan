@@ -1,5 +1,6 @@
 package com.evan.dokan.ui.home.notice
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.text.Html
 import android.view.LayoutInflater
@@ -19,6 +20,7 @@ import kotlinx.android.synthetic.main.layout_notice_list.view.tv_content
 import kotlinx.android.synthetic.main.layout_notice_list.view.tv_date
 import kotlinx.android.synthetic.main.layout_notice_list.view.tv_title
 import kotlinx.android.synthetic.main.layout_product_list.view.*
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -50,6 +52,7 @@ class NoticeAdapter (val context: Context, val noticeUpdateListener: INoticeUpda
                 return oldItem.Id == newItem.Id
             }
 
+            @SuppressLint("DiffUtilEquals")
             override fun areContentsTheSame(oldItem: Notice, newItem: Notice): Boolean {
                 return oldItem == newItem
             }
@@ -93,10 +96,9 @@ class AlertViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     }
 
     fun getStartDate(startDate: String?): String? {
-        val inputFormat =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        val outputFormat =
-            DateTimeFormatter.ofPattern("dd,MMMM yyyy")
-        return LocalDate.parse(startDate, inputFormat).format(outputFormat)
+        val parser = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        val formatter = SimpleDateFormat("dd,MMMM yyyy")
+        val output: String = formatter.format(parser.parse(startDate!!))
+        return output
     }
 }

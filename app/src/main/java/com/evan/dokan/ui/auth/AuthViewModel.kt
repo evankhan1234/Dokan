@@ -125,12 +125,12 @@ class AuthViewModel(
 
             } catch (e: ApiException) {
                 signUpListener?.onFailure(e?.message!!)
-                signUpListener?.onEnd()
+                signUpListener?.onEndError()
                 Log.e("response", "response" + e?.message!!)
 
             } catch (e: NoInternetException) {
                 signUpListener?.onFailure(e?.message!!)
-                signUpListener?.onEnd()
+                signUpListener?.onEndError()
 
             }
         }

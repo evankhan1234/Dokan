@@ -28,7 +28,7 @@ class ReceiveNotificationService : FirebaseMessagingService() {
         Log.d(TAG, "OnReceive: ${remoteMessage.from}")
         Log.d(TAG, "OnReceive: ${remoteMessage.data.get("title")}")
         Log.d(TAG, "OnReceive: ${remoteMessage.data.get("body")}")
-        Log.e("OnReceive", "OnReceive: " + Gson().toJson(remoteMessage))
+        //Log.e("OnReceive", "OnReceive: " + Gson().toJson(remoteMessage))
 
 //        if (remoteMessage.notification != null) {
 //            showNotification(remoteMessage.notification?.title, remoteMessage.notification?.body)

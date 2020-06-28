@@ -2,22 +2,20 @@ package com.evan.dokan.ui.home.dashboard.product
 
 import android.content.Context
 import android.graphics.Paint
+import android.os.Build
 import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.evan.dokan.R
 import com.evan.dokan.data.db.entities.Product
-import com.evan.dokan.data.db.entities.Shop
-import com.evan.dokan.ui.shop.IShopUpdateListener
-import com.evan.dokan.ui.shop.ShopListAdapter
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.layout_product_list.view.*
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import java.text.SimpleDateFormat
 
 class ProductCategoryWiseSearchAdapter(val context: Context, val product: MutableList<Product>?, val productCategoryWiseUpdateListener: IProductCategoryWiseUpdateListener) : RecyclerView.Adapter<ProductCategoryWiseSearchAdapter.CustomViewHolder>() {
 
@@ -69,12 +67,17 @@ class ProductCategoryWiseSearchAdapter(val context: Context, val product: Mutabl
 
 
     }
+
     fun getStartDate(startDate: String?): String? {
-        val inputFormat =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        val outputFormat =
-            DateTimeFormatter.ofPattern("dd,MMMM yyyy")
-        return LocalDate.parse(startDate, inputFormat).format(outputFormat)
+//        val inputFormat =
+//            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+//        val outputFormat =
+//            DateTimeFormatter.ofPattern("dd,MMMM yyyy")
+//        return LocalDate.parse(startDate, inputFormat).format(outputFormat)
+        val parser = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        val formatter = SimpleDateFormat("dd,MMMM yyyy")
+        val output: String = formatter.format(parser.parse(startDate!!))
+        return output
     }
     inner class CustomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 

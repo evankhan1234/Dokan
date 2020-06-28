@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.evan.dokan.R
 import com.evan.dokan.data.db.entities.Order
 import kotlinx.android.synthetic.main.layout_order_list.view.*
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -86,11 +87,10 @@ class AlertViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
     }
     fun getStartDate(startDate: String?): String? {
-        val inputFormat =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        val outputFormat =
-            DateTimeFormatter.ofPattern("dd,MMMM yyyy")
-        return LocalDate.parse(startDate, inputFormat).format(outputFormat)
+        val parser = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        val formatter = SimpleDateFormat("dd,MMMM yyyy")
+        val output: String = formatter.format(parser.parse(startDate!!))
+        return output
     }
 
 }

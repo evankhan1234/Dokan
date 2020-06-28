@@ -10,6 +10,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
+import java.util.concurrent.TimeUnit
 
 interface MyApi {
 
@@ -292,11 +293,14 @@ interface MyApi {
 
             val okkHttpclient = OkHttpClient.Builder()
                 .addInterceptor(networkConnectionInterceptor)
+                .connectTimeout(1, TimeUnit.MINUTES)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(15, TimeUnit.SECONDS)
                 .build()
 
             return Retrofit.Builder()
                 .client(okkHttpclient)
-                .baseUrl("http://hathbazzar.com/v1/")
+                .baseUrl("http://206.189.180.190/v1/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(MyApi::class.java)

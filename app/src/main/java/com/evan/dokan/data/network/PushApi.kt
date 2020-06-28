@@ -2,6 +2,7 @@ package com.evan.dokan.data.network
 
 import com.evan.dokan.data.network.post.*
 import com.evan.dokan.data.network.responses.*
+import com.google.gson.GsonBuilder
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
@@ -28,11 +29,14 @@ interface PushApi {
             val okkHttpclient = OkHttpClient.Builder()
                 .addInterceptor(networkConnectionInterceptor)
                 .build()
+            val gson = GsonBuilder()
+                .setLenient()
+                .create()
 
             return Retrofit.Builder()
                 .client(okkHttpclient)
                 .baseUrl("https://fcm.googleapis.com/")
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
                 .create(PushApi::class.java)
         }

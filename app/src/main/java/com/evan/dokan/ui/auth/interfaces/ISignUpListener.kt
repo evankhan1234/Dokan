@@ -5,4 +5,5 @@ interface ISignUpListener {
     fun onSuccess(message:String)
     fun onFailure(message:String)
     fun onEnd()
+    fun onEndError()
 }

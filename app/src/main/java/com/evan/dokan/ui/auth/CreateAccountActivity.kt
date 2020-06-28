@@ -389,8 +389,13 @@ class CreateAccountActivity : AppCompatActivity() ,KodeinAware , ISignUpListener
     }
 
     override fun onEnd() {
+      //  progress_bar?.visibility=View.GONE
+    }
+
+    override fun onEndError() {
         progress_bar?.visibility=View.GONE
     }
+
     open fun register() {
         progress_bar?.visibility=View.VISIBLE
         auth!!.createUserWithEmailAndPassword(email, password)
@@ -419,6 +424,7 @@ class CreateAccountActivity : AppCompatActivity() ,KodeinAware , ISignUpListener
                             }
                         }
                 } else {
+                    progress_bar?.visibility=View.GONE
                     Toast.makeText(
                         this@CreateAccountActivity,
                         "You can't register with this email or password",
