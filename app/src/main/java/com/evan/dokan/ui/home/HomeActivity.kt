@@ -74,7 +74,6 @@ class HomeActivity : AppCompatActivity() ,KodeinAware,IWishCountListener,ICartCo
         viewModel.cartCountListener=this
         viewModel.wishCountListener=this
         token = SharedPreferenceUtil.getShared(this, SharedPreferenceUtil.TYPE_AUTH_TOKEN)
-
         shop_user_id=intent.getIntExtra("ShopUserId",0)
         shop_user_name=intent.getStringExtra("ShopUserName")
         viewModel.countCartList(token!!,shop_user_id!!)

@@ -300,7 +300,8 @@ interface MyApi {
 
             return Retrofit.Builder()
                 .client(okkHttpclient)
-                .baseUrl("http://206.189.180.190/v1/")
+              //  .baseUrl("http://206.189.180.190/v1/")
+                .baseUrl("http://192.168.0.105/stationary/v1/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(MyApi::class.java)
