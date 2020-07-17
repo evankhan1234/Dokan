@@ -6,11 +6,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
+import android.location.*
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
@@ -18,8 +15,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.evan.dokan.R
 import com.evan.dokan.data.db.entities.Shop
 import com.evan.dokan.ui.home.HomeActivity
-
 import com.evan.dokan.util.NetworkState
 import com.evan.dokan.util.SharedPreferenceUtil
 import com.evan.dokan.util.hide
@@ -35,39 +31,49 @@ import com.evan.dokan.util.show
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
+import java.io.IOException
+import java.util.*
+
 private const val PERMISSION_REQUEST = 10
-class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateListener {
+
+class ShopActivity : AppCompatActivity(), KodeinAware, IShopListener, IShopUpdateListener {
     override val kodein by kodein()
 
-    private val factory : ShopModelFactory by instance()
+    private val factory: ShopModelFactory by instance()
 
-    var shop_adapter:ShopAdapter?=null
-    var shoplist_adapter:ShopListAdapter?=null
-    var activity: Activity?=null
-    private  var viewModel: ShopViewModel?=null
+    var shop_adapter: ShopAdapter? = null
+    var shoplist_adapter: ShopListAdapter? = null
+    var activity: Activity? = null
+    private var viewModel: ShopViewModel? = null
 
-    var rcv_shop:RecyclerView?=null
-    var rcv_shop_search:RecyclerView?=null
-    var progress_bar: ProgressBar?=null
-    var btn_category_new: ImageView?=null
-    var edit_content: EditText?=null
-    var tv_status: TextView?=null
-    var token:String?=""
-    var latitude:String?=""
+    var rcv_shop: RecyclerView? = null
+    var rcv_shop_search: RecyclerView? = null
+    var progress_bar: ProgressBar? = null
+    var btn_category_new: ImageView? = null
+    var edit_content: EditText? = null
+    var tv_status: TextView? = null
+    var token: String? = ""
+    var latitude: String? = ""
     private var fresh: String? = ""
     lateinit var locationManager: LocationManager
     private var hasGps = false
     private var hasNetwork = false
     private var locationGps: Location? = null
     private var locationNetwork: Location? = null
+    var geocoder: Geocoder? = null
+    var addresses: MutableList<Address>? = null
+    private var permissions = arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION
+    )
 
-    private var permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop)
         viewModel = ViewModelProviders.of(this, factory).get(ShopViewModel::class.java)
-         viewModel?.shopListener=this
-        activity=this
+        viewModel?.shopListener = this
+        activity = this
+        geocoder = Geocoder(this, Locale.getDefault())
 //        val crashButton = Button(this)
 //        crashButton.text = "Crash!"
 //        crashButton.setOnClickListener {
@@ -77,30 +83,29 @@ class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateL
 //        addContentView(crashButton, ViewGroup.LayoutParams(
 //            ViewGroup.LayoutParams.MATCH_PARENT,
 //            ViewGroup.LayoutParams.WRAP_CONTENT))
-        edit_content=findViewById(R.id.edit_content)
-        rcv_shop=findViewById(R.id.rcv_shop)
-        tv_status=findViewById(R.id.tv_status)
-        progress_bar=findViewById(R.id.progress_bar)
-        rcv_shop_search=findViewById(R.id.rcv_shop_search)
+        edit_content = findViewById(R.id.edit_content)
+        rcv_shop = findViewById(R.id.rcv_shop)
+        tv_status = findViewById(R.id.tv_status)
+        progress_bar = findViewById(R.id.progress_bar)
+        rcv_shop_search = findViewById(R.id.rcv_shop_search)
         edit_content?.addTextChangedListener(keyword)
         fresh = SharedPreferenceUtil.getShared(this, SharedPreferenceUtil.TYPE_FRESH)
         token = SharedPreferenceUtil.getShared(this, SharedPreferenceUtil.TYPE_AUTH_TOKEN)
         latitude = SharedPreferenceUtil.getShared(this, SharedPreferenceUtil.TYPE_LATITUDE)
-        if(fresh != null && !fresh?.trim().equals("") && !fresh.isNullOrEmpty()) {
-            tv_status?.visibility=View.GONE
+        if (fresh != null && !fresh?.trim().equals("") && !fresh.isNullOrEmpty()) {
+            tv_status?.visibility = View.GONE
             initAdapter()
             initState()
-        }
-        else{
+        } else {
             progress_bar?.show()
-            tv_status?.isSelected=true
-            tv_status?.visibility=View.VISIBLE
+            tv_status?.isSelected = true
+            tv_status?.visibility = View.VISIBLE
             Handler().postDelayed(Runnable {
-                progress_bar?.visibility= View.GONE
-                tv_status?.visibility=View.GONE
+                progress_bar?.visibility = View.GONE
+                tv_status?.visibility = View.GONE
                 initAdapter()
                 initState()
-            },10000)
+            }, 10000)
             SharedPreferenceUtil.saveShared(
                 this,
                 SharedPreferenceUtil.TYPE_FRESH,
@@ -117,19 +122,21 @@ class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateL
             enableView()
         }
     }
-    fun replace(){
+
+    fun replace() {
         viewModel?.replaceSubscription(this)
         startListening()
     }
+
     override fun onResume() {
         super.onResume()
         // viewModel.getCategoryType(token!!)
-        Log.e("stop","stop")
+        Log.e("stop", "stop")
 
     }
 
     private fun initAdapter() {
-        shop_adapter = ShopAdapter(this,this)
+        shop_adapter = ShopAdapter(this, this)
         rcv_shop?.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         rcv_shop?.adapter = shop_adapter
         startListening()
@@ -137,8 +144,8 @@ class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateL
     }
 
     private fun startListening() {
-        rcv_shop_search?.visibility= View.GONE
-        rcv_shop?.visibility= View.VISIBLE
+        rcv_shop_search?.visibility = View.GONE
+        rcv_shop?.visibility = View.VISIBLE
 
         viewModel?.listOfAlerts?.observe(this, Observer {
             shop_adapter?.submitList(it)
@@ -151,13 +158,13 @@ class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateL
         viewModel?.getNetworkState()?.observe(this, Observer { state ->
             when (state.status) {
                 NetworkState.Status.LOADIND -> {
-                    progress_bar?.visibility= View.VISIBLE
+                    progress_bar?.visibility = View.VISIBLE
                 }
                 NetworkState.Status.SUCCESS -> {
-                    progress_bar?.visibility= View.GONE
+                    progress_bar?.visibility = View.GONE
                 }
                 NetworkState.Status.FAILED -> {
-                    progress_bar?.visibility= View.GONE
+                    progress_bar?.visibility = View.GONE
                 }
             }
         })
@@ -165,11 +172,11 @@ class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateL
 
     override fun show(data: MutableList<Shop>) {
         viewModel?.replaceSubscription(this)
-        rcv_shop_search?.visibility= View.VISIBLE
-        rcv_shop?.visibility= View.GONE
-        shoplist_adapter = ShopListAdapter(this,data!!,this)
+        rcv_shop_search?.visibility = View.VISIBLE
+        rcv_shop?.visibility = View.GONE
+        shoplist_adapter = ShopListAdapter(this, data!!, this)
         rcv_shop_search?.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             setHasFixedSize(true)
             adapter = shoplist_adapter
         }
@@ -180,7 +187,7 @@ class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateL
     }
 
     override fun failure(message: String) {
-        Toast.makeText(this,message,Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun end() {
@@ -188,14 +195,19 @@ class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateL
     }
 
     override fun onUpdate(shop: Shop) {
-        val intent =Intent(this,HomeActivity::class.java)
-        intent.putExtra("ShopUserId",shop?.ShopUserId)
-        intent.putExtra("ShopUserName",shop?.Name)
+        val intent = Intent(this, HomeActivity::class.java)
+        intent.putExtra("ShopUserId", shop?.ShopUserId)
+        intent.putExtra("ShopUserName", shop?.Name)
         startActivity(intent)
-        SharedPreferenceUtil.saveShared(this, SharedPreferenceUtil.TYPE_SHOP_ID, shop?.ShopUserId.toString())
+        SharedPreferenceUtil.saveShared(
+            this,
+            SharedPreferenceUtil.TYPE_SHOP_ID,
+            shop?.ShopUserId.toString()
+        )
 
 
     }
+
     var keyword: TextWatcher = object : TextWatcher {
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 
@@ -208,13 +220,12 @@ class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateL
         override fun afterTextChanged(s: Editable) {
 
             try {
-                if (s.toString().equals("")){
+                if (s.toString().equals("")) {
                     startListening()
-                }
-                else{
-                    var keyword:String?=""
-                    keyword=s.toString()+"%"
-                    viewModel?.getSearch(token!!,keyword)
+                } else {
+                    var keyword: String? = ""
+                    keyword = s.toString() + "%"
+                    viewModel?.getSearch(token!!, keyword)
                 }
 
             } catch (e: Exception) {
@@ -225,9 +236,10 @@ class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateL
         }
 
     }
-    override fun exit(){
-        rcv_shop_search?.visibility= View.GONE
-        rcv_shop?.visibility= View.GONE
+
+    override fun exit() {
+        rcv_shop_search?.visibility = View.GONE
+        rcv_shop?.visibility = View.GONE
         viewModel?.replaceSubscription(this)
     }
 
@@ -245,77 +257,143 @@ class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateL
 
             if (hasGps) {
                 Log.d("CodeAndroidLocation", "hasGps")
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0F, object :
-                    LocationListener {
-                    override fun onLocationChanged(location: Location?) {
-                        if (location != null) {
-                            locationGps = location
-                            SharedPreferenceUtil.saveShared(activity!!, SharedPreferenceUtil.TYPE_LATITUDE, locationGps!!.latitude.toString())
-                            SharedPreferenceUtil.saveShared(activity!!, SharedPreferenceUtil.TYPE_LONGITUDE, locationGps!!.longitude.toString())
-                            Log.d("rear", " GPS Latitude : " + locationGps!!.latitude)
-                            Log.d("rear", " GPS Longitude : " + locationGps!!.longitude)
+                locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    5000,
+                    0F,
+                    object :
+                        LocationListener {
+                        override fun onLocationChanged(location: Location?) {
+                            if (location != null) {
+                                locationGps = location
+                                SharedPreferenceUtil.saveShared(
+                                    activity!!,
+                                    SharedPreferenceUtil.TYPE_LATITUDE,
+                                    locationGps!!.latitude.toString()
+                                )
+                                SharedPreferenceUtil.saveShared(
+                                    activity!!,
+                                    SharedPreferenceUtil.TYPE_LONGITUDE,
+                                    locationGps!!.longitude.toString()
+                                )
+                                Log.d("rear", " GPS Latitude : " + locationGps!!.latitude)
+                                Log.d("rear", " GPS Longitude : " + locationGps!!.longitude)
+//                                try {
+//                                    addresses = geocoder!!.getFromLocation(
+//                                        locationGps!!.latitude,
+//                                        locationGps!!.longitude,
+//                                        1
+//                                    ) // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+//                                    val address = addresses?.get(0)
+//                                        ?.getAddressLine(0) // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+//
+//                                    val knownName = addresses?.get(0)
+//                                        ?.featureName // Only if available else return NULL
+//                                    Log.e("address","address"+address)
+//                                    Log.e("address","knownName"+knownName)
+//                                } catch (e: IOException) {
+//                                    e.printStackTrace()
+//                                }
+
+                            }
                         }
-                    }
 
-                    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+                        override fun onStatusChanged(
+                            provider: String?,
+                            status: Int,
+                            extras: Bundle?
+                        ) {
 
-                    }
+                        }
 
-                    override fun onProviderEnabled(provider: String?) {
+                        override fun onProviderEnabled(provider: String?) {
 
-                    }
+                        }
 
-                    override fun onProviderDisabled(provider: String?) {
+                        override fun onProviderDisabled(provider: String?) {
 
-                    }
+                        }
 
-                })
+                    })
 
-                val localGpsLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                val localGpsLocation =
+                    locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
                 if (localGpsLocation != null)
                     locationGps = localGpsLocation
             }
             if (hasNetwork) {
                 Log.d("CodeAndroidLocation", "hasGps")
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0F, object :
-                    LocationListener {
-                    override fun onLocationChanged(location: Location?) {
-                        if (location != null) {
-                            locationNetwork = location
-                            SharedPreferenceUtil.saveShared(activity!!, SharedPreferenceUtil.TYPE_LATITUDE, locationGps!!.latitude.toString())
-                            SharedPreferenceUtil.saveShared(activity!!, SharedPreferenceUtil.TYPE_LONGITUDE, locationGps!!.longitude.toString())
-                            Log.d("rears", " Network Latitude : " + locationNetwork!!.latitude)
-                            Log.d("rears", " Network Longitude : " + locationNetwork!!.longitude)
+                locationManager.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER,
+                    5000,
+                    0F,
+                    object :
+                        LocationListener {
+                        override fun onLocationChanged(location: Location?) {
+                            if (location != null) {
+                                locationNetwork = location
+                                try {
+                                    SharedPreferenceUtil.saveShared(
+                                        activity!!,
+                                        SharedPreferenceUtil.TYPE_LATITUDE,
+                                        locationGps!!.latitude.toString()
+                                    )
+                                    SharedPreferenceUtil.saveShared(
+                                        activity!!,
+                                        SharedPreferenceUtil.TYPE_LONGITUDE,
+                                        locationGps!!.longitude.toString()
+                                    )
+                                } catch (e: Exception) {
+                                }
+                                Log.d("rears", " Network Latitude : " + locationNetwork!!.latitude)
+                                Log.d(
+                                    "rears",
+                                    " Network Longitude : " + locationNetwork!!.longitude
+                                )
+
+                            }
                         }
-                    }
 
-                    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+                        override fun onStatusChanged(
+                            provider: String?,
+                            status: Int,
+                            extras: Bundle?
+                        ) {
 
-                    }
+                        }
 
-                    override fun onProviderEnabled(provider: String?) {
+                        override fun onProviderEnabled(provider: String?) {
 
-                    }
+                        }
 
-                    override fun onProviderDisabled(provider: String?) {
+                        override fun onProviderDisabled(provider: String?) {
 
-                    }
+                        }
 
-                })
+                    })
 
-                val localNetworkLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+                val localNetworkLocation =
+                    locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
                 if (localNetworkLocation != null)
                     locationNetwork = localNetworkLocation
             }
 
-            if(locationGps!= null && locationNetwork!= null){
-                SharedPreferenceUtil.saveShared(activity!!, SharedPreferenceUtil.TYPE_LATITUDE, locationGps!!.latitude.toString())
-                SharedPreferenceUtil.saveShared(activity!!, SharedPreferenceUtil.TYPE_LONGITUDE, locationGps!!.longitude.toString())
-                if(locationGps!!.accuracy > locationNetwork!!.accuracy){
+            if (locationGps != null && locationNetwork != null) {
+                SharedPreferenceUtil.saveShared(
+                    activity!!,
+                    SharedPreferenceUtil.TYPE_LATITUDE,
+                    locationGps!!.latitude.toString()
+                )
+                SharedPreferenceUtil.saveShared(
+                    activity!!,
+                    SharedPreferenceUtil.TYPE_LONGITUDE,
+                    locationGps!!.longitude.toString()
+                )
+                if (locationGps!!.accuracy > locationNetwork!!.accuracy) {
 
                     Log.d("rearsa", " Network Latitude : " + locationNetwork!!.latitude)
                     Log.d("rearsa", " Network Longitude : " + locationNetwork!!.longitude)
-                }else{
+                } else {
 
                     Log.d("CodeAndroidLocation", " GPS Latitude : " + locationGps!!.latitude)
                     Log.d("CodeAndroidLocation", " GPS Longitude : " + locationGps!!.longitude)
@@ -336,18 +414,29 @@ class ShopActivity : AppCompatActivity(), KodeinAware,IShopListener,IShopUpdateL
         return allSuccess
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_REQUEST) {
             var allSuccess = true
             for (i in permissions.indices) {
                 if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
                     allSuccess = false
-                    val requestAgain = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && shouldShowRequestPermissionRationale(permissions[i])
+                    val requestAgain =
+                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && shouldShowRequestPermissionRationale(
+                            permissions[i]
+                        )
                     if (requestAgain) {
                         Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(this, "Go to settings and enable the permission", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this,
+                            "Go to settings and enable the permission",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }

@@ -45,6 +45,7 @@ class ReceiveNotificationService : FirebaseMessagingService() {
     }
 
 
+    @SuppressLint("WrongConstant")
     private fun showNotificationAgain(title: String?, body: String?) {
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
