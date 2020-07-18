@@ -120,6 +120,11 @@ interface MyApi {
         @Header("Authorization") Authorization:String,
         @Body chatPost: ChatPost
     ): Response<BasicResponses>
+    @POST("get-shop-by-latitude.php")
+    suspend fun getShopBy(
+        @Header("Authorization") Authorization:String,
+        @Body shopPost: ShopIdPost
+    ): Response<ShopResponses>
     @POST("get-firebase-id.php")
     suspend fun getFirebaseId(
         @Header("Authorization") Authorization:String,

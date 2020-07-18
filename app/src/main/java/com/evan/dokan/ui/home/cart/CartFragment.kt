@@ -18,6 +18,7 @@ import com.evan.bazar.ui.custom.CustomDialog
 
 import com.evan.dokan.R
 import com.evan.dokan.data.db.entities.Cart
+import com.evan.dokan.data.db.entities.Shop
 import com.evan.dokan.data.network.post.*
 import com.evan.dokan.ui.home.HomeActivity
 import com.evan.dokan.ui.home.HomeViewModel
@@ -34,7 +35,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class CartFragment : Fragment() ,KodeinAware,ICartListListener,ICartDeleteListener,ICartQuantityListener,ICartListDeleteListener,ICartItemClickListener,IPushListener{
+class CartFragment : Fragment() ,KodeinAware,ICartListListener,ICartDeleteListener,ICartQuantityListener,ICartListDeleteListener,ICartItemClickListener,IPushListener,IShopListener{
 
     override val kodein by kodein()
     var progress_bar: ProgressBar?=null
@@ -57,6 +58,9 @@ class CartFragment : Fragment() ,KodeinAware,ICartListListener,ICartDeleteListen
     var list_cart_order: ArrayList<CartOrderPost> = arrayListOf()
     var pushPost: PushPost?=null
     var push: Push?=null
+
+    var latitude:Double?=0.0
+    var longitude:Double?=0.0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -67,6 +71,7 @@ class CartFragment : Fragment() ,KodeinAware,ICartListListener,ICartDeleteListen
         viewModel.cartListListener=this
         viewModel.cartListDeleteListener=this
         viewModel.pushListener=this
+        viewModel.shopListeners=this
         root_layout=root?.findViewById(R.id.root_layout)
         progress_bar=root?.findViewById(R.id.progress_bar)
         ima_no_data=root?.findViewById(R.id.ima_no_data)
@@ -78,6 +83,8 @@ class CartFragment : Fragment() ,KodeinAware,ICartListListener,ICartDeleteListen
             SharedPreferenceUtil.getShared(context!!, SharedPreferenceUtil.TYPE_SHOP_ID)!!.toInt())
 
         viewModel.getToken(token!!,1,SharedPreferenceUtil.getShared(context!!, SharedPreferenceUtil.TYPE_SHOP_ID)!!)
+
+        viewModel.getShopBy(token!!,SharedPreferenceUtil.getShared(context!!, SharedPreferenceUtil.TYPE_SHOP_ID)!!.toInt())
         btn_ok?.setOnClickListener {
 
             showDialog(context!!)
@@ -201,7 +208,7 @@ class CartFragment : Fragment() ,KodeinAware,ICartListListener,ICartDeleteListen
                 data_cart_order=list_cart_order
                 val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
                 val currentDate = sdf.format(Date())
-                customerOrderPost= CustomerOrderPost(SharedPreferenceUtil.getShared(context!!, SharedPreferenceUtil.TYPE_SHOP_ID)!!.toInt(),1,currentDate,order_address,order_area,SharedPreferenceUtil.getShared(context!!, SharedPreferenceUtil.TYPE_LATITUDE)!!.toDouble(),SharedPreferenceUtil.getShared(context!!, SharedPreferenceUtil.TYPE_LONGITUDE)!!.toDouble(),data_customer_status!!)
+                customerOrderPost= CustomerOrderPost(SharedPreferenceUtil.getShared(context!!, SharedPreferenceUtil.TYPE_SHOP_ID)!!.toInt(),1,currentDate,order_address,order_area,latitude!!,longitude!!,data_customer_status!!)
                 Log.e("data_customer_status","data_customer_status"+Gson().toJson(customerOrderPost))
                 viewModel.postOrderList(token!!,customerOrderPost!!)
                 viewModel.updateCartOrderDetails(token!!,data_cart_order)
@@ -277,5 +284,10 @@ class CartFragment : Fragment() ,KodeinAware,ICartListListener,ICartDeleteListen
     var tokenData:String?=""
     override fun onLoad(data: String) {
         tokenData=data
+    }
+
+    override fun onShow(shop: Shop) {
+        latitude=shop?.Latitude
+        longitude=shop?.Longitude
     }
 }

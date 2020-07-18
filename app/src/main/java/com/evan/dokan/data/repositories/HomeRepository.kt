@@ -166,4 +166,7 @@ class HomeRepository (
     suspend fun createChat(header:String,post: ChatPost): BasicResponses {
         return apiRequest { api.createChat(header,post) }
     }
+    suspend fun getShopBy(header:String, post: ShopIdPost): ShopResponses {
+        return apiRequest { api.getShopBy(header,post) }
+    }
 }
