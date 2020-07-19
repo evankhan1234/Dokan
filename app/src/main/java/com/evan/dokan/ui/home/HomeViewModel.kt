@@ -4,10 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.evan.dokan.data.network.post.*
 import com.evan.dokan.data.repositories.HomeRepository
-import com.evan.dokan.ui.home.cart.ICartCountListener
-import com.evan.dokan.ui.home.cart.ICartListDeleteListener
-import com.evan.dokan.ui.home.cart.ICartListListener
-import com.evan.dokan.ui.home.cart.IPushListener
+import com.evan.dokan.ui.home.cart.*
 import com.evan.dokan.ui.home.dashboard.IRecentProductListener
 import com.evan.dokan.ui.home.dashboard.category.ICategoryListListener
 import com.evan.dokan.ui.home.dashboard.product.details.ICreateCartListener
@@ -35,56 +32,58 @@ class HomeViewModel (
     private val repository: HomeRepository
 ) : ViewModel() {
 
-    var shopUserIdPost:ShopUserIdPost?=null
-    var commentsPost:CommentsPost?=null
-    var replyPost:ReplyPost?=null
-    var ownUpdatedPost:OwnUpdatedPost?=null
-    var likeCountPost:LikeCountPost?=null
-    var commentsForPost:CommentsForPost?=null
-    var replyForPost:ReplyForPost?=null
+    var shopUserIdPost: ShopUserIdPost? = null
+    var commentsPost: CommentsPost? = null
+    var replyPost: ReplyPost? = null
+    var ownUpdatedPost: OwnUpdatedPost? = null
+    var likeCountPost: LikeCountPost? = null
+    var commentsForPost: CommentsForPost? = null
+    var replyForPost: ReplyForPost? = null
 
-    var orderIdPost:OrderIdPost?=null
-    var cutomerOrderPost:CutomerOrderPost?=null
-    var tokenPost:TokenPost?=null
-    var chatPost:ChatPost?=null
-    var userUpdatePost:UserUpdatePost?=null
-    var passwordPost:PasswordPost?=null
-    var newsfeedPost:NewsfeedPost?=null
-    var deleteCartPost:DeleteCartPost?=null
-    var cartOrderDetailsPost:CartOrderDetailsPost?=null
-    var cartListQuantityPost:CartListQuantityPost?=null
-    var cartCreatePost:CartCreatePost?=null
-    var productLikePost:ProductLikePost?=null
-    var wishListCreatePost:WishListCreatePost?=null
-    var wishListDeletedPost:WishListDeletedPost?=null
-    var categoryListListener: ICategoryListListener?=null
-    var productLikeListener: IProductLikeListener?=null
-    var wishListCreateListener: IWishListCreateListener?=null
-    var wishDeleteListener: IWishDeleteListener?=null
-    var wishListListener: IWishListListener?=null
-    var createCartListener: ICreateCartListener?=null
-    var cartListListener: ICartListListener?=null
-    var orderDetailsListener: IOrderDetailsListener?=null
-    var cartListDeleteListener: ICartListDeleteListener?=null
-    var wishCountListener: IWishCountListener?=null
-    var cartCountListener: ICartCountListener?=null
-    var userListener: IUserListener?=null
-    var profileUpdateListener: IProfileUpdateListener?=null
-    var recentProductListener: IRecentProductListener?=null
-    var postListener: IPostListener?=null
-    var commentsPostListener: ICommentsPostListener?=null
-    var commentsListener: ICommentsListener?=null
-    var succeslistener: ISucceslistener?=null
-    var replyListener: IReplyListener?=null
-    var replyPostListener: IReplyPostListener?=null
-    var customerOrderListener: ICustomerOrderListener?=null
-    var pushListener: IPushListener?=null
-    fun getCategory(token:String,shopUserId:Int) {
+    var orderIdPost: OrderIdPost? = null
+    var cutomerOrderPost: CutomerOrderPost? = null
+    var tokenPost: TokenPost? = null
+    var chatPost: ChatPost? = null
+    var shopIdPost: ShopIdPost? = null
+    var userUpdatePost: UserUpdatePost? = null
+    var passwordPost: PasswordPost? = null
+    var newsfeedPost: NewsfeedPost? = null
+    var deleteCartPost: DeleteCartPost? = null
+    var cartOrderDetailsPost: CartOrderDetailsPost? = null
+    var cartListQuantityPost: CartListQuantityPost? = null
+    var cartCreatePost: CartCreatePost? = null
+    var productLikePost: ProductLikePost? = null
+    var wishListCreatePost: WishListCreatePost? = null
+    var wishListDeletedPost: WishListDeletedPost? = null
+    var categoryListListener: ICategoryListListener? = null
+    var productLikeListener: IProductLikeListener? = null
+    var wishListCreateListener: IWishListCreateListener? = null
+    var wishDeleteListener: IWishDeleteListener? = null
+    var wishListListener: IWishListListener? = null
+    var createCartListener: ICreateCartListener? = null
+    var cartListListener: ICartListListener? = null
+    var orderDetailsListener: IOrderDetailsListener? = null
+    var cartListDeleteListener: ICartListDeleteListener? = null
+    var wishCountListener: IWishCountListener? = null
+    var cartCountListener: ICartCountListener? = null
+    var userListener: IUserListener? = null
+    var profileUpdateListener: IProfileUpdateListener? = null
+    var recentProductListener: IRecentProductListener? = null
+    var postListener: IPostListener? = null
+    var commentsPostListener: ICommentsPostListener? = null
+    var commentsListener: ICommentsListener? = null
+    var succeslistener: ISucceslistener? = null
+    var replyListener: IReplyListener? = null
+    var replyPostListener: IReplyPostListener? = null
+    var customerOrderListener: ICustomerOrderListener? = null
+    var pushListener: IPushListener? = null
+    var shopListeners: IShopListener? = null
+    fun getCategory(token: String, shopUserId: Int) {
         categoryListListener?.onStarted()
         Coroutines.main {
             try {
-                shopUserIdPost=ShopUserIdPost(shopUserId)
-                val authResponse = repository.getCategory(token!!,shopUserIdPost!!)
+                shopUserIdPost = ShopUserIdPost(shopUserId)
+                val authResponse = repository.getCategory(token!!, shopUserIdPost!!)
                 categoryListListener?.category(authResponse?.data!!)
                 Log.e("response", "response" + Gson().toJson(authResponse))
                 categoryListListener?.onEnd()
@@ -97,13 +96,13 @@ class HomeViewModel (
 
     }
 
-    fun getProductLike(token:String,productId:Int,shopUserId:Int) {
+    fun getProductLike(token: String, productId: Int, shopUserId: Int) {
 
         Coroutines.main {
             try {
-                productLikePost=ProductLikePost(shopUserId,productId)
+                productLikePost = ProductLikePost(shopUserId, productId)
                 Log.e("productLikePost", "productLikePost" + Gson().toJson(productLikePost))
-                val authResponse = repository.getProductLike(token!!,productLikePost!!)
+                val authResponse = repository.getProductLike(token!!, productLikePost!!)
                 productLikeListener?.onBoolean(authResponse?.success!!)
                 Log.e("response", "response" + Gson().toJson(authResponse))
             } catch (e: ApiException) {
@@ -112,13 +111,20 @@ class HomeViewModel (
         }
 
     }
-    fun createWishList(token:String,shopUserId:Int,productId:Int,status:Int,created:String) {
+
+    fun createWishList(
+        token: String,
+        shopUserId: Int,
+        productId: Int,
+        status: Int,
+        created: String
+    ) {
         wishListCreateListener?.onStarted()
         Coroutines.main {
             try {
-                wishListCreatePost=WishListCreatePost(shopUserId,productId,status,created)
+                wishListCreatePost = WishListCreatePost(shopUserId, productId, status, created)
                 Log.e("createWishList", "createWishList" + Gson().toJson(wishListCreatePost))
-                val authResponse = repository.createWishList(token!!,wishListCreatePost!!)
+                val authResponse = repository.createWishList(token!!, wishListCreatePost!!)
                 wishListCreateListener?.onSuccess(authResponse?.message!!)
                 wishListCreateListener?.onEnd()
                 Log.e("response", "response" + Gson().toJson(authResponse))
@@ -132,13 +138,14 @@ class HomeViewModel (
         }
 
     }
-    fun deleteWishList(token:String,shopUserId:Int,productId:Int) {
+
+    fun deleteWishList(token: String, shopUserId: Int, productId: Int) {
         wishDeleteListener?.onStarted()
         Coroutines.main {
             try {
-                wishListDeletedPost=WishListDeletedPost(shopUserId,productId)
+                wishListDeletedPost = WishListDeletedPost(shopUserId, productId)
                 Log.e("createWishList", "createWishList" + Gson().toJson(wishListDeletedPost))
-                val authResponse = repository.deleteWishList(token!!,wishListDeletedPost!!)
+                val authResponse = repository.deleteWishList(token!!, wishListDeletedPost!!)
                 wishDeleteListener?.onSuccess(authResponse?.message!!)
                 wishDeleteListener?.onEnd()
                 Log.e("response", "response" + Gson().toJson(authResponse))
@@ -152,13 +159,14 @@ class HomeViewModel (
         }
 
     }
-    fun deleteCartList(token:String,shopUserId:Int,productId:Int) {
+
+    fun deleteCartList(token: String, shopUserId: Int, productId: Int) {
         cartListDeleteListener?.onStarted()
         Coroutines.main {
             try {
-                deleteCartPost= DeleteCartPost(shopUserId,productId)
+                deleteCartPost = DeleteCartPost(shopUserId, productId)
                 Log.e("createWishList", "createWishList" + Gson().toJson(wishListDeletedPost))
-                val authResponse = repository.deleteCartList(token!!,deleteCartPost!!)
+                val authResponse = repository.deleteCartList(token!!, deleteCartPost!!)
                 cartListDeleteListener?.onSuccess(authResponse?.message!!)
                 cartListDeleteListener?.onEnd()
                 Log.e("response", "response" + Gson().toJson(authResponse))
@@ -173,13 +181,13 @@ class HomeViewModel (
 
     }
 
-    fun getWishList(header:String,shopUserId:Int) {
+    fun getWishList(header: String, shopUserId: Int) {
         wishListListener?.onStarted()
         Coroutines.main {
             try {
-                shopUserIdPost= ShopUserIdPost(shopUserId!!)
+                shopUserIdPost = ShopUserIdPost(shopUserId!!)
                 Log.e("Search", "Search" + Gson().toJson(shopUserIdPost))
-                val response = repository.getWishList(header,shopUserIdPost!!)
+                val response = repository.getWishList(header, shopUserIdPost!!)
                 Log.e("Search", "Search" + Gson().toJson(response))
                 wishListListener?.wish(response?.data!!)
                 wishListListener?.onEnd()
@@ -193,13 +201,14 @@ class HomeViewModel (
         }
 
     }
-    fun getCartList(header:String,shopUserId:Int) {
+
+    fun getCartList(header: String, shopUserId: Int) {
         cartListListener?.onStarted()
         Coroutines.main {
             try {
-                shopUserIdPost= ShopUserIdPost(shopUserId!!)
+                shopUserIdPost = ShopUserIdPost(shopUserId!!)
                 Log.e("Search", "Search" + Gson().toJson(shopUserIdPost))
-                val response = repository.getCartList(header,shopUserIdPost!!)
+                val response = repository.getCartList(header, shopUserIdPost!!)
                 Log.e("Search", "Search" + Gson().toJson(response))
                 cartListListener?.cart(response?.data!!)
                 cartListListener?.onEnd()
@@ -213,12 +222,13 @@ class HomeViewModel (
         }
 
     }
-    fun updateCartQuantity(header:String,shopUserId:Int,productId:Int,quantity:Int) {
+
+    fun updateCartQuantity(header: String, shopUserId: Int, productId: Int, quantity: Int) {
         Coroutines.main {
             try {
-                cartListQuantityPost= CartListQuantityPost(shopUserId,productId,quantity)
+                cartListQuantityPost = CartListQuantityPost(shopUserId, productId, quantity)
                 Log.e("response", "response" + Gson().toJson(cartListQuantityPost))
-                val response = repository.updateCartQuantity(header,cartListQuantityPost!!)
+                val response = repository.updateCartQuantity(header, cartListQuantityPost!!)
                 Log.e("response", "response" + Gson().toJson(response))
             } catch (e: ApiException) {
 
@@ -228,12 +238,13 @@ class HomeViewModel (
         }
 
     }
-    fun postOrderList(header:String,customerOrderPost: CustomerOrderPost) {
+
+    fun postOrderList(header: String, customerOrderPost: CustomerOrderPost) {
         Coroutines.main {
             try {
 
                 Log.e("response", "response" + Gson().toJson(customerOrderPost))
-                val response = repository.postOrderList(header,customerOrderPost!!)
+                val response = repository.postOrderList(header, customerOrderPost!!)
                 Log.e("response", "response" + Gson().toJson(response))
             } catch (e: ApiException) {
 
@@ -243,12 +254,13 @@ class HomeViewModel (
         }
 
     }
-    fun updateCartOrderDetails(header:String,data: MutableList<CartOrderPost>?) {
+
+    fun updateCartOrderDetails(header: String, data: MutableList<CartOrderPost>?) {
         Coroutines.main {
             try {
-                cartOrderDetailsPost= CartOrderDetailsPost(data)
+                cartOrderDetailsPost = CartOrderDetailsPost(data)
                 Log.e("response", "response" + Gson().toJson(cartOrderDetailsPost))
-                val response = repository.updateCartOrderDetails(header,cartOrderDetailsPost!!)
+                val response = repository.updateCartOrderDetails(header, cartOrderDetailsPost!!)
                 Log.e("response", "response" + Gson().toJson(response))
             } catch (e: ApiException) {
 
@@ -258,11 +270,12 @@ class HomeViewModel (
         }
 
     }
-    fun sendPush(header:String,pushPost: PushPost) {
+
+    fun sendPush(header: String, pushPost: PushPost) {
         Coroutines.main {
             try {
                 Log.e("response", "response" + Gson().toJson(pushPost))
-                val response = repository.sendPush(header,pushPost!!)
+                val response = repository.sendPush(header, pushPost!!)
                 Log.e("response", "response" + Gson().toJson(response))
             } catch (e: ApiException) {
                 Log.e("response", "response" + e?.message)
@@ -273,13 +286,32 @@ class HomeViewModel (
 
     }
 
-    fun createCart(header:String,productName:String,price:Double,quantity:Int,productId:Int,status:Int,shopUserId:Int,picture:String,created:String) {
+    fun createCart(
+        header: String,
+        productName: String,
+        price: Double,
+        quantity: Int,
+        productId: Int,
+        status: Int,
+        shopUserId: Int,
+        picture: String,
+        created: String
+    ) {
         createCartListener?.onStarted()
         Coroutines.main {
             try {
-                cartCreatePost= CartCreatePost(productName,price,quantity,productId,status,shopUserId,picture,created)
+                cartCreatePost = CartCreatePost(
+                    productName,
+                    price,
+                    quantity,
+                    productId,
+                    status,
+                    shopUserId,
+                    picture,
+                    created
+                )
                 Log.e("Search", "Search" + Gson().toJson(cartCreatePost))
-                val response = repository.createCart(header,cartCreatePost!!)
+                val response = repository.createCart(header, cartCreatePost!!)
                 Log.e("Search", "Search" + Gson().toJson(response))
                 createCartListener?.onSuccessCart(response?.message!!)
                 createCartListener?.onEnd()
@@ -295,12 +327,13 @@ class HomeViewModel (
         }
 
     }
-    fun countWishList(header:String,shopUserId:Int) {
+
+    fun countWishList(header: String, shopUserId: Int) {
         Coroutines.main {
             try {
-                shopUserIdPost= ShopUserIdPost(shopUserId)
+                shopUserIdPost = ShopUserIdPost(shopUserId)
                 Log.e("response", "response" + Gson().toJson(shopUserIdPost))
-                val response = repository.countWishList(header,shopUserIdPost!!)
+                val response = repository.countWishList(header, shopUserIdPost!!)
                 wishCountListener?.onWishCount(response?.count!!)
                 Log.e("response", "response" + Gson().toJson(response))
             } catch (e: ApiException) {
@@ -311,12 +344,13 @@ class HomeViewModel (
         }
 
     }
-    fun countCartList(header:String,shopUserId:Int) {
+
+    fun countCartList(header: String, shopUserId: Int) {
         Coroutines.main {
             try {
-                shopUserIdPost= ShopUserIdPost(shopUserId)
+                shopUserIdPost = ShopUserIdPost(shopUserId)
                 Log.e("response", "response" + Gson().toJson(shopUserIdPost))
-                val response = repository.countCartList(header,shopUserIdPost!!)
+                val response = repository.countCartList(header, shopUserIdPost!!)
                 Log.e("response", "response" + Gson().toJson(response))
                 cartCountListener?.onCartCount(response?.count!!)
             } catch (e: ApiException) {
@@ -327,13 +361,14 @@ class HomeViewModel (
         }
 
     }
-    fun getCustomerDetailsList(header:String,orderId:Int) {
+
+    fun getCustomerDetailsList(header: String, orderId: Int) {
         orderDetailsListener?.onStarted()
         Coroutines.main {
             try {
-                orderIdPost= OrderIdPost(orderId!!)
+                orderIdPost = OrderIdPost(orderId!!)
                 Log.e("Search", "Search" + Gson().toJson(orderIdPost))
-                val response = repository.getCustomerDetailsList(header,orderIdPost!!)
+                val response = repository.getCustomerDetailsList(header, orderIdPost!!)
                 Log.e("Search", "Search" + Gson().toJson(response))
                 orderDetailsListener?.order(response?.data!!)
                 orderDetailsListener?.onEnd()
@@ -348,7 +383,7 @@ class HomeViewModel (
 
     }
 
-    fun getCustomerUser(header:String) {
+    fun getCustomerUser(header: String) {
         userListener?.onStarted()
         Coroutines.main {
             try {
@@ -364,13 +399,21 @@ class HomeViewModel (
         }
 
     }
-    fun updateUserDetails(header:String,id:Int,name:String,address:String,picture:String,gender:Int) {
+
+    fun updateUserDetails(
+        header: String,
+        id: Int,
+        name: String,
+        address: String,
+        picture: String,
+        gender: Int
+    ) {
         profileUpdateListener?.onStarted()
         Coroutines.main {
             try {
-                userUpdatePost= UserUpdatePost(id!!,name!!,address!!,picture!!,gender)
+                userUpdatePost = UserUpdatePost(id!!, name!!, address!!, picture!!, gender)
                 Log.e("Search", "Search" + Gson().toJson(userUpdatePost))
-                val response = repository.updateUserDetails(header,userUpdatePost!!)
+                val response = repository.updateUserDetails(header, userUpdatePost!!)
                 Log.e("response", "response" + Gson().toJson(response))
                 profileUpdateListener?.onUser(response?.message!!)
                 profileUpdateListener?.onEnd()
@@ -385,13 +428,14 @@ class HomeViewModel (
         }
 
     }
-    fun updatePassword(header:String,id:Int,password:String) {
+
+    fun updatePassword(header: String, id: Int, password: String) {
         profileUpdateListener?.onStarted()
         Coroutines.main {
             try {
-                passwordPost= PasswordPost(id!!,password!!)
+                passwordPost = PasswordPost(id!!, password!!)
                 Log.e("Search", "Search" + Gson().toJson(passwordPost))
-                val response = repository.updatePassword(header,passwordPost!!)
+                val response = repository.updatePassword(header, passwordPost!!)
                 Log.e("response", "response" + Gson().toJson(response))
                 profileUpdateListener?.onUser(response?.message!!)
                 profileUpdateListener?.onEnd()
@@ -406,13 +450,14 @@ class HomeViewModel (
         }
 
     }
-    fun getRecentProduct(header:String,shopUserId:Int) {
+
+    fun getRecentProduct(header: String, shopUserId: Int) {
         recentProductListener?.onStarted()
         Coroutines.main {
             try {
-                shopUserIdPost= ShopUserIdPost(shopUserId)
+                shopUserIdPost = ShopUserIdPost(shopUserId)
                 Log.e("Search", "Search" + Gson().toJson(shopUserIdPost))
-                val response = repository.getRecentProduct(header,shopUserIdPost!!)
+                val response = repository.getRecentProduct(header, shopUserIdPost!!)
                 Log.e("Search", "Search" + Gson().toJson(response))
                 recentProductListener?.product(response?.data!!)
                 recentProductListener?.onEnd()
@@ -427,13 +472,32 @@ class HomeViewModel (
 
     }
 
-    fun createdNewsFeedPost(header:String,Name:String,content:String,picture:String,created:String,status:Int,type:Int,image:String,love:Int) {
+    fun createdNewsFeedPost(
+        header: String,
+        Name: String,
+        content: String,
+        picture: String,
+        created: String,
+        status: Int,
+        type: Int,
+        image: String,
+        love: Int
+    ) {
         postListener?.onStarted()
         Coroutines.main {
             try {
-                newsfeedPost= NewsfeedPost(Name!!,content!!,picture!!,created!!,status!!,type!!,image!!,love!!)
+                newsfeedPost = NewsfeedPost(
+                    Name!!,
+                    content!!,
+                    picture!!,
+                    created!!,
+                    status!!,
+                    type!!,
+                    image!!,
+                    love!!
+                )
                 Log.e("Search", "Search" + Gson().toJson(newsfeedPost))
-                val response = repository.createdNewsFeedPost(header,newsfeedPost!!)
+                val response = repository.createdNewsFeedPost(header, newsfeedPost!!)
                 Log.e("response", "response" + Gson().toJson(response))
                 postListener?.onSuccess(response?.message!!)
                 postListener?.onEnd()
@@ -448,13 +512,14 @@ class HomeViewModel (
         }
 
     }
-    fun getComments(header:String,postId:Int,type:Int) {
+
+    fun getComments(header: String, postId: Int, type: Int) {
         commentsListener?.onStarted()
         Coroutines.main {
             try {
-                commentsPost= CommentsPost(postId,type)
+                commentsPost = CommentsPost(postId, type)
                 Log.e("Search", "Search" + Gson().toJson(commentsPost))
-                val response = repository.getComments(header,commentsPost!!)
+                val response = repository.getComments(header, commentsPost!!)
                 Log.e("Search", "Search" + Gson().toJson(response))
                 commentsListener?.load(response?.data!!)
                 commentsListener?.onEnd()
@@ -468,13 +533,14 @@ class HomeViewModel (
         }
 
     }
-    fun getCommentsAgain(header:String,postId:Int,type:Int) {
+
+    fun getCommentsAgain(header: String, postId: Int, type: Int) {
 
         Coroutines.main {
             try {
-                commentsPost= CommentsPost(postId,type)
+                commentsPost = CommentsPost(postId, type)
                 Log.e("Search", "Search" + Gson().toJson(commentsPost))
-                val response = repository.getComments(header,commentsPost!!)
+                val response = repository.getComments(header, commentsPost!!)
                 Log.e("Search", "Search" + Gson().toJson(response))
 
                 succeslistener?.onShow()
@@ -489,13 +555,21 @@ class HomeViewModel (
 
     }
 
-    fun updateNewsFeedPost(header:String,id:Int,Name:String,content:String,picture:String,type:Int,image:String) {
+    fun updateNewsFeedPost(
+        header: String,
+        id: Int,
+        Name: String,
+        content: String,
+        picture: String,
+        type: Int,
+        image: String
+    ) {
         postListener?.onStarted()
         Coroutines.main {
             try {
-                ownUpdatedPost= OwnUpdatedPost(id,Name!!,content!!,picture!!,type!!,image!!)
+                ownUpdatedPost = OwnUpdatedPost(id, Name!!, content!!, picture!!, type!!, image!!)
                 Log.e("Search", "Search" + Gson().toJson(ownUpdatedPost))
-                val response = repository.updateOwnPost(header,ownUpdatedPost!!)
+                val response = repository.updateOwnPost(header, ownUpdatedPost!!)
                 Log.e("response", "response" + Gson().toJson(response))
                 postListener?.onSuccess(response?.message!!)
                 postListener?.onEnd()
@@ -510,11 +584,12 @@ class HomeViewModel (
         }
 
     }
-    fun updatedCommentsLikeCount(header:String,id: Int,love:Int) {
+
+    fun updatedCommentsLikeCount(header: String, id: Int, love: Int) {
         Coroutines.main {
             try {
-                likeCountPost= LikeCountPost(id,love)
-                val response = repository.updatedCommentsLikeCount(header,likeCountPost!!)
+                likeCountPost = LikeCountPost(id, love)
+                val response = repository.updatedCommentsLikeCount(header, likeCountPost!!)
                 Log.e("response", "response" + Gson().toJson(response))
 
             } catch (e: ApiException) {
@@ -525,11 +600,12 @@ class HomeViewModel (
         }
 
     }
-    fun createdLike(header:String,postId: Int,type:Int) {
+
+    fun createdLike(header: String, postId: Int, type: Int) {
         Coroutines.main {
             try {
-                commentsPost= CommentsPost(postId,type)
-                val response = repository.createdLike(header,commentsPost!!)
+                commentsPost = CommentsPost(postId, type)
+                val response = repository.createdLike(header, commentsPost!!)
                 Log.e("response", "response" + Gson().toJson(response))
 
             } catch (e: ApiException) {
@@ -540,11 +616,12 @@ class HomeViewModel (
         }
 
     }
-    fun deletedLike(header:String,postId: Int,type:Int) {
+
+    fun deletedLike(header: String, postId: Int, type: Int) {
         Coroutines.main {
             try {
-                commentsPost= CommentsPost(postId,type)
-                val response = repository.deletedLike(header,commentsPost!!)
+                commentsPost = CommentsPost(postId, type)
+                val response = repository.deletedLike(header, commentsPost!!)
                 Log.e("response", "response" + Gson().toJson(response))
 
             } catch (e: ApiException) {
@@ -555,13 +632,33 @@ class HomeViewModel (
         }
 
     }
-    fun createComments(header:String,Name:String,content:String,created:String,status:Int,type:Int,image:String,love:Int,postId:Int) {
+
+    fun createComments(
+        header: String,
+        Name: String,
+        content: String,
+        created: String,
+        status: Int,
+        type: Int,
+        image: String,
+        love: Int,
+        postId: Int
+    ) {
         commentsPostListener?.onStarted()
         Coroutines.main {
             try {
-                commentsForPost= CommentsForPost(Name!!,content!!,created!!,status!!,type!!,image!!,love!!,postId!!)
+                commentsForPost = CommentsForPost(
+                    Name!!,
+                    content!!,
+                    created!!,
+                    status!!,
+                    type!!,
+                    image!!,
+                    love!!,
+                    postId!!
+                )
                 Log.e("Search", "Search" + Gson().toJson(newsfeedPost))
-                val response = repository.createComments(header,commentsForPost!!)
+                val response = repository.createComments(header, commentsForPost!!)
                 Log.e("response", "response" + Gson().toJson(response))
                 commentsPostListener?.onSuccess(response?.message!!)
                 commentsPostListener?.onEnd()
@@ -576,13 +673,14 @@ class HomeViewModel (
         }
 
     }
-    fun getReply(header:String,commentId:Int) {
+
+    fun getReply(header: String, commentId: Int) {
         replyListener?.onStarted()
         Coroutines.main {
             try {
-                replyPost= ReplyPost(commentId)
+                replyPost = ReplyPost(commentId)
                 Log.e("Search", "Search" + Gson().toJson(replyPost))
-                val response = repository.getReply(header,replyPost!!)
+                val response = repository.getReply(header, replyPost!!)
                 Log.e("Search", "Search" + Gson().toJson(response))
                 replyListener?.load(response?.data!!)
                 replyListener?.onEnd()
@@ -596,13 +694,31 @@ class HomeViewModel (
         }
 
     }
-    fun createReply(header:String,Name:String,content:String,created:String,status:Int,type:Int,image:String,commentsId:Int) {
+
+    fun createReply(
+        header: String,
+        Name: String,
+        content: String,
+        created: String,
+        status: Int,
+        type: Int,
+        image: String,
+        commentsId: Int
+    ) {
         replyPostListener?.onStarted()
         Coroutines.main {
             try {
-                replyForPost= ReplyForPost(Name!!,content!!,created!!,status!!,type!!,image!!,commentsId!!)
+                replyForPost = ReplyForPost(
+                    Name!!,
+                    content!!,
+                    created!!,
+                    status!!,
+                    type!!,
+                    image!!,
+                    commentsId!!
+                )
                 Log.e("Search", "Search" + Gson().toJson(replyForPost))
-                val response = repository.createReply(header,replyForPost!!)
+                val response = repository.createReply(header, replyForPost!!)
                 Log.e("response", "response" + Gson().toJson(response))
                 replyPostListener?.onSuccess(response?.message!!)
                 replyPostListener?.onEnd()
@@ -617,13 +733,14 @@ class HomeViewModel (
         }
 
     }
-    fun geReplyAgain(header:String,commentId:Int) {
+
+    fun geReplyAgain(header: String, commentId: Int) {
 
         Coroutines.main {
             try {
-                replyPost= ReplyPost(commentId)
+                replyPost = ReplyPost(commentId)
                 Log.e("Search", "Search" + Gson().toJson(replyPost))
-                val response = repository.getReply(header,replyPost!!)
+                val response = repository.getReply(header, replyPost!!)
                 Log.e("Search", "Search" + Gson().toJson(response))
 
                 succeslistener?.onShow()
@@ -637,21 +754,21 @@ class HomeViewModel (
         }
 
     }
-    fun getCustomerOrderInformation(header:String,orderId:Int,shopId:Int) {
+
+    fun getCustomerOrderInformation(header: String, orderId: Int, shopId: Int) {
 
         Coroutines.main {
             try {
-                cutomerOrderPost= CutomerOrderPost(orderId,shopId)
+                cutomerOrderPost = CutomerOrderPost(orderId, shopId)
                 Log.e("Search", "Search" + Gson().toJson(cutomerOrderPost))
-                val response = repository.getCustomerOrderInformation(header,cutomerOrderPost!!)
+                val response = repository.getCustomerOrderInformation(header, cutomerOrderPost!!)
                 Log.e("OrderInformation", "OrderInformation" + Gson().toJson(response))
-                if(response.data!=null){
+                if (response.data != null) {
                     customerOrderListener?.onShow(response?.data!!)
-                }
-                else{
+                } else {
                     customerOrderListener?.onEmpty()
                 }
-             //   customerOrderListener?.onShow(response?.data!!)
+                //   customerOrderListener?.onShow(response?.data!!)
                 Log.e("Search", "Search" + Gson().toJson(response))
 
             } catch (e: ApiException) {
@@ -662,13 +779,14 @@ class HomeViewModel (
         }
 
     }
-    fun createToken(header:String,type:Int,data:String) {
+
+    fun createToken(header: String, type: Int, data: String) {
 
         Coroutines.main {
             try {
-                tokenPost= TokenPost(type,data)
+                tokenPost = TokenPost(type, data)
                 Log.e("createToken", "createToken" + Gson().toJson(tokenPost))
-                val response = repository.createToken(header,tokenPost!!)
+                val response = repository.createToken(header, tokenPost!!)
                 Log.e("createToken", "createToken" + Gson().toJson(response))
 
             } catch (e: ApiException) {
@@ -679,68 +797,72 @@ class HomeViewModel (
         }
 
     }
-    fun getToken(header:String,type:Int,data:String) {
+
+    fun getToken(header: String, type: Int, data: String) {
 
         Coroutines.main {
             try {
-                tokenPost= TokenPost(type,data)
+                tokenPost = TokenPost(type, data)
                 Log.e("createToken", "createToken" + Gson().toJson(tokenPost))
-                val response = repository.getToken(header,tokenPost!!)
-                Log.e("createToken", "createToken" + Gson().toJson(response))
-                pushListener?.onLoad(response.data!!)
-            } catch (e: ApiException) {
-
-            } catch (e: NoInternetException) {
-
-            }
-        }
-
-    }
-    fun createFirebaseId(header:String,type:Int,data:String) {
-
-        Coroutines.main {
-            try {
-                tokenPost= TokenPost(type,data)
-                Log.e("createToken", "createToken" + Gson().toJson(tokenPost))
-                val response = repository.createFirebaseId(header,tokenPost!!)
-                Log.e("createToken", "createToken" + Gson().toJson(response))
-
-            } catch (e: ApiException) {
-
-            } catch (e: NoInternetException) {
-
-            }
-        }
-
-    }
-    fun getFirebaseId(header:String,type:Int,data:String) {
-
-        Coroutines.main {
-            try {
-                tokenPost= TokenPost(type,data)
-                Log.e("createToken", "createToken" + Gson().toJson(tokenPost))
-                val response = repository.getFirebaseId(header,tokenPost!!)
+                val response = repository.getToken(header, tokenPost!!)
                 Log.e("createToken", "createToken" + Gson().toJson(response))
                 pushListener?.onLoad(response.data!!)
             } catch (e: ApiException) {
-                Log.e("createToken", "createToken" +e?.message)
+
             } catch (e: NoInternetException) {
 
             }
         }
 
     }
-    fun createChat(header:String,shopId:Int,firebaseId:String,created:String) {
+
+    fun createFirebaseId(header: String, type: Int, data: String) {
 
         Coroutines.main {
             try {
-                chatPost= ChatPost(shopId,0,firebaseId,created)
+                tokenPost = TokenPost(type, data)
+                Log.e("createToken", "createToken" + Gson().toJson(tokenPost))
+                val response = repository.createFirebaseId(header, tokenPost!!)
+                Log.e("createToken", "createToken" + Gson().toJson(response))
+
+            } catch (e: ApiException) {
+
+            } catch (e: NoInternetException) {
+
+            }
+        }
+
+    }
+
+    fun getFirebaseId(header: String, type: Int, data: String) {
+
+        Coroutines.main {
+            try {
+                tokenPost = TokenPost(type, data)
+                Log.e("createToken", "createToken" + Gson().toJson(tokenPost))
+                val response = repository.getFirebaseId(header, tokenPost!!)
+                Log.e("createToken", "createToken" + Gson().toJson(response))
+                pushListener?.onLoad(response.data!!)
+            } catch (e: ApiException) {
+                Log.e("createToken", "createToken" + e?.message)
+            } catch (e: NoInternetException) {
+
+            }
+        }
+
+    }
+
+    fun createChat(header: String, shopId: Int, firebaseId: String, created: String) {
+
+        Coroutines.main {
+            try {
+                chatPost = ChatPost(shopId, 0, firebaseId, created)
                 Log.e("createToken", "createToken" + Gson().toJson(chatPost))
-                val response = repository.createChat(header,chatPost!!)
+                val response = repository.createChat(header, chatPost!!)
                 Log.e("createToken", "createToken" + Gson().toJson(response))
 
             } catch (e: ApiException) {
-                Log.e("createToken", "createToken" +e?.message)
+                Log.e("createToken", "createToken" + e?.message)
             } catch (e: NoInternetException) {
 
             }
@@ -748,4 +870,21 @@ class HomeViewModel (
 
     }
 
+    fun getShopBy(header: String, shopId: Int) {
+
+        Coroutines.main {
+            try {
+                shopIdPost = ShopIdPost(shopId)
+                Log.e("createToken", "createToken" + Gson().toJson(shopIdPost))
+                val response = repository.getShopBy(header, shopIdPost!!)
+                Log.e("getShopBy", "createToken" + Gson().toJson(response))
+                shopListeners?.onShow(response.data!!)
+            } catch (e: ApiException) {
+                Log.e("getShopBy", "createToken" + e?.message)
+            } catch (e: NoInternetException) {
+
+            }
+        }
+
+    }
 }

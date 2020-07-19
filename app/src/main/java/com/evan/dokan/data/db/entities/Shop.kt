@@ -16,5 +16,9 @@ data class Shop (
     @SerializedName("Status")
     var Status: Int?,
     @SerializedName("Created")
-    var Created: String?
+    var Created: String?,
+    @SerializedName("Latitude")
+    var Latitude: Double?,
+    @SerializedName("Longitude")
+    var Longitude: Double?
 )
