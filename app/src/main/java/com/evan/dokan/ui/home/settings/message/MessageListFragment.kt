@@ -113,10 +113,10 @@ class MessageListFragment : Fragment(),KodeinAware, IPushListener {
                             theLastMessage = chat.message
                             try {
                                 if(chat.isseen!!){
-                                    last_msg.setTextColor(context!!.getColor(R.color.black_opacity_60))
+                                    last_msg.setTextColor(context!!.resources.getColor(R.color.black_opacity_60))
                                 }
                                 else{
-                                    last_msg.setTextColor(context!!.getColor(R.color.colorPrimary))
+                                    last_msg.setTextColor(context!!.resources.getColor(R.color.colorPrimary))
                                 }
                             } catch (e: Exception) {
                             }
