@@ -9,12 +9,10 @@
 
     <androidx.cardview.widget.CardView
             android:id="@+id/line1"
-            android:layout_width="167dp"
+            android:layout_width="match_parent"
             android:layout_height="190dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
+
+            android:layout_margin="5dp"
             android:orientation="vertical"
             android:visibility="visible"
             app:cardBackgroundColor="@color/white"
