@@ -121,7 +121,7 @@ class PostBottomsheetFragment(posts: Post?) : BottomSheetDialogFragment(),Kodein
             }
             else{
                 if(post==null){
-                    viewModel?.createdNewsFeedPost(token!!,name!!,content,image_address!!,currentDate,1,2,image!!,0)
+                    viewModel?.createdNewsFeedPost(token!!,name!!,content,image_address!!,currentDate,0,2,image!!,0)
                 }
                 else{
                     viewModel?.updateNewsFeedPost(token!!,post?.Id!!,name!!,content,image_address!!,2,image!!)
