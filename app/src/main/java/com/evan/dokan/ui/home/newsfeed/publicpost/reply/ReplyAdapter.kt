@@ -15,7 +15,14 @@ import com.evan.dokan.ui.home.newsfeed.publicpost.comments.ICommentsPostLikeList
 import com.evan.dokan.ui.home.newsfeed.publicpost.comments.ICommentsUpdateListener
 import com.evan.dokan.util.is_like
 import com.google.gson.Gson
+import kotlinx.android.synthetic.main.layout_comments_list.view.*
 import kotlinx.android.synthetic.main.layout_reply_list.view.*
+import kotlinx.android.synthetic.main.layout_reply_list.view.img_auth
+import kotlinx.android.synthetic.main.layout_reply_list.view.img_icon
+import kotlinx.android.synthetic.main.layout_reply_list.view.tv_content
+import kotlinx.android.synthetic.main.layout_reply_list.view.tv_hour
+import kotlinx.android.synthetic.main.layout_reply_list.view.tv_name
+import kotlinx.android.synthetic.main.layout_reply_list.view.tv_type
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -48,6 +55,10 @@ class ReplyAdapter (val context: Context, val reply: MutableList<Reply>?) : Recy
         if(reply?.get(position)?.Type==2){
             holder.itemView.tv_type.text ="Customer"
             holder.itemView.img_auth?.setImageDrawable(context?.getDrawable(R.drawable.correct))
+        }
+        else if(reply?.get(position)?.Type==3){
+            holder.itemView.tv_type.text ="Admin"
+            holder.itemView.img_auth?.setImageDrawable(context?.getDrawable(R.drawable.admin_correct))
         }
         else{
             holder.itemView.tv_type.text ="ShopOwner"
