@@ -48,6 +48,10 @@ class CommentsAdapter (val context: Context, val comments: MutableList<Comments>
             holder.itemView.tv_type.text ="Customer"
             holder.itemView.img_auth?.setImageDrawable(context?.getDrawable(R.drawable.correct))
         }
+        else if(comments?.get(position)?.Type==3){
+            holder.itemView.tv_type.text ="Admin"
+            holder.itemView.img_auth?.setImageDrawable(context?.getDrawable(R.drawable.admin_correct))
+        }
         else{
             holder.itemView.tv_type.text ="ShopOwner"
             holder.itemView.img_auth?.setImageDrawable(context?.getDrawable(R.drawable.correct_blue))

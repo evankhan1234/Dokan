@@ -102,6 +102,10 @@ class AlertViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                 itemView.tv_type.text ="Customer"
                 itemView?.img_auth?.setImageDrawable(context?.getDrawable(R.drawable.correct))
             }
+            else if(post?.Type==3){
+                itemView.tv_type.text ="Admin"
+                itemView.img_auth?.setImageDrawable(context?.getDrawable(R.drawable.admin_correct))
+            }
             else{
                 itemView.tv_type.text ="ShopOwner"
                 itemView?.img_auth?.setImageDrawable(context?.getDrawable(R.drawable.correct_blue))
