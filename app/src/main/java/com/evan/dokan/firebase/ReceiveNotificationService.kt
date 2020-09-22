@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -16,6 +17,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.evan.dokan.R
 import com.evan.dokan.ui.home.HomeActivity
+import com.evan.dokan.ui.spalash.SpalashActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
@@ -47,6 +49,7 @@ class ReceiveNotificationService : FirebaseMessagingService() {
 
     @SuppressLint("WrongConstant")
     private fun showNotificationAgain(title: String?, body: String?) {
+
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val NOTIFICATION_CHANNEL_ID = "DOKAN"
@@ -64,7 +67,12 @@ class ReceiveNotificationService : FirebaseMessagingService() {
             notificationManager.createNotificationChannel(notificationChannel)
 
         }
-
+        val intent = Intent(this, SpalashActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        val pendingIntent = PendingIntent.getActivity(
+            this, 0, intent,
+            PendingIntent.FLAG_ONE_SHOT
+        )
         val uri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder= NotificationCompat.Builder(this,NOTIFICATION_CHANNEL_ID)
         notificationBuilder
@@ -72,11 +80,13 @@ class ReceiveNotificationService : FirebaseMessagingService() {
             .setWhen(System.currentTimeMillis())
             .setSmallIcon(R.drawable.alphabet)
             .setSound(uri)
+            .setAutoCancel(true)
             .setLargeIcon(
                 BitmapFactory.decodeResource(resources,
                     R.drawable.letters))
             .setColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary))
             .setContentTitle(title)
+            .setContentIntent(pendingIntent)
             .setStyle( NotificationCompat.BigTextStyle().bigText(body))
             .setContentText(body)
 

@@ -44,6 +44,7 @@ class NoticeFragment : Fragment(),KodeinAware,INoticeUpdateListener {
         val root= inflater.inflate(R.layout.fragment_notice, container, false)
         viewModel = ViewModelProviders.of(this, factory).get(NoticeViewModel::class.java)
         rcv_notice=root?.findViewById(R.id.rcv_notice)
+        progress_bar=root?.findViewById(R.id.progress_bar)
         initAdapter()
         initState()
         return root

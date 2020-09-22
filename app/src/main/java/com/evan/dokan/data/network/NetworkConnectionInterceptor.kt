@@ -9,38 +9,35 @@ import com.evan.dokan.util.NoInternetException
 import okhttp3.Interceptor
 import okhttp3.Response
 
-class NetworkConnectionInterceptor(
-    context: Context
-) : Interceptor {
-
-    private val applicationContext = context.applicationContext
-
-    @RequiresApi(Build.VERSION_CODES.M)
+class NetworkConnectionInterceptor(context: Context) : Interceptor {
+    val applicationCon = context.applicationContext
     override fun intercept(chain: Interceptor.Chain): Response {
-        try {
-            if (!isInternetAvailable())
-                throw NoInternetException("Make sure you have an active data connection")
-            return chain.proceed(chain.request())
-        } catch (e: Exception) {
-             throw NoInternetException("Make sure you have an active data connection")
-        }
+        if (!isInternetAvailable())
+            throw NoInternetException("Make sure you have an active data connection")
+        return chain.proceed(chain.request())
+
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun isInternetAvailable(): Boolean {
-        var result = false
         val connectivityManager =
-            applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
-        connectivityManager?.let {
-            it.getNetworkCapabilities(connectivityManager.activeNetwork)?.apply {
-                result = when {
-                    hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-                    hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-                    else -> false
+            applicationCon.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            var result = false
+            connectivityManager?.let {
+                it.getNetworkCapabilities(connectivityManager.activeNetwork)?.apply {
+                    result = when {
+                        hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                        hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                        else -> false
+                    }
                 }
             }
-        }
-        return result
-    }
+            return result
+        } else {
+            connectivityManager.activeNetworkInfo.also {
+                return it != null && it.isConnected
+            }
 
+        }
+    }
 }
