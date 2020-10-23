@@ -32,6 +32,7 @@ import android.view.MotionEvent
 import android.view.View
 import com.evan.dokan.util.*
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 private const val PERMISSION_REQUEST = 10
 class LoginActivity : AppCompatActivity(),

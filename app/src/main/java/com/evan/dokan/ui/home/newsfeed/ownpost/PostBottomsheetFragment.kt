@@ -138,12 +138,12 @@ class PostBottomsheetFragment(posts: Post?) : BottomSheetDialogFragment(),Kodein
     fun showImage(temp:String?){
         img_image?.visibility=View.VISIBLE
         img_image_cross?.visibility=View.VISIBLE
-        image_address="http://hathbazzar.com/"+temp
+        image_address="http://199.192.28.11/"+temp
         Log.e("for","Image"+temp)
 //        Glide.with(this)
 //            .load("http://192.168.0.106/"+temp)
 //            .into(img_image!!)
-        loadImage("http://hathbazzar.com/"+temp)
+        loadImage("http://199.192.28.11/"+temp)
     }
     fun loadImage(image_path:String){
         progress_bar?.visibility = View.VISIBLE

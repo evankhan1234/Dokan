@@ -16,6 +16,8 @@ import com.evan.dokan.ui.home.HomeViewModel
 import com.evan.dokan.ui.home.HomeViewModelFactory
 import com.evan.dokan.ui.home.settings.profile.IProfileUpdateListener
 import com.evan.dokan.util.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_create_account.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -43,6 +45,7 @@ class ChangePasswordFragment : Fragment(),KodeinAware, IProfileUpdateListener {
     var btn_ok: Button?=null
     var users:Users?=null
     var root_layout: RelativeLayout?=null
+    var auth: FirebaseAuth? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,6 +54,7 @@ class ChangePasswordFragment : Fragment(),KodeinAware, IProfileUpdateListener {
         val root= inflater.inflate(R.layout.fragment_change_password, container, false)
         viewModel = ViewModelProviders.of(this, factory).get(HomeViewModel::class.java)
         viewModel.profileUpdateListener=this
+        auth = FirebaseAuth.getInstance()
         root_layout=root?.findViewById(R.id.root_layout)
         et_current_password=root?.findViewById(R.id.et_current_password)
         progress_bar=root?.findViewById(R.id.progress_bar)
@@ -181,6 +185,24 @@ class ChangePasswordFragment : Fragment(),KodeinAware, IProfileUpdateListener {
     override fun onUser(message: String) {
         Toast.makeText(context!!,message,Toast.LENGTH_SHORT).show()
         (activity as HomeActivity?)!!.onBackPressed()
+        current_password=et_current_password?.text.toString()
+        password=et_password?.text.toString()
+        auth!!.signInWithEmailAndPassword(users?.Email!!,current_password)
+            .addOnCompleteListener(activity!!) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success now update email
+                    auth!!.currentUser!!.updatePassword(password)
+                        .addOnCompleteListener{ task ->
+                            if (task.isSuccessful) {
+
+                            }else{
+                                // email update failed
+                            }
+                        }
+                } else {
+                    // sign in failed
+                }
+            }
     }
 
     override fun onFailure(message: String) {

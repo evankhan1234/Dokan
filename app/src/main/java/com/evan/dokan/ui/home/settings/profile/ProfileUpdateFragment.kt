@@ -1,5 +1,6 @@
 package com.evan.dokan.ui.home.settings.profile
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,6 +11,10 @@ import android.widget.*
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.evan.dokan.R
 import com.evan.dokan.data.db.entities.Order
 import com.evan.dokan.data.db.entities.Product
@@ -72,6 +77,7 @@ class ProfileUpdateFragment : Fragment(),KodeinAware ,IProfileUpdateListener{
         radio_male=root?.findViewById(R.id.radio_male)
         radio_female=root?.findViewById(R.id.radio_female)
         img_user_add=root?.findViewById(R.id.img_user_add)
+        progress_bar=root?.findViewById(R.id.progress_bar)
         token = SharedPreferenceUtil.getShared(activity!!, SharedPreferenceUtil.TYPE_AUTH_TOKEN)
         val args: Bundle? = arguments
         if (args != null) {
@@ -141,10 +147,36 @@ class ProfileUpdateFragment : Fragment(),KodeinAware ,IProfileUpdateListener{
         return root
     }
     fun showImage(temp:String?){
-        image_address="http://hathbazzar.com/"+temp
+        image_address="http://199.192.28.11/"+temp
         Log.e("for","Image"+temp)
+        loadImage(image_address!!)
+    }
+    fun loadImage(image_path:String){
+        progress_bar?.visibility = View.VISIBLE
         Glide.with(this)
-            .load("http://hathbazzar.com/"+temp)
+            .load(image_path)
+            .listener(object : RequestListener<Drawable> {
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    progress_bar?.visibility = View.GONE
+                    return false
+                }
+
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    progress_bar?.visibility = View.GONE
+                    return false
+                }
+            })
             .into(img_user_profile!!)
     }
     override fun onStarted() {

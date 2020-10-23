@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +18,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.evan.dokan.BuildConfig
 import com.evan.dokan.R
 import com.evan.dokan.ui.auth.interfaces.ISignUpListener
@@ -330,11 +335,9 @@ class CreateAccountActivity : AppCompatActivity() ,KodeinAware , ISignUpListener
 
                         } else {
                             img_user_add?.visibility= View.GONE
-                            image_address="http://hathbazzar.com/"+updated_image_url
+                            image_address="http://199.192.28.11/"+updated_image_url
                             //update in
-                            Glide.with(this)
-                                .load("http://hathbazzar.com/"+updated_image_url)
-                                .into(img_user_profile!!)
+                            loadImage(image_address!!)
 
 
 
@@ -350,7 +353,34 @@ class CreateAccountActivity : AppCompatActivity() ,KodeinAware , ISignUpListener
         }
 
     }
+    fun loadImage(image_path:String){
+        progress_bar?.visibility = View.VISIBLE
+        Glide.with(this)
+            .load(image_path)
+            .listener(object : RequestListener<Drawable> {
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    progress_bar?.visibility = View.GONE
+                    return false
+                }
 
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    progress_bar?.visibility = View.GONE
+                    return false
+                }
+            })
+            .into(img_user_profile!!)
+    }
     fun goImagePreviewPage(uri: Uri?, imageFile: File) {
         val fileSize = imageFile.length().toInt()
         if (fileSize <= SERVER_SEND_FILE_SIZE_MAX_LIMIT) {
